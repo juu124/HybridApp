@@ -10,7 +10,7 @@ import android.webkit.WebViewClient;
 public class MainActivity extends AppCompatActivity {
     WebView myWebView;
     WebSettings myWebSettings;
-    String wetURL;
+    String webURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,10 +19,10 @@ public class MainActivity extends AppCompatActivity {
 
         myWebView = (WebView) findViewById(R.id.webview);
         myWebSettings = myWebView.getSettings();
-        wetURL = "file:///android_asset/sample.html";
+        webURL = "file:///android_asset/sample.html";
 
         myWebSettings.setJavaScriptEnabled(true);
 //        myWebView.loadUrl("https://m.naver.com/");
-        myWebView.loadUrl(wetURL);
+        myWebView.loadUrl(webURL);
     }
 }
