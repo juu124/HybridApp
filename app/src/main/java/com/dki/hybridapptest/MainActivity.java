@@ -1,16 +1,15 @@
 package com.dki.hybridapptest;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
-    WebView myWebView;
-    WebSettings myWebSettings;
-    String webURL;
+    private WebView myWebView;
+    private WebSettings myWebSettings;
+    private String webURL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         myWebSettings.setJavaScriptEnabled(true);
 //        myWebView.loadUrl("https://m.naver.com/");
+        myWebView.addJavascriptInterface(new WebAppInterface(this), "DKITec");
         myWebView.loadUrl(webURL);
     }
 }
