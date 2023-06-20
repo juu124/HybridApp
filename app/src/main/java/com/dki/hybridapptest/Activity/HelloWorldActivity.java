@@ -1,10 +1,12 @@
-package com.dki.hybridapptest;
+package com.dki.hybridapptest.Activity;
 
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class HelloWorld extends AppCompatActivity {
+import com.dki.hybridapptest.R;
+
+public class HelloWorldActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
