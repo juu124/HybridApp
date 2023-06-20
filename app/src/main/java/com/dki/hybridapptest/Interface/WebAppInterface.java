@@ -8,6 +8,7 @@ import android.webkit.JavascriptInterface;
 import android.widget.Toast;
 
 import com.dki.hybridapptest.Activity.HelloWorldActivity;
+import com.dki.hybridapptest.R;
 
 public class WebAppInterface {
     private Context mContext;
@@ -18,12 +19,12 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void showToast(String word) {
-        if (TextUtils.equals(word, "hello")) {
+        if (TextUtils.equals(word, mContext.getString(R.string.hello))) {
             Intent intent = new Intent(mContext, HelloWorldActivity.class);
             mContext.startActivity(intent);
-        } else if (TextUtils.equals(word, "world")) {
+        } else if (TextUtils.equals(word, mContext.getString(R.string.world))) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setTitle("Alert").setMessage("Hello World");
+            builder.setTitle("Alert").setMessage(mContext.getString(R.string.hello_world));
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
         } else {

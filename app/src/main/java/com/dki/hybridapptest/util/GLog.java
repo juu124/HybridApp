@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.Util;
+package com.dki.hybridapptest.util;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
