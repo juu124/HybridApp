@@ -18,18 +18,16 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void showToast(String word) {
-        if (!TextUtils.isEmpty(word)) {
-            if (word.equalsIgnoreCase("hello")) {
-                Intent intent = new Intent(mContext, HelloWorldActivity.class);
-                mContext.startActivity(intent);
-            } else if (word.equalsIgnoreCase("world")) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setTitle("Alert").setMessage("Hello World");
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
-            } else {
-                Toast.makeText(mContext, word, Toast.LENGTH_SHORT).show();
-            }
+        if (TextUtils.equals(word, "hello")) {
+            Intent intent = new Intent(mContext, HelloWorldActivity.class);
+            mContext.startActivity(intent);
+        } else if (TextUtils.equals(word, "world")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle("Alert").setMessage("Hello World");
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        } else {
+            Toast.makeText(mContext, word, Toast.LENGTH_SHORT).show();
         }
     }
 }
