@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-//import com.kt.watchcfmanager.application.CFMgrApplication;
 
 /**
  * 로그 통합관리

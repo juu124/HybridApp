@@ -16,12 +16,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        myWebView = (WebView) findViewById(R.id.webview);
+        myWebView = findViewById(R.id.webview);
         myWebSettings = myWebView.getSettings();
         webURL = "file:///android_asset/sample.html";
 
         myWebSettings.setJavaScriptEnabled(true);
-//        myWebView.loadUrl("https://m.naver.com/");
         myWebView.addJavascriptInterface(new WebAppInterface(this), "DKITec");
         myWebView.loadUrl(webURL);
     }
