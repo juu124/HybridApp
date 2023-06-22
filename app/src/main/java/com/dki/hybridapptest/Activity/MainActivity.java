@@ -1,7 +1,9 @@
 package com.dki.hybridapptest.Activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private WebSettings mWebSettings;
     private String mWebURL;
     private Intent mAction;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +73,29 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == Constants.CALL_PHONE_REQUEST_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+
+        if (sharedPreferences.getString("FIRST_RUN", "true") == "true") {
+            sharedPreferences.edit().putString("FIRST_RUN", "false").putString("FIRST_REQUEST", "true").apply();
+        }
+
+        if (Constants.CALL_PHONE_REQUEST_CODE == requestCode) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "권한 수락", Toast.LENGTH_SHORT).show();
             } else {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
+                if (TextUtils.equals(sharedPreferences.getString("FIRST_REQUEST", "true"), "true")) {
+                    GLog.d("첫 권한 요청 권한 미수락");
                     Toast.makeText(this, "권한 미수락", Toast.LENGTH_SHORT).show();
+                    sharedPreferences.edit().putString("FIRST_REQUEST", "false").apply();
                 } else {
-                    Toast.makeText(this, "앱 설정 창에서 전화 권한을 허용해주세요.", Toast.LENGTH_SHORT).show();
-                    mAction = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                    mAction.setData(Uri.parse("package:" + getPackageName()));
-                    startActivity(mAction);
+                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
+                        Toast.makeText(this, "권한 미수락", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "앱 설정 창에서 전화 권한을 허용해주세요.", Toast.LENGTH_SHORT).show();
+                        mAction = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                        mAction.setData(Uri.parse("package:" + getPackageName()));
+                        startActivity(mAction);
+                    }
                 }
             }
         }
