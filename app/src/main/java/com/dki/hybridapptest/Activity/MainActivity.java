@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         mWebSettings = mWebView.getSettings();
 
         mWebSettings.setJavaScriptEnabled(true);
-        mWebView.addJavascriptInterface(new WebAppInterface(this), "DKITec");
+        mWebView.addJavascriptInterface(new WebAppInterface(this, mWebView), "DKITec");
         mWebView.loadUrl(Constants.WEB_VIEW_URL);
 
         mWebView.setWebViewClient(new WebViewClient() {
