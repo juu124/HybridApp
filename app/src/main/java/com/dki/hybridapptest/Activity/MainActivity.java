@@ -27,7 +27,6 @@ import com.dki.hybridapptest.utils.GLog;
 public class MainActivity extends AppCompatActivity {
     private WebView mWebView;
     private WebSettings mWebSettings;
-    private String mWebURL;
     private Intent mAction;
     private SharedPreferences sharedPreferences;
 
@@ -39,11 +38,10 @@ public class MainActivity extends AppCompatActivity {
         GLog.d("onCreate");
         mWebView = findViewById(R.id.webview);
         mWebSettings = mWebView.getSettings();
-        mWebURL = Constants.WEB_VIEW_URL;
 
         mWebSettings.setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new WebAppInterface(this), "DKITec");
-        mWebView.loadUrl(mWebURL);
+        mWebView.loadUrl(Constants.WEB_VIEW_URL);
 
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(url)) {
                     GLog.d("url is null");
                 } else {
-                    if (url.toLowerCase().contains("tel:".toLowerCase())) {
+                    if (url.startsWith("tel:")) {
                         if ((checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)) {
                             GLog.d("CALL_PHONE PERMISSION_DENIED 입니다.");
                             requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, Constants.CALL_PHONE_REQUEST_CODE);
@@ -59,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                             mAction = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
                             startActivity(mAction);
                         }
-                    } else if (url.toLowerCase().contains("mailto:".toLowerCase())) {
+                    } else if (url.startsWith("mailto:")) {
                         mAction = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
                         startActivity(mAction);
                     } else {
@@ -75,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-        sharedPreferences.getBoolean("FIRST_REQUEST", true);
 
         if (requestCode == Constants.CALL_PHONE_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
