@@ -21,8 +21,8 @@ import androidx.core.app.ActivityCompat;
 
 import com.dki.hybridapptest.Interface.WebAppInterface;
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.constants.Constants;
-import com.dki.hybridapptest.util.GLog;
+import com.dki.hybridapptest.utils.Constants;
+import com.dki.hybridapptest.utils.GLog;
 
 public class MainActivity extends AppCompatActivity {
     private WebView mWebView;
@@ -36,9 +36,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        GLog.d("onCreate");
         mWebView = findViewById(R.id.webview);
         mWebSettings = mWebView.getSettings();
-        mWebURL = "file:///android_asset/sample.html";
+        mWebURL = Constants.WEB_VIEW_URL;
 
         mWebSettings.setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new WebAppInterface(this), "DKITec");
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 if (TextUtils.isEmpty(url)) {
                     GLog.d("url is null");
                 } else {
-                    if (url.toLowerCase().contains("tel".toLowerCase())) {
+                    if (url.toLowerCase().contains("tel:".toLowerCase())) {
                         if ((checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)) {
                             GLog.d("CALL_PHONE PERMISSION_DENIED 입니다.");
                             requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, Constants.CALL_PHONE_REQUEST_CODE);
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                             mAction = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
                             startActivity(mAction);
                         }
-                    } else if (url.toLowerCase().contains("mailto".toLowerCase())) {
+                    } else if (url.toLowerCase().contains("mailto:".toLowerCase())) {
                         mAction = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
                         startActivity(mAction);
                     } else {
@@ -74,19 +75,16 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+        sharedPreferences.getBoolean("FIRST_REQUEST", true);
 
-        if (sharedPreferences.getString("FIRST_RUN", "true") == "true") {
-            sharedPreferences.edit().putString("FIRST_RUN", "false").putString("FIRST_REQUEST", "true").apply();
-        }
-
-        if (Constants.CALL_PHONE_REQUEST_CODE == requestCode) {
+        if (requestCode == Constants.CALL_PHONE_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "권한 수락", Toast.LENGTH_SHORT).show();
             } else {
-                if (TextUtils.equals(sharedPreferences.getString("FIRST_REQUEST", "true"), "true")) {
+                if (sharedPreferences.getBoolean("FIRST_REQUEST", true)) {
                     GLog.d("첫 권한 요청 권한 미수락");
                     Toast.makeText(this, "권한 미수락", Toast.LENGTH_SHORT).show();
-                    sharedPreferences.edit().putString("FIRST_REQUEST", "false").apply();
+                    sharedPreferences.edit().putBoolean("FIRST_REQUEST", false).apply();
                 } else {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
                         Toast.makeText(this, "권한 미수락", Toast.LENGTH_SHORT).show();
