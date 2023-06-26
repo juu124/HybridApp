@@ -40,6 +40,7 @@ public class RetrofitApiManager {
                 .create();
 
         return new Retrofit.Builder()
+                .client(getUnsafeOkHttpClient().build()) //OkHttp 사용해서 로그 보기
                 .baseUrl("https://reqres.in/api/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();

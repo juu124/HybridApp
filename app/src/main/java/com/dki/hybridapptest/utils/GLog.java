@@ -21,9 +21,9 @@ public class GLog {
     private static final int LOG_WARN = 3;
     private static final int LOG_ERROR = 4;
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    public static boolean isRetrofitLog = true;
-    public static boolean isRequestHeaderLog = true;
-    public static boolean isResponseHeaderLog = true;
+    public static boolean isRetrofitLog = true; // retrofit log
+    public static boolean isRequestHeaderLog = false; // retrofit 요청 헤더 log
+    public static boolean isResponseHeaderLog = false; // retrofit 리스폰 헤더 log
 
     /**
      * 현재 디버그모드여부를 리턴
