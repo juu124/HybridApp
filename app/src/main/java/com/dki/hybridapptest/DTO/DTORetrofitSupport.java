@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class DTORetrofitSupport {
     @SerializedName("url")
-    String url;
+    private String url;
 
     @SerializedName("text")
-    String text;
+    private String text;
 
     public String getUrl() {
         return url;

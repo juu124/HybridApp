@@ -4,19 +4,19 @@ import com.google.gson.annotations.SerializedName;
 
 public class DTOdata {
     @SerializedName("id")
-    String id;
+    private String id;
 
     @SerializedName("email")
-    String email;
+    private String email;
 
     @SerializedName("first_name")
-    String first_Name;
+    private String first_Name;
 
     @SerializedName("last_name")
-    String last_Name;
+    private String last_Name;
 
     @SerializedName("avatar")
-    String avatar;
+    private String avatar;
 
     public String getId() {
         return id;

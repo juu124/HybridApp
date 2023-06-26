@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.dki.hybridapptest.DTO.DTOPostResult;
 import com.dki.hybridapptest.DTO.DTORetrofit;
 import com.dki.hybridapptest.Interface.WebAppInterface;
 import com.dki.hybridapptest.R;
@@ -51,7 +52,27 @@ public class MainActivity extends AppCompatActivity {
         mWebView.loadUrl(Constants.WEB_VIEW_URL);
 
         RetrofitApiService mRetrofitService = RetrofitApiManager.Build().create(RetrofitApiService.class);
-        Call<DTORetrofit> mCallDTO = mRetrofitService.listRepos("2");
+
+        Call<DTORetrofit> mCallDTO = mRetrofitService.Repos("2");
+        DTOPostResult dtoPostResult = new DTOPostResult("aaa", "leader");
+        Call<DTORetrofit> mCallPostDTO = mRetrofitService.callBody(dtoPostResult);
+
+        mCallPostDTO.enqueue(new Callback<DTORetrofit>() {
+            @Override
+            public void onResponse(Call<DTORetrofit> call, Response<DTORetrofit> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    GLog.d("성공 == " + response.body());
+                    GLog.d("getData == " + response.body().getData());
+                } else {
+                    GLog.d("오류 메세지 == " + response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DTORetrofit> call, Throwable t) {
+                GLog.d("오류 메세지 == " + t.toString());
+            }
+        });
 
         mCallDTO.enqueue(new Callback<DTORetrofit>() {
             @Override

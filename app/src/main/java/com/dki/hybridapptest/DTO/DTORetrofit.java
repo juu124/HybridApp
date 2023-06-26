@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class DTORetrofit {
     @SerializedName("data")
-    DTOdata data;
+    private DTOdata data;
 
     @SerializedName("support")
-    DTORetrofitSupport support;
+    private DTORetrofitSupport support;
 
     public DTOdata getData() {
         return data;
