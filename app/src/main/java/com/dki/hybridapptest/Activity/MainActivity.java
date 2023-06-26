@@ -19,10 +19,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.dki.hybridapptest.DTO.DTORetrofit;
 import com.dki.hybridapptest.Interface.WebAppInterface;
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.retrofit.RetrofitApiManager;
+import com.dki.hybridapptest.retrofit.RetrofitApiService;
 import com.dki.hybridapptest.utils.Constants;
 import com.dki.hybridapptest.utils.GLog;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private WebView mWebView;
@@ -42,6 +49,26 @@ public class MainActivity extends AppCompatActivity {
         mWebSettings.setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new WebAppInterface(this, mWebView), "DKITec");
         mWebView.loadUrl(Constants.WEB_VIEW_URL);
+
+        RetrofitApiService mRetrofitService = RetrofitApiManager.Build().create(RetrofitApiService.class);
+        Call<DTORetrofit> mCallDTO = mRetrofitService.listRepos("2");
+
+        mCallDTO.enqueue(new Callback<DTORetrofit>() {
+            @Override
+            public void onResponse(Call<DTORetrofit> call, Response<DTORetrofit> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    GLog.d("성공 == " + response.body());
+                    GLog.d("getFirstName == " + response.body().getData().getLastName());
+                } else {
+                    GLog.d("오류 메세지 == " + response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DTORetrofit> call, Throwable t) {
+                GLog.d("오류 메세지 == " + t.toString());
+            }
+        });
 
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
