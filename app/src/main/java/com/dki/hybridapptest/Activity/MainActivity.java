@@ -24,6 +24,7 @@ import com.dki.hybridapptest.Interface.WebAppInterface;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitApiService;
+import com.dki.hybridapptest.retrofit.RetrofitLogInterceptor;
 import com.dki.hybridapptest.utils.Constants;
 import com.dki.hybridapptest.utils.GLog;
 
@@ -58,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<DTORetrofit> call, Response<DTORetrofit> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     GLog.d("성공 == " + response.body());
-                    GLog.d("getFirstName == " + response.body().getData().getLastName());
+                    GLog.d("getLastName == " + response.body().getData().getLastName());
+                    RetrofitLogInterceptor.Logger.DEFAULT.log(response.body().toString());
                 } else {
                     GLog.d("오류 메세지 == " + response.errorBody().toString());
                 }
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 GLog.d("오류 메세지 == " + t.toString());
             }
         });
+
 
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {

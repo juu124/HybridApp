@@ -21,6 +21,9 @@ public class GLog {
     private static final int LOG_WARN = 3;
     private static final int LOG_ERROR = 4;
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    public static boolean isRetrofitLog = true;
+    public static boolean isRequestHeaderLog = true;
+    public static boolean isResponseHeaderLog = true;
 
     /**
      * 현재 디버그모드여부를 리턴
