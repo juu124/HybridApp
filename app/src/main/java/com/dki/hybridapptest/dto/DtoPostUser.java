@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.DTO;
+package com.dki.hybridapptest.dto;
 
 import com.google.gson.annotations.SerializedName;
 

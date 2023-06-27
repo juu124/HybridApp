@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.Activity;
+package com.dki.hybridapptest.activities;
 
 import android.os.Bundle;
 
