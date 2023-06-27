@@ -2,7 +2,7 @@ package com.dki.hybridapptest.DTO;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DTORetrofitSupport {
+public class DtoSupport extends DtoCommon {
     @SerializedName("url")
     private String url;
 

@@ -2,7 +2,7 @@ package com.dki.hybridapptest.DTO;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DTOdata {
+public class DtoUser extends DtoCommon {
     @SerializedName("id")
     private String id;
 

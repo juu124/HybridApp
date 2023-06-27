@@ -2,26 +2,26 @@ package com.dki.hybridapptest.DTO;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DTORetrofit {
+public class DtoRetrofit extends DtoCommon {
     @SerializedName("data")
-    private DTOdata data;
+    private DtoUser data;
 
     @SerializedName("support")
-    private DTORetrofitSupport support;
+    private DtoSupport support;
 
-    public DTOdata getData() {
+    public DtoUser getData() {
         return data;
     }
 
-    public void setData(DTOdata data) {
+    public void setData(DtoUser data) {
         this.data = data;
     }
 
-    public DTORetrofitSupport getSupport() {
+    public DtoSupport getSupport() {
         return support;
     }
 
-    public void setSupport(DTORetrofitSupport support) {
+    public void setSupport(DtoSupport support) {
         this.support = support;
     }
 }

@@ -1,7 +1,7 @@
 package com.dki.hybridapptest.retrofit;
 
-import com.dki.hybridapptest.DTO.DTOPostResult;
-import com.dki.hybridapptest.DTO.DTORetrofit;
+import com.dki.hybridapptest.DTO.DtoPostUser;
+import com.dki.hybridapptest.DTO.DtoRetrofit;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -11,8 +11,8 @@ import retrofit2.http.Path;
 
 public interface RetrofitApiService {
     @GET("users/{id}")
-    Call<DTORetrofit> Repos(@Path("id") String id);
+    Call<DtoRetrofit> getOneUserInfo(@Path("id") String id);
 
     @POST("users/")
-    Call<DTORetrofit> callBody(@Body DTOPostResult dtoPostResult);
+    Call<DtoPostUser> getUserInfo(@Body DtoPostUser dtoPostUser);
 }

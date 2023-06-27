@@ -1,5 +1,7 @@
 package com.dki.hybridapptest.retrofit;
 
+import com.dki.hybridapptest.DTO.DtoPostUser;
+import com.dki.hybridapptest.DTO.DtoRetrofit;
 import com.dki.hybridapptest.utils.GLog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +22,9 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -46,21 +51,34 @@ public class RetrofitApiManager {
                 .build();
     }
 
-    RetrofitLogInterceptor logging = new RetrofitLogInterceptor(new RetrofitLogInterceptor.Logger() {
-
-        @Override
-        public void log(String message) {
-            if (GLog.isRetrofitLog) {
-                try {
-                    // JSON Format이 아닌경우 Exception
-                    new JSONObject(message);
-                    GLog.d("RESPONSE JSON ->\n" + GLog.getPretty(message));
-                } catch (JSONException e) {
-                    GLog.d(message);
-                }
+    public void requestGetUser(RetrofitInterface retrofitInterface) {
+        Build().create(RetrofitApiService.class).getOneUserInfo("2").enqueue(new Callback<DtoRetrofit>() {
+            @Override
+            public void onResponse(Call<DtoRetrofit> call, Response<DtoRetrofit> response) {
+                retrofitInterface.onResponse(response);
             }
-        }
-    });
+
+            @Override
+            public void onFailure(Call<DtoRetrofit> call, Throwable t) {
+                retrofitInterface.onFailure(t);
+            }
+        });
+    }
+
+    public void requestPostUser(RetrofitInterface retrofitInterface) {
+        DtoPostUser dtoPostUser = new DtoPostUser("aaa", "leader");
+        Build().create(RetrofitApiService.class).getUserInfo(dtoPostUser).enqueue(new Callback<DtoPostUser>() {
+            @Override
+            public void onResponse(Call<DtoPostUser> call, Response<DtoPostUser> response) {
+                retrofitInterface.onResponse(response);
+            }
+
+            @Override
+            public void onFailure(Call<DtoPostUser> call, Throwable t) {
+                retrofitInterface.onFailure(t);
+            }
+        });
+    }
 
     public static OkHttpClient.Builder getUnsafeOkHttpClient() {
         try {
