@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.DTO;
+package com.dki.hybridapptest.dto;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -10,13 +10,21 @@ public class DtoUser extends DtoCommon {
     private String email;
 
     @SerializedName("first_name")
-    private String first_Name;
+    private String firstName;
 
     @SerializedName("last_name")
-    private String last_Name;
+    private String lastName;
 
     @SerializedName("avatar")
     private String avatar;
+
+    public DtoUser(String id, String email, String firstName, String lastName, String avatar) {
+        this.id = id;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.avatar = avatar;
+    }
 
     public String getId() {
         return id;
@@ -35,19 +43,19 @@ public class DtoUser extends DtoCommon {
     }
 
     public String getFirstName() {
-        return first_Name;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-        this.first_Name = firstName;
+        this.firstName = firstName;
     }
 
     public String getLastName() {
-        return last_Name;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-        this.last_Name = lastName;
+        this.lastName = lastName;
     }
 
     public String getAvatar() {

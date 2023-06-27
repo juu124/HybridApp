@@ -1,7 +1,7 @@
 package com.dki.hybridapptest.retrofit;
 
-import com.dki.hybridapptest.DTO.DtoPostUser;
-import com.dki.hybridapptest.DTO.DtoRetrofit;
+import com.dki.hybridapptest.dto.DtoJson;
+import com.dki.hybridapptest.dto.DtoPostUser;
 import com.dki.hybridapptest.utils.GLog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -51,15 +51,29 @@ public class RetrofitApiManager {
                 .build();
     }
 
-    public void requestGetUser(RetrofitInterface retrofitInterface) {
-        Build().create(RetrofitApiService.class).getOneUserInfo("2").enqueue(new Callback<DtoRetrofit>() {
+    public void requestUserInfoList(RetrofitInterface retrofitInterface) {
+        Build().create(RetrofitApiService.class).getUserInfoList().enqueue(new Callback<DtoJson>() {
             @Override
-            public void onResponse(Call<DtoRetrofit> call, Response<DtoRetrofit> response) {
+            public void onResponse(Call<DtoJson> call, Response<DtoJson> response) {
                 retrofitInterface.onResponse(response);
             }
 
             @Override
-            public void onFailure(Call<DtoRetrofit> call, Throwable t) {
+            public void onFailure(Call<DtoJson> call, Throwable t) {
+                retrofitInterface.onFailure(t);
+            }
+        });
+    }
+
+    public void requestGetUser(RetrofitInterface retrofitInterface) {
+        Build().create(RetrofitApiService.class).getOneUserInfo("2").enqueue(new Callback<DtoJson>() {
+            @Override
+            public void onResponse(Call<DtoJson> call, Response<DtoJson> response) {
+                retrofitInterface.onResponse(response);
+            }
+
+            @Override
+            public void onFailure(Call<DtoJson> call, Throwable t) {
                 retrofitInterface.onFailure(t);
             }
         });
