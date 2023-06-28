@@ -11,18 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.dto.DtoUser;
+import com.dki.hybridapptest.dto.UserResponse;
 import com.dki.hybridapptest.utils.GLog;
 
 import java.util.ArrayList;
 
 public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.ViewHolder> {
-    ArrayList<DtoUser> mArrUser = new ArrayList<>();
+    ArrayList<UserResponse> mArrUser = new ArrayList<>();
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView userAvatar;
-        //        RelativeLayout userAvatar;
-        TextView userId, userFirstName, userLastName, userEmail;
+        TextView userId;
+        TextView userFirstName;
+        TextView userLastName;
+        TextView userEmail;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -57,8 +59,7 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
         return mArrUser.size();
     }
 
-    public void setArrUser(ArrayList<DtoUser> arrUser) {
+    public void setArrUser(ArrayList<UserResponse> arrUser) {
         mArrUser.addAll(arrUser);
-        GLog.d("사이즈" + mArrUser.size());
     }
 }
