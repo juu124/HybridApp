@@ -21,17 +21,17 @@ import java.util.ArrayList;
 import retrofit2.Response;
 
 public class UserListActivity extends AppCompatActivity {
-    private RecyclerView rvUserList;
+    private RecyclerView userRecyclerView;
     private Button btnUserListMore;
     private RvUserListAdapter rvUserListAdapter;
-    private ArrayList<UserResponse> mArrUser = new ArrayList<>();
+    private ArrayList<UserResponse> mUserList = new ArrayList<>();
     private UsersDetail usersDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_list);
-        rvUserList = findViewById(R.id.rv_user_list);
+        userRecyclerView = findViewById(R.id.rv_user_list);
         btnUserListMore = findViewById(R.id.btn_user_list_more);
 
         RetrofitApiManager.getInstance().requestUserInfoList(new RetrofitInterface() {
@@ -40,24 +40,24 @@ public class UserListActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     GLog.d("response Successful == " + response.body());
                     usersDetail = (UsersDetail) response.body();
-                    mArrUser = usersDetail.getArrDtoUser();
+                    mUserList = usersDetail.getArrDtoUser();
 
 //                     for문 처리 (for each)
 //                    for (UserResponse mArrUser2 : usersDetail.getArrDtoUser()) {
-//                        mArrUser.add(mArrUser2);
+//                        mUserList.add(mArrUser2);
 //                    }
 
                     // for문 처리 (for i)
-//                    for (int i = 0; i < a.getArrDtoUser().size(); i++) {
+//                    for (int i = 0; i < usersDetail.getArrDtoUser().size(); i++) {
 //                        DtoUser mUser = new DtoUser(
-//                                a.getArrDtoUser().get(i).getId(),
-//                                a.getArrDtoUser().get(i).getEmail(),
-//                                a.getArrDtoUser().get(i).getFirstName(),
-//                                a.getArrDtoUser().get(i).getLastName(),
-//                                a.getArrDtoUser().get(i).getAvatar());
-//                        mArrUser.add(mUser);
+//                                usersDetail.getArrDtoUser().get(i).getId(),
+//                                usersDetail.getArrDtoUser().get(i).getEmail(),
+//                                usersDetail.getArrDtoUser().get(i).getFirstName(),
+//                                usersDetail.getArrDtoUser().get(i).getLastName(),
+//                                usersDetail.getArrDtoUser().get(i).getAvatar());
+//                        mUserList.add(mUser);
 //                    }
-                    rvUserListAdapter.setArrUser(mArrUser);
+                    rvUserListAdapter.addArrUser(mUserList);
                     rvUserListAdapter.notifyDataSetChanged();
 
                     if (usersDetail.getPage() >= usersDetail.getTotalPages()) {
@@ -84,9 +84,9 @@ public class UserListActivity extends AppCompatActivity {
                         if (response.isSuccessful() && response.body() != null) {
                             usersDetail = (UsersDetail) response.body();
                             if (usersDetail.getPage() <= usersDetail.getTotalPages()) {
-                                mArrUser = usersDetail.getArrDtoUser();
+                                mUserList = usersDetail.getArrDtoUser();
                             }
-                            rvUserListAdapter.setArrUser(mArrUser);
+                            rvUserListAdapter.addArrUser(mUserList);
                             rvUserListAdapter.notifyDataSetChanged();
                             if (usersDetail.getPage() >= usersDetail.getTotalPages()) {
                                 btnUserListMore.setVisibility(View.GONE);
@@ -104,8 +104,8 @@ public class UserListActivity extends AppCompatActivity {
             }
         });
 
-        rvUserList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        userRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rvUserListAdapter = new RvUserListAdapter();
-        rvUserList.setAdapter(rvUserListAdapter);
+        userRecyclerView.setAdapter(rvUserListAdapter);
     }
 }

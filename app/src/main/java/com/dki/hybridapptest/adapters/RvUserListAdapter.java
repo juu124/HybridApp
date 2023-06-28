@@ -17,7 +17,7 @@ import com.dki.hybridapptest.utils.GLog;
 import java.util.ArrayList;
 
 public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.ViewHolder> {
-    ArrayList<UserResponse> mArrUser = new ArrayList<>();
+    ArrayList<UserResponse> mUserList = new ArrayList<>();
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView userAvatar;
@@ -45,21 +45,21 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         GLog.d("onBindViewHolder");
-        holder.userId.setText(mArrUser.get(position).getId());
+        holder.userId.setText(mUserList.get(position).getId());
         Glide.with(holder.itemView)
-                .load(mArrUser.get(position).getAvatar())
+                .load(mUserList.get(position).getAvatar())
                 .into(holder.userAvatar);
-        holder.userFirstName.setText(mArrUser.get(position).getFirstName());
-        holder.userLastName.setText(mArrUser.get(position).getLastName());
-        holder.userEmail.setText(mArrUser.get(position).getEmail());
+        holder.userFirstName.setText(mUserList.get(position).getFirstName());
+        holder.userLastName.setText(mUserList.get(position).getLastName());
+        holder.userEmail.setText(mUserList.get(position).getEmail());
     }
 
     @Override
     public int getItemCount() {
-        return mArrUser.size();
+        return mUserList.size();
     }
 
-    public void setArrUser(ArrayList<UserResponse> arrUser) {
-        mArrUser.addAll(arrUser);
+    public void addArrUser(ArrayList<UserResponse> UserList) {
+        mUserList.addAll(UserList);
     }
 }
