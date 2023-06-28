@@ -1,44 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
-    android:layout_marginBottom="10dp"
+    android:layout_height="wrap_content"
     android:orientation="horizontal">
 
     <ImageView
         android:id="@+id/item_user_avatar"
         android:layout_width="100dp"
-        android:layout_height="100dp" />
+        android:layout_height="100dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="5dp"
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:id="@+id/item_tv_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/item_user_id"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/item_id_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="id" />
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/item_user_email"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="email" />
+            <TextView
+                android:id="@+id/item_user_id_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="id : "
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/item_user_first_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="first_name" />
+            <TextView
+                android:id="@+id/item_user_id_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="id" />
 
-        <TextView
-            android:id="@+id/item_user_last_name"
-            android:layout_width="wrap_content"
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_email_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="last_name" />
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/item_user_email_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="email : "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/item_user_email_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="email" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/item_uesr_name_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/item_user_name_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="name : "
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/item_user_first_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="first" />
+
+            <TextView
+                android:id="@+id/item_user_last_name_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="last" />
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
