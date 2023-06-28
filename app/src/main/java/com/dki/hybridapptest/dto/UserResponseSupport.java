@@ -2,7 +2,7 @@ package com.dki.hybridapptest.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DtoSupport extends DtoCommon {
+public class UserResponseSupport extends UserCommon {
     @SerializedName("url")
     private String url;
 

@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class DtoJson {
+public class UsersDetail {
     @SerializedName("page")
     private int page;
 
@@ -18,10 +18,10 @@ public class DtoJson {
     private int totalPages;
 
     @SerializedName("data")
-    private ArrayList<DtoUser> arrDtoUser;
+    private ArrayList<UserResponse> arrDtoUser;
 
     @SerializedName("support")
-    private DtoSupport dtoSupport;
+    private UserResponseSupport dtoSupport;
 
     public int getPage() {
         return page;
@@ -55,19 +55,19 @@ public class DtoJson {
         this.totalPages = totalPages;
     }
 
-    public ArrayList<DtoUser> getArrDtoUser() {
+    public ArrayList<UserResponse> getArrDtoUser() {
         return arrDtoUser;
     }
 
-    public void setArrDtoUser(ArrayList<DtoUser> arrDtoUser) {
+    public void setArrDtoUser(ArrayList<UserResponse> arrDtoUser) {
         this.arrDtoUser = arrDtoUser;
     }
 
-    public DtoSupport getDtoSupport() {
+    public UserResponseSupport getDtoSupport() {
         return dtoSupport;
     }
 
-    public void setDtoSupport(DtoSupport dtoSupport) {
+    public void setDtoSupport(UserResponseSupport dtoSupport) {
         this.dtoSupport = dtoSupport;
     }
 }

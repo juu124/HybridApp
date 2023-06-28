@@ -2,7 +2,7 @@ package com.dki.hybridapptest.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DtoPostUser extends DtoCommon {
+public class UserCreate extends UserCommon {
     @SerializedName("name")
     private String name;
 
@@ -10,12 +10,12 @@ public class DtoPostUser extends DtoCommon {
     private String job;
 
     @SerializedName("id")
-    private String id;
+    private String id = null;
 
     @SerializedName("createdAt")
     private String createdAt;
 
-    public DtoPostUser(String mName, String mJob) {
+    public UserCreate(String mName, String mJob) {
         name = mName;
         job = mJob;
     }

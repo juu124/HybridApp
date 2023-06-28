@@ -1,5 +1,5 @@
 package com.dki.hybridapptest.dto;
 
-public class DtoCommon {
+public class UserCommon {
     // 공통 DTO
 }

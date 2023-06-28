@@ -2,7 +2,7 @@ package com.dki.hybridapptest.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DtoUser extends DtoCommon {
+public class UserResponse extends UserCommon {
     @SerializedName("id")
     private String id;
 
@@ -18,13 +18,13 @@ public class DtoUser extends DtoCommon {
     @SerializedName("avatar")
     private String avatar;
 
-    public DtoUser(String id, String email, String firstName, String lastName, String avatar) {
-        this.id = id;
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.avatar = avatar;
-    }
+//    public UserResponse(String id, String email, String firstName, String lastName, String avatar) {
+//        this.id = id;
+//        this.email = email;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.avatar = avatar;
+//    }
 
     public String getId() {
         return id;
