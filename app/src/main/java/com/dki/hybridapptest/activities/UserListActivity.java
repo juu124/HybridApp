@@ -43,9 +43,9 @@ public class UserListActivity extends AppCompatActivity {
                     mArrUser = usersDetail.getArrDtoUser();
 
 //                     for문 처리 (for each)
-                    for (UserResponse mArrUser2 : usersDetail.getArrDtoUser()) {
-                        mArrUser.add(mArrUser2);
-                    }
+//                    for (UserResponse mArrUser2 : usersDetail.getArrDtoUser()) {
+//                        mArrUser.add(mArrUser2);
+//                    }
 
                     // for문 처리 (for i)
 //                    for (int i = 0; i < a.getArrDtoUser().size(); i++) {
