@@ -1,27 +1,25 @@
 package com.dki.hybridapptest.Interface;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.activities.HelloWorldActivity;
 import com.dki.hybridapptest.activities.UserListActivity;
+import com.dki.hybridapptest.dialog.InputDialog;
 import com.dki.hybridapptest.utils.GLog;
 
 public class WebAppInterface {
     private Context mContext;
     private WebView mWebView;
     private Intent mIntent;
+    private InputDialog inputDialog;
 
     public WebAppInterface(Context context, WebView webView) {
         mContext = context;
@@ -54,35 +52,24 @@ public class WebAppInterface {
 
     @JavascriptInterface
     public void showDialog() {
-        Dialog dialog = new Dialog(mContext);
-        dialog.setContentView(R.layout.dialog_edit_view);
-        EditText dialogEditText = dialog.findViewById(R.id.dialog_edit);
-        Button dialogNoBtn = dialog.findViewById(R.id.noButton);
-        ;
-        Button dialogYesBtn = dialog.findViewById(R.id.yesButton);
-        ;
-
-        dialogNoBtn.setOnClickListener(new View.OnClickListener() {
+        inputDialog = new InputDialog(mContext, new InputDialogClickListener() {
             @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialogYesBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            public void onInputPositiveClick(String text) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        String text = dialogEditText.getText().toString();
+                        GLog.d("text =======" + text);
                         mWebView.loadUrl("javascript:nativeToWebWithMsg('" + text + "')");
-                        dialog.dismiss();
                     }
                 });
             }
+
+            @Override
+            public void onInputNegativeClick() {
+
+            }
         });
-        dialog.show();
+        inputDialog.show();
     }
 
     @JavascriptInterface
