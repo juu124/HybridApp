@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.dialog.UserDialog;
 import com.dki.hybridapptest.dto.UserResponse;
 import com.dki.hybridapptest.utils.GLog;
 
@@ -31,54 +32,7 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
         private TextView userEmail;
 
         // 다이얼로그
-//        private Dialog dialog;
-//        private TextView userInfo;
-//        private Button dialogNoBtn;
-//        private Button dialogYesBtn;
-//        private String text = null;
-//
-//        public void userInfoSetting(String id, String email, String firstName, String lastName) {
-//            text = "Id : " + id + "\n"
-//                    + "Email : " + email + "\n"
-//                    + "Name : " + firstName + " " + lastName;
-//            GLog.d("text 잘 나왔나" + text);
-//        }
-//
-//        public void showDialog() {
-//            dialog.show();
-//            userInfo = dialog.findViewById(R.id.user_info);
-//            dialogNoBtn = dialog.findViewById(R.id.noButton);
-//            dialogYesBtn = dialog.findViewById(R.id.yesButton);
-//
-//            RetrofitApiManager.getInstance().requestOneUserInfo((getAdapterPosition() + 1) + "", new RetrofitInterface() {
-//                @Override
-//                public void onResponse(Response response) {
-//                    GLog.d("onResponse");
-//                    UserDataSupport userResponse = (UserDataSupport) response.body();
-//                    userInfoSetting(userResponse.getDtoUser().getId(), userResponse.getDtoUser().getEmail(), userResponse.getDtoUser().getFirstName(), userResponse.getDtoUser().getLastName());
-//                    userInfo.setText(text);
-//                }
-//
-//                @Override
-//                public void onFailure(Throwable t) {
-//                    GLog.d("오류 메세지 == " + t.toString());
-//                }
-//            });
-//
-//            dialogNoBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    dialog.dismiss();
-//                }
-//            });
-//
-//            dialogYesBtn.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    dialog.dismiss();
-//                }
-//            });
-//        }
+        private UserDialog userDialog;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -91,17 +45,12 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
             userEmailType = itemView.findViewById(R.id.item_user_email_type);
             userEmail = itemView.findViewById(R.id.item_user_email_tv);
 
-//            dialog = new Dialog(itemView.getContext());
-//            dialog.setContentView(R.layout.dialog_view);
-//            customDialog = new UserDialog(itemView.getContext());
-
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     GLog.d("아이템을 클릭했습니다.");
-                    GLog.d("숫자 == " + getAdapterPosition());
-//                    showDialog();
-//                    customDialog.showDialog(getAdapterPosition());
+                    userDialog = new UserDialog(itemView.getContext(), getAdapterPosition());
+                    userDialog.show();
                 }
             });
         }
