@@ -1,6 +1,7 @@
 package com.dki.hybridapptest.retrofit;
 
 import com.dki.hybridapptest.dto.UserCreate;
+import com.dki.hybridapptest.dto.UserDataSupport;
 import com.dki.hybridapptest.dto.UsersDetail;
 import com.dki.hybridapptest.utils.GLog;
 import com.google.gson.Gson;
@@ -51,6 +52,34 @@ public class RetrofitApiManager {
                 .build();
     }
 
+    public void requestOneUserInfo(String idNum, RetrofitInterface retrofitInterface) {
+        Build().create(RetrofitApiService.class).getOneUser(idNum).enqueue(new Callback<UserDataSupport>() {
+            @Override
+            public void onResponse(Call<UserDataSupport> call, Response<UserDataSupport> response) {
+                retrofitInterface.onResponse(response);
+            }
+
+            @Override
+            public void onFailure(Call<UserDataSupport> call, Throwable t) {
+                retrofitInterface.onFailure(t);
+            }
+        });
+    }
+
+    public void requestGetUser(RetrofitInterface retrofitInterface) {
+        Build().create(RetrofitApiService.class).getOneUserInfo("2").enqueue(new Callback<UsersDetail>() {
+            @Override
+            public void onResponse(Call<UsersDetail> call, Response<UsersDetail> response) {
+                retrofitInterface.onResponse(response);
+            }
+
+            @Override
+            public void onFailure(Call<UsersDetail> call, Throwable t) {
+                retrofitInterface.onFailure(t);
+            }
+        });
+    }
+
     public void requestUserInfoList(RetrofitInterface retrofitInterface) {
         Build().create(RetrofitApiService.class).getUserInfoList().enqueue(new Callback<UsersDetail>() {
             @Override
@@ -65,8 +94,8 @@ public class RetrofitApiManager {
         });
     }
 
-    public void requestGetUser(RetrofitInterface retrofitInterface) {
-        Build().create(RetrofitApiService.class).getOneUserInfo("2").enqueue(new Callback<UsersDetail>() {
+    public void requestUserNextList(int page, RetrofitInterface retrofitInterface) {
+        Build().create(RetrofitApiService.class).getUserNextInfo(page).enqueue(new Callback<UsersDetail>() {
             @Override
             public void onResponse(Call<UsersDetail> call, Response<UsersDetail> response) {
                 retrofitInterface.onResponse(response);
@@ -89,20 +118,6 @@ public class RetrofitApiManager {
 
             @Override
             public void onFailure(Call<UserCreate> call, Throwable t) {
-                retrofitInterface.onFailure(t);
-            }
-        });
-    }
-
-    public void requestUserNextList(int page, RetrofitInterface retrofitInterface) {
-        Build().create(RetrofitApiService.class).getUserNextInfo(page).enqueue(new Callback<UsersDetail>() {
-            @Override
-            public void onResponse(Call<UsersDetail> call, Response<UsersDetail> response) {
-                retrofitInterface.onResponse(response);
-            }
-
-            @Override
-            public void onFailure(Call<UsersDetail> call, Throwable t) {
                 retrofitInterface.onFailure(t);
             }
         });

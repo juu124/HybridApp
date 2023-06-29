@@ -13,37 +13,64 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.dto.UserDataSupport;
 import com.dki.hybridapptest.dto.UserResponse;
+import com.dki.hybridapptest.retrofit.RetrofitApiManager;
+import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.utils.GLog;
 
 import java.util.ArrayList;
 
+import retrofit2.Response;
+
 public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.ViewHolder> {
     private ArrayList<UserResponse> mUserList = new ArrayList<>();
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        Dialog dialog;
-        ImageView userAvatar;
-        TextView userIdType;
-        TextView userId;
-        TextView userName;
-        TextView userFirstName;
-        TextView userLastName;
-        TextView userEmailType;
-        TextView userEmail;
+        // 뷰 홀더
+        private ImageView userAvatar;
+        private TextView userIdType;
+        private TextView userId;
+        private TextView userName;
+        private TextView userFirstName;
+        private TextView userLastName;
+        private TextView userEmailType;
+        private TextView userEmail;
+
+        // 다이얼로그
+        private Dialog dialog;
+        private TextView userInfo;
+        private Button dialogNoBtn;
+        private Button dialogYesBtn;
+        private String text = null;
+
+        public void userInfoSetting(String id, String email, String firstName, String lastName) {
+            text = "Id : " + id + "\n"
+                    + "Email : " + email + "\n"
+                    + "Name : " + firstName + " " + lastName;
+            GLog.d("text 잘 나왔나" + text);
+        }
 
         public void showDialog() {
             dialog.show();
-            TextView userInfo;
-            Button dialogNoBtn;
-            Button dialogYesBtn;
-
             userInfo = dialog.findViewById(R.id.user_info);
             dialogNoBtn = dialog.findViewById(R.id.noButton);
             dialogYesBtn = dialog.findViewById(R.id.yesButton);
 
-//            userInfo.setText(RetrofitApiManager.getInstance().requestGetUser(););
+            RetrofitApiManager.getInstance().requestOneUserInfo((getAdapterPosition() + 1) + "", new RetrofitInterface() {
+                @Override
+                public void onResponse(Response response) {
+                    GLog.d("onResponse");
+                    UserDataSupport userResponse = (UserDataSupport) response.body();
+                    userInfoSetting(userResponse.getDtoUser().getId(), userResponse.getDtoUser().getEmail(), userResponse.getDtoUser().getFirstName(), userResponse.getDtoUser().getLastName());
+                    userInfo.setText(text);
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    GLog.d("오류 메세지 == " + t.toString());
+                }
+            });
 
             dialogNoBtn.setOnClickListener(new View.OnClickListener() {
                 @Override

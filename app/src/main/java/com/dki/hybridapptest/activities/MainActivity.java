@@ -47,19 +47,19 @@ public class MainActivity extends AppCompatActivity {
         mWebView.addJavascriptInterface(new WebAppInterface(this, mWebView), "DKITec");
         mWebView.loadUrl(Constants.WEB_VIEW_URL);
 
-//        RetrofitApiManager.getInstance().requestGetUser(new RetrofitInterface() {
-//            @Override
-//            public void onResponse(Response response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    GLog.d("성공 == " + response.body());
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable t) {
-//                GLog.d("오류 메세지 == " + t.toString());
-//            }
-//        });
+        RetrofitApiManager.getInstance().requestGetUser(new RetrofitInterface() {
+            @Override
+            public void onResponse(Response response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    GLog.d("성공 == " + response.body());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                GLog.d("오류 메세지 == " + t.toString());
+            }
+        });
 
         RetrofitApiManager.getInstance().requestPostUser(new RetrofitInterface() {
             @Override
