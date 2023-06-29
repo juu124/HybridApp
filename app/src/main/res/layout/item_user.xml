@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal">
 
     <ImageView
@@ -37,7 +38,7 @@
                 android:id="@+id/item_user_id_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="id" />
+                tools:text="id" />
 
         </LinearLayout>
 
@@ -59,7 +60,7 @@
                 android:id="@+id/item_user_email_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="email" />
+                tools:text="email" />
 
         </LinearLayout>
 
@@ -81,13 +82,13 @@
                 android:id="@+id/item_user_first_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="first" />
+                tools:text="first" />
 
             <TextView
                 android:id="@+id/item_user_last_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="last" />
+                tools:text="last" />
 
         </LinearLayout>
     </LinearLayout>
