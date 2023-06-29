@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
-public class UsersDetail {
+public class UsersList {
     @SerializedName("page")
     private int page;
 

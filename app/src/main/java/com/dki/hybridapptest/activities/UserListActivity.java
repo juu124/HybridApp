@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.adapters.RvUserListAdapter;
 import com.dki.hybridapptest.dto.UserResponse;
-import com.dki.hybridapptest.dto.UsersDetail;
+import com.dki.hybridapptest.dto.UsersList;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.utils.GLog;
@@ -25,7 +25,7 @@ public class UserListActivity extends AppCompatActivity {
     private Button btnUserListMore;
     private RvUserListAdapter rvUserListAdapter;
     private ArrayList<UserResponse> mUserList = new ArrayList<>();
-    private UsersDetail usersDetail;
+    private UsersList usersDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class UserListActivity extends AppCompatActivity {
             public void onResponse(Response response) {
                 if (response.isSuccessful() && response.body() != null) {
                     GLog.d("response Successful == " + response.body());
-                    usersDetail = (UsersDetail) response.body();
+                    usersDetail = (UsersList) response.body();
                     mUserList = usersDetail.getArrDtoUser();
 
 //                     for문 처리 (for each)
@@ -82,7 +82,7 @@ public class UserListActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Response response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            usersDetail = (UsersDetail) response.body();
+                            usersDetail = (UsersList) response.body();
                             if (usersDetail.getPage() <= usersDetail.getTotalPages()) {
                                 mUserList = usersDetail.getArrDtoUser();
                             }
