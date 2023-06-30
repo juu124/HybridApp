@@ -11,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.dto.UserDataSupport;
+import com.dki.hybridapptest.dto.UserResponse;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.utils.GLog;
@@ -46,7 +48,7 @@ public class UserDialog extends Dialog {
 
         userInfo = findViewById(R.id.user_info);
         dialogYesBtn = findViewById(R.id.yesButton);
-        mProgressBar = findViewById(R.id.dialog_progressbar);
+        mProgressBar = findViewById(R.id.indeterminate_progressbar);
 
         mProgressBar.setIndeterminate(true);
         mProgressBar.setVisibility(View.VISIBLE);
@@ -54,21 +56,20 @@ public class UserDialog extends Dialog {
         RetrofitApiManager.getInstance().requestOneUserInfo((mPosition + 1) + "", new RetrofitInterface() {
             @Override
             public void onResponse(Response response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    GLog.d("onResponse");
-//                    UserDataSupport userResponse = (UserDataSupport) response.body();
-//                    UserResponse user = userResponse.getDtoUser();
-//                    userInfoSetting(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
-//                    if (userResponse.getDtoUser() != null) {
-//                        mProgressBar.setVisibility(View.GONE);
-//                        userInfo.setText(text);
-//                        dialogYesBtn.setEnabled(true);
-//                        GLog.d("text 있음");
-//                    } else {
-////                        progressBarText.setText("오류 발생" + response.errorBody().toString());
-//                        GLog.d("text 없음");
-//                    }
-//                }
+                if (response.isSuccessful() && response.body() != null) {
+                    GLog.d("onResponse");
+                    UserDataSupport userResponse = (UserDataSupport) response.body();
+                    UserResponse user = userResponse.getDtoUser();
+                    userInfoSetting(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
+                    if (userResponse.getDtoUser() != null) {
+                        mProgressBar.setVisibility(View.GONE);
+                        userInfo.setText(text);
+                        dialogYesBtn.setEnabled(true);
+                        GLog.d("text 있음");
+                    } else {
+                        GLog.d("text 없음" + response.errorBody());
+                    }
+                }
             }
 
             @Override

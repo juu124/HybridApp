@@ -3,6 +3,7 @@ package com.dki.hybridapptest.activities;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -27,6 +28,9 @@ public class UserListActivity extends AppCompatActivity {
     private RvUserListAdapter rvUserListAdapter;
     private ArrayList<UserResponse> mUserList = new ArrayList<>();
     private UsersList usersDetail;
+
+    // 프로그래스 바
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +82,12 @@ public class UserListActivity extends AppCompatActivity {
             }
         });
 
+        mProgressBar = findViewById(R.id.indeterminate_progressbar);
+        mProgressBar.setVisibility(View.GONE);
         btnUserListMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mProgressBar.setVisibility(View.VISIBLE);
                 GLog.d("btnUserListMore onClick");
                 RetrofitApiManager.getInstance().requestUserNextList(usersDetail.getPage() + 1, new RetrofitInterface() {
                     @Override
@@ -92,6 +99,7 @@ public class UserListActivity extends AppCompatActivity {
                             }
                             rvUserListAdapter.addArrUser(mUserList);
                             rvUserListAdapter.notifyDataSetChanged();
+                            mProgressBar.setVisibility(View.GONE);
                             if (usersDetail.getPage() >= usersDetail.getTotalPages()) {
                                 btnUserListMore.setVisibility(View.GONE);
                             } else {

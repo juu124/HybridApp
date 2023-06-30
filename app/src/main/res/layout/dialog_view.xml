@@ -13,12 +13,11 @@
         android:text="유저 정보"
         android:textStyle="bold" />
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="10dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginVertical="10dp">
 
         <include
             android:id="@+id/progressbar"
@@ -32,51 +31,14 @@
             android:id="@+id/user_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             android:padding="10dp"
             tools:text="유저 정보" />
 
     </RelativeLayout>
-
-
-    <!--    <RelativeLayout-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content">-->
-
-    <!--        <ProgressBar-->
-    <!--            android:id="@+id/progressBar"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="50dp"-->
-    <!--            android:layout_marginLeft="10dp" />-->
-
-
-    <!--        <TextView-->
-    <!--            android:id="@+id/progressBar_text"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_margin="5dp"-->
-    <!--            android:layout_toRightOf="@+id/progressBar"-->
-    <!--            android:padding="10dp"-->
-    <!--            tools:text="정보 로딩중" />-->
-
-    <!--    </RelativeLayout>-->
-
-
-    <!--        <ProgressBar-->
-    <!--            android:id="@+id/progressBar"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="50dp"-->
-    <!--            android:layout_marginLeft="10dp" />-->
-
-
-    <!--        <TextView-->
-    <!--            android:id="@+id/progressBar_text"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            android:layout_margin="5dp"-->
-    <!--            android:layout_toRightOf="@+id/progressBar"-->
-    <!--            android:padding="10dp"-->
-    <!--            tools:text="정보 로딩중" />-->
 
     <Button
         android:id="@+id/yesButton"

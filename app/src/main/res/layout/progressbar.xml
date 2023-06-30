@@ -6,13 +6,11 @@
     tools:showIn="@layout/dialog_view">
 
     <ProgressBar
-        android:id="@+id/dialog_progressbar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="76dp"
-        android:layout_height="76dp"
+        android:id="@+id/indeterminate_progressbar"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_gravity="center"
-        android:progressBackgroundTint="#FBE7C6"
-        android:progressDrawable="@drawable/circle_progressbar"
-        android:progressTint="#edbf41" />
+        android:indeterminateDrawable="@drawable/circle_progressbar"
+        android:indeterminateDuration="1000" />
 
 </LinearLayout>
