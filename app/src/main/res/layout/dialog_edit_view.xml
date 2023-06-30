@@ -38,7 +38,7 @@
             android:textSize="14sp" />
 
         <Button
-            android:id="@+id/yesButton"
+            android:id="@+id/dialog_user_info_yesButton"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"

@@ -46,8 +46,8 @@ public class UserDialog extends Dialog {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_view);
 
-        userInfo = findViewById(R.id.user_info);
-        dialogYesBtn = findViewById(R.id.yesButton);
+        userInfo = findViewById(R.id.dialog_user_info);
+        dialogYesBtn = findViewById(R.id.dialog_user_info_yesButton);
         mProgressBar = findViewById(R.id.indeterminate_progressbar);
 
         mProgressBar.setIndeterminate(true);

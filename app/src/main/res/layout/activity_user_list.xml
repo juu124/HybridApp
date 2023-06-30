@@ -14,8 +14,8 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
-        android:id="@+id/progressbar"
-        layout="@layout/progressbar"
+        android:id="@+id/dialog_user_info_progressbar"
+        layout="@layout/indeterminate_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

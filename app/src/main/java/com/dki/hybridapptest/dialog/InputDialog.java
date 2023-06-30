@@ -33,7 +33,7 @@ public class InputDialog extends Dialog {
         setContentView(R.layout.dialog_edit_view);
         dialogEditText = findViewById(R.id.dialog_edit);
         dialogNoBtn = findViewById(R.id.noButton);
-        dialogYesBtn = findViewById(R.id.yesButton);
+        dialogYesBtn = findViewById(R.id.dialog_user_info_yesButton);
 
         dialogYesBtn.setOnClickListener(new View.OnClickListener() {
             @Override

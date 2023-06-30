@@ -13,84 +13,125 @@
         android:layout_marginVertical="5dp"
         android:scaleType="centerCrop" />
 
-    <LinearLayout
-        android:id="@+id/item_tv_layout"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:background="#ebebeb"
+        android:gravity="center_vertical">
 
-        <LinearLayout
-            android:id="@+id/item_id_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/item_user_id_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="id : "
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="0.1"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="id"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/item_user_id_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="#ffffff"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
                 tools:text="id" />
 
-        </LinearLayout>
+        </TableRow>
 
-        <LinearLayout
-            android:id="@+id/item_email_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/item_user_email_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="email : "
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="0.1"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="email"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/item_user_email_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="#ffffff"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
                 tools:text="email" />
 
-        </LinearLayout>
+        </TableRow>
 
-
-        <LinearLayout
-            android:id="@+id/item_uesr_name_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/item_user_name_type"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="name : "
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="0.15"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="name"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/item_user_first_name_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="0.15"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="first"
+                android:textColor="#c2c2c2" />
+
+            <TextView
                 android:id="@+id/item_user_first_name_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.22"
+                android:background="#ffffff"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
                 tools:text="first" />
 
             <TextView
+                android:id="@+id/item_user_last_name_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="1dp"
+                android:layout_weight="0.15"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="last"
+                android:textColor="#c2c2c2" />
+
+            <TextView
                 android:id="@+id/item_user_last_name_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.22"
+                android:background="#ffffff"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
                 tools:text="last" />
 
-        </LinearLayout>
-    </LinearLayout>
+        </TableRow>
+
+    </TableLayout>
 
 </LinearLayout>
