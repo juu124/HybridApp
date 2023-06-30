@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,10 @@ public class UserDialog extends Dialog {
     private Button dialogYesBtn;
     private String text = null;
     private int mPosition;
+
+    // 프로그래스 바
+    private ProgressBar progressBar;
+    private TextView progressBarText;
 
     public UserDialog(@NonNull Context context, int position) {
         super(context);
@@ -43,13 +48,29 @@ public class UserDialog extends Dialog {
         userInfo = findViewById(R.id.user_info);
         dialogYesBtn = findViewById(R.id.yesButton);
 
+        progressBar = findViewById(R.id.progressBar);
+        progressBarText = findViewById(R.id.progressBar_text);
+        progressBar.setIndeterminate(true);
+        progressBarText.setText("로딩중 입니다.");
+
         RetrofitApiManager.getInstance().requestOneUserInfo((mPosition + 1) + "", new RetrofitInterface() {
             @Override
             public void onResponse(Response response) {
-                GLog.d("onResponse");
+                progressBar.setVisibility(View.VISIBLE);
+                progressBarText.setVisibility(View.VISIBLE);
                 UserDataSupport userResponse = (UserDataSupport) response.body();
                 userInfoSetting(userResponse.getDtoUser().getId(), userResponse.getDtoUser().getEmail(), userResponse.getDtoUser().getFirstName(), userResponse.getDtoUser().getLastName());
-                userInfo.setText(text);
+                if (userResponse.getDtoUser() != null) {
+                    progressBar.setVisibility(View.GONE);
+                    progressBarText.setVisibility(View.GONE);
+                    userInfo.setText(text);
+                    GLog.d("text 있음");
+                } else {
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBarText.setVisibility(View.VISIBLE);
+                    GLog.d("text 없음");
+                }
+                GLog.d("onResponse");
             }
 
             @Override
