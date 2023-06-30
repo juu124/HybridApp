@@ -11,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.dto.UserDataSupport;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.utils.GLog;
@@ -26,8 +25,7 @@ public class UserDialog extends Dialog {
     private int mPosition;
 
     // 프로그래스 바
-    private ProgressBar progressBar;
-    private TextView progressBarText;
+    private ProgressBar mProgressBar;
 
     public UserDialog(@NonNull Context context, int position) {
         super(context);
@@ -45,32 +43,32 @@ public class UserDialog extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_view);
+
         userInfo = findViewById(R.id.user_info);
         dialogYesBtn = findViewById(R.id.yesButton);
+        mProgressBar = findViewById(R.id.dialog_progressbar);
 
-        progressBar = findViewById(R.id.progressBar);
-        progressBarText = findViewById(R.id.progressBar_text);
-        progressBar.setIndeterminate(true);
-        progressBarText.setText("로딩중 입니다.");
-
+        mProgressBar.setIndeterminate(true);
+        mProgressBar.setVisibility(View.VISIBLE);
+        dialogYesBtn.setEnabled(false);
         RetrofitApiManager.getInstance().requestOneUserInfo((mPosition + 1) + "", new RetrofitInterface() {
             @Override
             public void onResponse(Response response) {
-                progressBar.setVisibility(View.VISIBLE);
-                progressBarText.setVisibility(View.VISIBLE);
-                UserDataSupport userResponse = (UserDataSupport) response.body();
-                userInfoSetting(userResponse.getDtoUser().getId(), userResponse.getDtoUser().getEmail(), userResponse.getDtoUser().getFirstName(), userResponse.getDtoUser().getLastName());
-                if (userResponse.getDtoUser() != null) {
-                    progressBar.setVisibility(View.GONE);
-                    progressBarText.setVisibility(View.GONE);
-                    userInfo.setText(text);
-                    GLog.d("text 있음");
-                } else {
-                    progressBar.setVisibility(View.VISIBLE);
-                    progressBarText.setVisibility(View.VISIBLE);
-                    GLog.d("text 없음");
-                }
-                GLog.d("onResponse");
+//                if (response.isSuccessful() && response.body() != null) {
+//                    GLog.d("onResponse");
+//                    UserDataSupport userResponse = (UserDataSupport) response.body();
+//                    UserResponse user = userResponse.getDtoUser();
+//                    userInfoSetting(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
+//                    if (userResponse.getDtoUser() != null) {
+//                        mProgressBar.setVisibility(View.GONE);
+//                        userInfo.setText(text);
+//                        dialogYesBtn.setEnabled(true);
+//                        GLog.d("text 있음");
+//                    } else {
+////                        progressBarText.setText("오류 발생" + response.errorBody().toString());
+//                        GLog.d("text 없음");
+//                    }
+//                }
             }
 
             @Override

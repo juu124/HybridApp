@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +34,9 @@ public class UserListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_list);
         userRecyclerView = findViewById(R.id.rv_user_list);
         btnUserListMore = findViewById(R.id.btn_user_list_more);
+
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getApplicationContext(), new LinearLayoutManager(this).getOrientation());
+        userRecyclerView.addItemDecoration(dividerItemDecoration);
 
         RetrofitApiManager.getInstance().requestUserInfoList(new RetrofitInterface() {
             @Override
