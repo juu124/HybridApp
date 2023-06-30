@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,10 +22,16 @@ import retrofit2.Response;
 
 public class UserDialog extends Dialog {
     private Context mContext;
-    private TextView userInfo;
+    private TableLayout itemUserLayout;
     private Button dialogYesBtn;
     private String text = null;
     private int mPosition;
+    private TextView item_user_id_tv;
+    private TextView item_user_email_tv;
+    private TextView item_user_first_name_tv;
+    private TextView item_user_last_name_tv;
+
+    private UserResponse mUser;
 
     // 프로그래스 바
     private ProgressBar mProgressBar;
@@ -35,18 +42,25 @@ public class UserDialog extends Dialog {
         mPosition = position;
     }
 
-    public void userInfoSetting(String id, String email, String firstName, String lastName) {
-        text = "Id : " + id + "\n"
-                + "Email : " + email + "\n"
-                + "Name : " + firstName + " " + lastName;
-    }
+//    public void userInfoSetting(String id, String email, String firstName, String lastName) {
+//        text = "Id : " + id + "\n"
+//                + "Email : " + email + "\n"
+//                + "Name : " + firstName + " " + lastName;
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_view);
+        mUser = new UserResponse();
 
-        userInfo = findViewById(R.id.dialog_user_info);
+        item_user_id_tv = findViewById(R.id.item_user_id_tv);
+        item_user_email_tv = findViewById(R.id.item_user_email_tv);
+        item_user_first_name_tv = findViewById(R.id.item_user_first_name_tv);
+        item_user_last_name_tv = findViewById(R.id.item_user_last_name_tv);
+
+        itemUserLayout = findViewById(R.id.item_user_layout);
+//        userInfo = findViewById(R.id.dialog_user_info);
         dialogYesBtn = findViewById(R.id.dialog_user_info_yesButton);
         mProgressBar = findViewById(R.id.indeterminate_progressbar);
 
@@ -59,11 +73,14 @@ public class UserDialog extends Dialog {
                 if (response.isSuccessful() && response.body() != null) {
                     GLog.d("onResponse");
                     UserDataSupport userResponse = (UserDataSupport) response.body();
-                    UserResponse user = userResponse.getDtoUser();
-                    userInfoSetting(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
+                    mUser = userResponse.getDtoUser();
+//                    userInfoSetting(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
                     if (userResponse.getDtoUser() != null) {
                         mProgressBar.setVisibility(View.GONE);
-                        userInfo.setText(text);
+                        item_user_id_tv.setText(mUser.getId());
+                        item_user_email_tv.setText(mUser.getEmail());
+                        item_user_first_name_tv.setText(mUser.getFirstName());
+                        item_user_last_name_tv.setText(mUser.getLastName());
                         dialogYesBtn.setEnabled(true);
                         GLog.d("text 있음");
                     } else {

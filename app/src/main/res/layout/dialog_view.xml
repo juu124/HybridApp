@@ -3,32 +3,157 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="300dp"
-    android:layout_height="200dp"
+    android:layout_height="250dp"
     android:layout_gravity="center">
 
     <TextView
         android:id="@+id/dialog_user_info_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:padding="20dp"
         android:text="유저 정보"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/dialog_user_info"
+    <!--    <TextView-->
+    <!--        android:id="@+id/dialog_user_info"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="5dp"-->
+    <!--        android:layout_marginTop="5dp"-->
+    <!--        android:layout_marginEnd="5dp"-->
+    <!--        android:layout_marginBottom="5dp"-->
+    <!--        android:padding="10dp"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/dialog_user_info_yesButton"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/dialog_user_info_title"-->
+    <!--        tools:text="유저 정보" />-->
+
+    <TableLayout
+        android:id="@+id/item_user_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginBottom="5dp"
-        android:padding="10dp"
+        android:layout_height="0dp"
+        android:layout_marginVertical="5dp"
+        android:background="#ebebeb"
+        android:gravity="center_vertical"
         app:layout_constraintBottom_toTopOf="@+id/dialog_user_info_yesButton"
-        app:layout_constraintTop_toBottomOf="@id/dialog_user_info_title"
-        tools:text="유저 정보" />
+        app:layout_constraintTop_toBottomOf="@id/dialog_user_info_title">
+
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/item_user_id_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="0.1"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="id"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/item_user_id_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="#ffffff"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                tools:text="id" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/item_user_email_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="0.1"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="email"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/item_user_email_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="#ffffff"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                tools:text="email" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/item_user_name_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="0.15"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="name"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/item_user_first_name_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="0.15"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="first"
+                android:textColor="#c2c2c2" />
+
+            <TextView
+                android:id="@+id/item_user_first_name_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.22"
+                android:background="#ffffff"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                tools:text="first" />
+
+            <TextView
+                android:id="@+id/item_user_last_name_type"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="1dp"
+                android:layout_weight="0.15"
+                android:background="#ffffff"
+                android:gravity="center"
+                android:text="last"
+                android:textColor="#c2c2c2" />
+
+            <TextView
+                android:id="@+id/item_user_last_name_tv"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.22"
+                android:background="#ffffff"
+                android:gravity="center_vertical"
+                android:paddingLeft="5dp"
+                tools:text="last" />
+
+        </TableRow>
+
+    </TableLayout>
 
     <Button
         android:id="@+id/dialog_user_info_yesButton"
