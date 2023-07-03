@@ -38,10 +38,12 @@ public class UserListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_list);
         userRecyclerView = findViewById(R.id.rv_user_list);
         btnUserListMore = findViewById(R.id.btn_user_list_more);
+        mProgressBar = findViewById(R.id.indeterminate_progressbar);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getApplicationContext(), new LinearLayoutManager(this).getOrientation());
         userRecyclerView.addItemDecoration(dividerItemDecoration);
 
+        mProgressBar.setVisibility(View.VISIBLE);
         RetrofitApiManager.getInstance().requestUserInfoList(new RetrofitInterface() {
             @Override
             public void onResponse(Response response) {
@@ -67,7 +69,7 @@ public class UserListActivity extends AppCompatActivity {
 //                    }
                     rvUserListAdapter.addArrUser(mUserList);
                     rvUserListAdapter.notifyDataSetChanged();
-
+                    mProgressBar.setVisibility(View.GONE);
                     if (usersDetail.getPage() >= usersDetail.getTotalPages()) {
                         btnUserListMore.setVisibility(View.GONE);
                     } else {
@@ -82,8 +84,6 @@ public class UserListActivity extends AppCompatActivity {
             }
         });
 
-        mProgressBar = findViewById(R.id.indeterminate_progressbar);
-        mProgressBar.setVisibility(View.GONE);
         btnUserListMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
