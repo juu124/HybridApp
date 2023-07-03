@@ -24,7 +24,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/item_user_id_type"
+                android:id="@+id/dialog_user_id_type"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="1dp"
@@ -51,7 +51,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/item_user_email_type"
+                android:id="@+id/dialog_user_email_type"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="1dp"
@@ -78,7 +78,7 @@
             android:layout_weight="1">
 
             <TextView
-                android:id="@+id/item_user_name_type"
+                android:id="@+id/dialog_user_name_type"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="1dp"
@@ -89,7 +89,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/item_user_first_name_type"
+                android:id="@+id/dialog_user_first_name_type"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="1dp"
@@ -110,7 +110,7 @@
                 tools:text="first" />
 
             <TextView
-                android:id="@+id/item_user_last_name_type"
+                android:id="@+id/dialog_user_last_name_type"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="1dp"

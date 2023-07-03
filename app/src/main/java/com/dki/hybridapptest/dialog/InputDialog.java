@@ -32,8 +32,8 @@ public class InputDialog extends Dialog {
         GLog.d();
         setContentView(R.layout.dialog_edit_view);
         dialogEditText = findViewById(R.id.dialog_edit);
-        dialogNoBtn = findViewById(R.id.noButton);
-        dialogYesBtn = findViewById(R.id.dialog_user_info_yesButton);
+        dialogNoBtn = findViewById(R.id.dialog_user_info_no_button);
+        dialogYesBtn = findViewById(R.id.dialog_user_info_yes_button);
 
         dialogYesBtn.setOnClickListener(new View.OnClickListener() {
             @Override

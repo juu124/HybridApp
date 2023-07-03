@@ -12,11 +12,14 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.adapters.RvUserListAdapter;
 import com.dki.hybridapptest.dto.UserDataSupport;
 import com.dki.hybridapptest.dto.UserResponse;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.utils.GLog;
+
+import java.util.ArrayList;
 
 import retrofit2.Response;
 
@@ -30,8 +33,9 @@ public class UserDialog extends Dialog {
     private TextView item_user_email_tv;
     private TextView item_user_first_name_tv;
     private TextView item_user_last_name_tv;
-
     private UserResponse mUser;
+    private RvUserListAdapter rvUserListAdapter;
+    ArrayList<UserResponse> mUserList;
 
     // 프로그래스 바
     private ProgressBar mProgressBar;
@@ -42,17 +46,10 @@ public class UserDialog extends Dialog {
         mPosition = position;
     }
 
-//    public void userInfoSetting(String id, String email, String firstName, String lastName) {
-//        text = "Id : " + id + "\n"
-//                + "Email : " + email + "\n"
-//                + "Name : " + firstName + " " + lastName;
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.dialog_view);
-        mUser = new UserResponse();
 
         item_user_id_tv = findViewById(R.id.item_user_id_tv);
         item_user_email_tv = findViewById(R.id.item_user_email_tv);
@@ -60,13 +57,26 @@ public class UserDialog extends Dialog {
         item_user_last_name_tv = findViewById(R.id.item_user_last_name_tv);
 
         itemUserLayout = findViewById(R.id.item_user_layout);
-//        userInfo = findViewById(R.id.dialog_user_info);
-        dialogYesBtn = findViewById(R.id.dialog_user_info_yesButton);
+        dialogYesBtn = findViewById(R.id.dialog_user_info_yes_button);
         mProgressBar = findViewById(R.id.indeterminate_progressbar);
 
         mProgressBar.setIndeterminate(true);
         mProgressBar.setVisibility(View.VISIBLE);
         dialogYesBtn.setEnabled(false);
+
+        if (mUserList != null) {
+            mProgressBar.setVisibility(View.GONE);
+            item_user_id_tv.setText(mUser.getId());
+            item_user_email_tv.setText(mUser.getEmail());
+            item_user_first_name_tv.setText(mUser.getFirstName());
+            item_user_last_name_tv.setText(mUser.getLastName());
+            GLog.d("" + item_user_id_tv.getText());
+            dialogYesBtn.setEnabled(true);
+            GLog.d("text 있음");
+        } else {
+            GLog.d("text 없음");
+        }
+
         RetrofitApiManager.getInstance().requestOneUserInfo((mPosition + 1) + "", new RetrofitInterface() {
             @Override
             public void onResponse(Response response) {
@@ -74,13 +84,13 @@ public class UserDialog extends Dialog {
                     GLog.d("onResponse");
                     UserDataSupport userResponse = (UserDataSupport) response.body();
                     mUser = userResponse.getDtoUser();
-//                    userInfoSetting(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
                     if (userResponse.getDtoUser() != null) {
                         mProgressBar.setVisibility(View.GONE);
                         item_user_id_tv.setText(mUser.getId());
                         item_user_email_tv.setText(mUser.getEmail());
                         item_user_first_name_tv.setText(mUser.getFirstName());
                         item_user_last_name_tv.setText(mUser.getLastName());
+                        GLog.d("" + item_user_id_tv.getText());
                         dialogYesBtn.setEnabled(true);
                         GLog.d("text 있음");
                     } else {

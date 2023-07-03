@@ -4,14 +4,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dki.hybridapptest.Interface.InputUserInfoListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.adapters.RvUserListAdapter;
+import com.dki.hybridapptest.dialog.InputUserDialog;
 import com.dki.hybridapptest.dto.UserResponse;
 import com.dki.hybridapptest.dto.UsersList;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
@@ -25,6 +28,7 @@ import retrofit2.Response;
 public class UserListActivity extends AppCompatActivity {
     private RecyclerView userRecyclerView;
     private Button btnUserListMore;
+    private Button btnUserListAdd;
     private RvUserListAdapter rvUserListAdapter;
     private ArrayList<UserResponse> mUserList = new ArrayList<>();
     private UsersList usersDetail;
@@ -32,13 +36,21 @@ public class UserListActivity extends AppCompatActivity {
     // 프로그래스 바
     private ProgressBar mProgressBar;
 
+    // add 입력
+    private InputUserDialog mInputUserDialog;
+    private String Image = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_list);
         userRecyclerView = findViewById(R.id.rv_user_list);
         btnUserListMore = findViewById(R.id.btn_user_list_more);
+        btnUserListAdd = findViewById(R.id.btn_user_list_add);
         mProgressBar = findViewById(R.id.indeterminate_progressbar);
+
+        btnUserListMore.setVisibility(View.GONE);
+        btnUserListAdd.setVisibility(View.GONE);
 
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getApplicationContext(), new LinearLayoutManager(this).getOrientation());
         userRecyclerView.addItemDecoration(dividerItemDecoration);
@@ -72,8 +84,10 @@ public class UserListActivity extends AppCompatActivity {
                     mProgressBar.setVisibility(View.GONE);
                     if (usersDetail.getPage() >= usersDetail.getTotalPages()) {
                         btnUserListMore.setVisibility(View.GONE);
+                        btnUserListAdd.setVisibility(View.VISIBLE);
                     } else {
                         btnUserListMore.setVisibility(View.VISIBLE);
+                        btnUserListAdd.setVisibility(View.GONE);
                     }
                 }
             }
@@ -102,8 +116,10 @@ public class UserListActivity extends AppCompatActivity {
                             mProgressBar.setVisibility(View.GONE);
                             if (usersDetail.getPage() >= usersDetail.getTotalPages()) {
                                 btnUserListMore.setVisibility(View.GONE);
+                                btnUserListAdd.setVisibility(View.VISIBLE);
                             } else {
                                 btnUserListMore.setVisibility(View.VISIBLE);
+                                btnUserListAdd.setVisibility(View.GONE);
                             }
                         }
                     }
@@ -119,5 +135,35 @@ public class UserListActivity extends AppCompatActivity {
         userRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rvUserListAdapter = new RvUserListAdapter();
         userRecyclerView.setAdapter(rvUserListAdapter);
+
+//        rvUserListAdapter.setOnItemClickListener(new RvUserListAdapter.OnItemClickListener() {
+//            @Override
+//            public void onItemClicked(int position, UserResponse user) {
+//
+//            }
+//        });
+
+        btnUserListAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GLog.d("btnUserListAdd onClick");
+                mInputUserDialog = new InputUserDialog(UserListActivity.this, new InputUserInfoListener() {
+                    @Override
+                    public void onInputPositiveClick(String id, String email, String firstName, String lastName) {
+                        UserResponse mUser = new UserResponse(id, email, firstName, lastName, Image);
+                        GLog.d("저장 == " + id + ", " + email + ", " + firstName + ", " + lastName);
+                        rvUserListAdapter.addSortUser(Integer.parseInt(id), mUser);
+                        rvUserListAdapter.notifyDataSetChanged();
+                        GLog.d("리스트 출력 == " + mUserList.size());
+                    }
+
+                    @Override
+                    public void onInputNegativeClick() {
+                        Toast.makeText(UserListActivity.this, "취소", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                mInputUserDialog.show();
+            }
+        });
     }
 }

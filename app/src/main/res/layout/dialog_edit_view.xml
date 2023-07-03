@@ -29,7 +29,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/noButton"
+            android:id="@+id/dialog_user_info_no_button"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_marginEnd="7dp"
@@ -38,7 +38,7 @@
             android:textSize="14sp" />
 
         <Button
-            android:id="@+id/dialog_user_info_yesButton"
+            android:id="@+id/dialog_user_info_yes_button"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="1"
