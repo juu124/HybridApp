@@ -17,19 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/dialog_user_info"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginStart="5dp"-->
-    <!--        android:layout_marginTop="5dp"-->
-    <!--        android:layout_marginEnd="5dp"-->
-    <!--        android:layout_marginBottom="5dp"-->
-    <!--        android:padding="10dp"-->
-    <!--        app:layout_constraintBottom_toTopOf="@+id/dialog_user_info_yesButton"-->
-    <!--        app:layout_constraintTop_toBottomOf="@id/dialog_user_info_title"-->
-    <!--        tools:text="유저 정보" />-->
-
     <TableLayout
         android:id="@+id/item_user_layout"
         android:layout_width="match_parent"
@@ -37,7 +24,7 @@
         android:layout_marginVertical="5dp"
         android:background="#ebebeb"
         android:gravity="center_vertical"
-        app:layout_constraintBottom_toTopOf="@+id/dialog_user_info_yes_button"
+        app:layout_constraintBottom_toTopOf="@+id/dialog_button_layout"
         app:layout_constraintTop_toBottomOf="@id/dialog_user_info_title">
 
         <TableRow
@@ -61,7 +48,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:background="#ffffff"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:paddingLeft="5dp"
                 tools:text="id" />
 
@@ -83,12 +72,15 @@
                 android:textStyle="bold" />
 
             <TextView
+
                 android:id="@+id/item_user_email_tv"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:background="#ffffff"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:paddingLeft="5dp"
                 tools:text="email" />
 
@@ -126,7 +118,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.22"
                 android:background="#ffffff"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:paddingLeft="5dp"
                 tools:text="first" />
 
@@ -147,7 +141,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.22"
                 android:background="#ffffff"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
+                android:maxLines="1"
                 android:paddingLeft="5dp"
                 tools:text="last" />
 
@@ -155,21 +151,40 @@
 
     </TableLayout>
 
-    <Button
-        android:id="@+id/dialog_user_info_yes_button"
+    <LinearLayout
+        android:id="@+id/dialog_button_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginHorizontal="7dp"
-        android:text="확인"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/dialog_user_info_remove_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="7dp"
+            android:layout_weight="1"
+            android:text="삭제"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/dialog_user_info_yes_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="확인"
+            android:textSize="14sp" />
+
+    </LinearLayout>
 
     <include
         android:id="@+id/dialog_user_info_progressbar"
         layout="@layout/indeterminate_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/dialog_user_info_yes_button"
+        app:layout_constraintBottom_toBottomOf="@id/dialog_button_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

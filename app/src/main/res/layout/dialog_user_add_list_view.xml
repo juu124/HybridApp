@@ -49,20 +49,14 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:background="#ffffff"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:paddingLeft="5dp"
+                android:inputType="number"
+                android:maxLines="1"
+                android:paddingHorizontal="10dp"
+                android:singleLine="true"
                 android:textSize="15sp"
-                tools:text="id" />
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/item_user_id_tv"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:layout_weight="0.5"-->
-            <!--                android:background="#ffffff"-->
-            <!--                android:gravity="center_vertical"-->
-            <!--                android:paddingLeft="5dp"-->
-            <!--                tools:text="id" />-->
+                tools:text="test" />
 
         </TableRow>
 
@@ -87,20 +81,15 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.5"
                 android:background="#ffffff"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:paddingLeft="5dp"
+                android:hint="예시 : aaa@email.com"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:paddingHorizontal="10dp"
+                android:singleLine="true"
                 android:textSize="15sp"
                 tools:text="email" />
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/item_user_email_tv"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:layout_weight="0.5"-->
-            <!--                android:background="#ffffff"-->
-            <!--                android:gravity="center_vertical"-->
-            <!--                android:paddingLeft="5dp"-->
-            <!--                tools:text="email" />-->
 
         </TableRow>
 
@@ -136,20 +125,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.22"
                 android:background="#ffffff"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:paddingLeft="5dp"
+                android:maxLines="1"
+                android:paddingHorizontal="10dp"
+                android:singleLine="true"
                 android:textSize="15sp"
                 tools:text="first" />
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/item_user_first_name_tv"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:layout_weight="0.22"-->
-            <!--                android:background="#ffffff"-->
-            <!--                android:gravity="center_vertical"-->
-            <!--                android:paddingLeft="5dp"-->
-            <!--                tools:text="first" />-->
 
             <TextView
                 android:id="@+id/dialog_user_last_name_type"
@@ -168,20 +150,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.22"
                 android:background="#ffffff"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:paddingLeft="5dp"
+                android:maxLines="1"
+                android:paddingHorizontal="10dp"
+                android:singleLine="true"
                 android:textSize="15sp"
                 tools:text="last" />
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/item_user_last_name_tv"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="match_parent"-->
-            <!--                android:layout_weight="0.22"-->
-            <!--                android:background="#ffffff"-->
-            <!--                android:gravity="center_vertical"-->
-            <!--                android:paddingLeft="5dp"-->
-            <!--                tools:text="last" />-->
 
         </TableRow>
 

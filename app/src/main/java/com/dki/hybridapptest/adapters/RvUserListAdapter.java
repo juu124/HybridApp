@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.dki.hybridapptest.Interface.RemoveUserListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.UserDialog;
 import com.dki.hybridapptest.dto.UserResponse;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
 public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.ViewHolder> {
     private ArrayList<UserResponse> mUserList = new ArrayList<>();
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         // 뷰 홀더
         private ImageView userAvatar;
         private TextView userIdType;
@@ -31,6 +32,7 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
         private TextView userLastName;
         private TextView userEmailType;
         private TextView userEmail;
+        private ArrayList<UserResponse> responses;
 
         // 다이얼로그
         private UserDialog userDialog;
@@ -50,7 +52,13 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    userDialog = new UserDialog(itemView.getContext(), userId.getText().toString(), userResponse);
+                    userDialog = new UserDialog(itemView.getContext(), getAdapterPosition(), userResponse, new RemoveUserListener() {
+                        @Override
+                        public void onRemoveClick(int position) {
+                            responses.remove(position);
+                            notifyDataSetChanged();
+                        }
+                    });
                     GLog.d("아이템을 클릭했습니다.");
                     GLog.d();
                     userDialog.show();
@@ -80,6 +88,7 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
         holder.userEmailType.getText();
         holder.userEmail.setText(mUserList.get(position).getEmail());
         holder.userResponse = mUserList.get(position);
+        holder.responses = mUserList;
     }
 
     @Override
@@ -92,7 +101,7 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
     }
 
     public void addSortUser(int idNum, UserResponse user) {
-        mUserList.add(idNum, user);
+        mUserList.add(idNum - 1, user);
         mUserList.sort(new SortArrayList());
         for (int i = 0; i < mUserList.size(); i++) {
             GLog.d(mUserList.get(i).getId());
