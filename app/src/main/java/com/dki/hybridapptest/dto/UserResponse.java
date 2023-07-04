@@ -18,12 +18,31 @@ public class UserResponse extends UserCommon {
     @SerializedName("avatar")
     private String avatar;
 
+    private boolean isAdd = false;
+
     public UserResponse(String id, String email, String firstName, String lastName, String avatar) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.avatar = avatar;
+    }
+
+    public UserResponse(String id, String email, String firstName, String lastName, String avatar, boolean isAdd) {
+        this.id = id;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.avatar = avatar;
+        this.isAdd = isAdd;
+    }
+
+    public boolean isAdd() {
+        return isAdd;
+    }
+
+    public void setAdd(boolean add) {
+        isAdd = add;
     }
 
     public String getId() {

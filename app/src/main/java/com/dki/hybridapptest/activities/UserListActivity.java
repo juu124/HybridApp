@@ -40,7 +40,6 @@ public class UserListActivity extends AppCompatActivity {
     private Button btnUserListAdd;
     private InputUserDialog mInputUserDialog;
     private String Image = "";
-    private boolean mType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,6 @@ public class UserListActivity extends AppCompatActivity {
         RetrofitApiManager.getInstance().requestUserInfoList(new RetrofitInterface() {
             @Override
             public void onResponse(Response response) {
-                mType = true;
                 if (response.isSuccessful() && response.body() != null) {
                     GLog.d("response Successful == " + response.body());
                     usersDetail = (UsersList) response.body();
@@ -83,7 +81,7 @@ public class UserListActivity extends AppCompatActivity {
 //                                usersDetail.getArrDtoUser().get(i).getAvatar());
 //                        mUserList.add(mUser);
 //                    }
-                    rvUserListAdapter.addArrUser(mUserList, mType);
+                    rvUserListAdapter.addArrUser(mUserList);
                     rvUserListAdapter.notifyDataSetChanged();
                     mProgressBar.setVisibility(View.GONE);
                     if (usersDetail.getPage() >= usersDetail.getTotalPages()) {
@@ -106,7 +104,6 @@ public class UserListActivity extends AppCompatActivity {
         btnUserListMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mType = true;
                 mProgressBar.setVisibility(View.VISIBLE);
                 GLog.d("btnUserListMore onClick");
 
@@ -118,7 +115,7 @@ public class UserListActivity extends AppCompatActivity {
                             if (usersDetail.getPage() <= usersDetail.getTotalPages()) {
                                 mUserList = usersDetail.getArrDtoUser();
                             }
-                            rvUserListAdapter.addArrUser(mUserList, mType);
+                            rvUserListAdapter.addArrUser(mUserList);
                             rvUserListAdapter.notifyDataSetChanged();
                             mProgressBar.setVisibility(View.GONE);
                             if (usersDetail.getPage() >= usersDetail.getTotalPages()) {
@@ -148,13 +145,12 @@ public class UserListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 GLog.d("btnUserListAdd onClick");
-                mType = false;
                 mInputUserDialog = new InputUserDialog(UserListActivity.this, new InputUserInfoListener() {
                     @Override
                     public void onInputPositiveClick(String id, String email, String firstName, String lastName) {
-                        UserResponse mUser = new UserResponse(id, email, firstName, lastName, Image);
+                        UserResponse mUser = new UserResponse(id, email, firstName, lastName, Image, true);
                         GLog.d("저장 == " + id + ", " + email + ", " + firstName + ", " + lastName);
-                        rvUserListAdapter.addSortUser(Integer.parseInt(id), mUser, mType);
+                        rvUserListAdapter.addSortUser(Integer.parseInt(id), mUser);
                         rvUserListAdapter.notifyDataSetChanged();
                     }
 

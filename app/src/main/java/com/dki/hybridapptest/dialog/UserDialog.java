@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TableLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,9 +21,7 @@ import retrofit2.Response;
 
 public class UserDialog extends Dialog {
     private Context mContext;
-    private TableLayout itemUserLayout;
     private Button dialogYesBtn;
-    private String text = null;
     private String mPosition;
     private TextView item_user_id_tv;
     private TextView item_user_email_tv;
@@ -41,20 +38,11 @@ public class UserDialog extends Dialog {
     // 프로그래스 바
     private ProgressBar mProgressBar;
 
-    public UserDialog(@NonNull Context context, String position, boolean type) {
+    public UserDialog(@NonNull Context context, String position, UserResponse user) {
         super(context);
         mContext = context;
         mPosition = position;
-        mType = type;
-    }
-
-    public UserDialog(@NonNull Context context, String position, String email, String firstName, String lastName) {
-        super(context);
-        mContext = context;
-        userPosition = position;
-        userEmail = email;
-        userFirstName = firstName;
-        userLastName = lastName;
+        mUser = user;
     }
 
     @Override
@@ -66,7 +54,6 @@ public class UserDialog extends Dialog {
         item_user_first_name_tv = findViewById(R.id.item_user_first_name_tv);
         item_user_last_name_tv = findViewById(R.id.item_user_last_name_tv);
 
-        itemUserLayout = findViewById(R.id.item_user_layout);
         dialogYesBtn = findViewById(R.id.dialog_user_info_yes_button);
         mProgressBar = findViewById(R.id.indeterminate_progressbar);
 
@@ -74,7 +61,16 @@ public class UserDialog extends Dialog {
         mProgressBar.setVisibility(View.VISIBLE);
         dialogYesBtn.setEnabled(false);
 
-        if (mType) {
+        if (mUser.isAdd()) {
+            GLog.d("서버 데이터가 아닙니다 =====");
+            mProgressBar.setVisibility(View.GONE);
+            item_user_id_tv.setText(mUser.getId());
+            item_user_email_tv.setText(mUser.getEmail());
+            item_user_first_name_tv.setText(mUser.getFirstName());
+            item_user_last_name_tv.setText(mUser.getLastName());
+            dialogYesBtn.setEnabled(true);
+            GLog.d("text 있음");
+        } else {
             GLog.d("서버 데이터가 맞습니다 =====");
             RetrofitApiManager.getInstance().requestOneUserInfo(Integer.parseInt(mPosition) + "", new RetrofitInterface() {
                 @Override
@@ -103,15 +99,6 @@ public class UserDialog extends Dialog {
                     GLog.d("오류 메세지 == " + t.toString());
                 }
             });
-        } else {
-            GLog.d("서버 데이터가 아닙니다 =====");
-            mProgressBar.setVisibility(View.GONE);
-            item_user_id_tv.setText(userPosition);
-            item_user_email_tv.setText(userEmail);
-            item_user_first_name_tv.setText(userFirstName);
-            item_user_last_name_tv.setText(userLastName);
-            dialogYesBtn.setEnabled(true);
-            GLog.d("text 있음");
         }
 
         dialogYesBtn.setOnClickListener(new View.OnClickListener() {

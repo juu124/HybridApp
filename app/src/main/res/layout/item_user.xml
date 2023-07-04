@@ -134,10 +134,4 @@
 
     </TableLayout>
 
-    <TextView
-        android:id="@+id/item_user_value_type"
-        android:visibility="gone"
-        android:layout_width="0dp"
-        android:layout_height="0dp" />
-
 </LinearLayout>

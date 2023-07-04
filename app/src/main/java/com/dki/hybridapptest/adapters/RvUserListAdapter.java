@@ -1,6 +1,5 @@
 package com.dki.hybridapptest.adapters;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 
 public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.ViewHolder> {
     private ArrayList<UserResponse> mUserList = new ArrayList<>();
-    private boolean mType;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // 뷰 홀더
@@ -36,8 +34,8 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
 
         // 다이얼로그
         private UserDialog userDialog;
-        private TextView userValueType;
-        private boolean mType;
+        //        private boolean isAdd;
+        private UserResponse userResponse;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -49,20 +47,11 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
             userLastName = itemView.findViewById(R.id.item_user_last_name_tv);
             userEmailType = itemView.findViewById(R.id.dialog_user_email_type);
             userEmail = itemView.findViewById(R.id.item_user_email_tv);
-            userValueType = itemView.findViewById(R.id.item_user_value_type);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (TextUtils.equals(userValueType.getText().toString(), "true")) {
-                        mType = true;
-                        userDialog = new UserDialog(itemView.getContext(), userId.getText().toString(), mType);
-                    } else {
-                        mType = false;
-                        userDialog = new UserDialog(itemView.getContext(), userId.getText().toString(),
-                                userEmail.getText().toString(),
-                                userFirstName.getText().toString(), userLastName.getText().toString());
-                    }
+                    userDialog = new UserDialog(itemView.getContext(), userId.getText().toString(), userResponse);
                     GLog.d("아이템을 클릭했습니다.");
                     GLog.d();
                     userDialog.show();
@@ -91,7 +80,7 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
         holder.userLastName.setText(" " + mUserList.get(position).getLastName());
         holder.userEmailType.getText();
         holder.userEmail.setText(mUserList.get(position).getEmail());
-        holder.userValueType.setText(Boolean.toString(mType));
+        holder.userResponse = mUserList.get(position);
     }
 
     @Override
@@ -99,15 +88,13 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
         return mUserList.size();
     }
 
-    public void addArrUser(ArrayList<UserResponse> userList, boolean type) {
+    public void addArrUser(ArrayList<UserResponse> userList) {
         mUserList.addAll(userList);
-        mType = type;
     }
 
-    public void addSortUser(int idNum, UserResponse user, boolean type) {
+    public void addSortUser(int idNum, UserResponse user) {
         mUserList.add(idNum, user);
         mUserList.sort(new SortArrayList());
-        mType = type;
         for (int i = 0; i < mUserList.size(); i++) {
             GLog.d(mUserList.get(i).getId());
             GLog.d(mUserList.get(i).getEmail());

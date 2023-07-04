@@ -57,26 +57,6 @@ public class InputUserDialog extends Dialog {
                         editUserEmail.getText().toString(),
                         editUserFistName.getText().toString(),
                         editUserLastName.getText().toString());
-
-//                    editUserID.addTextChangedListener(new TextWatcher() {
-//                        @Override
-//                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                            dialogYesBtn.setEnabled(false);
-//                        }
-//
-//                        @Override
-//                        public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                        }
-//
-//                        @Override
-//                        public void afterTextChanged(Editable s) {
-//                            if (!TextUtils.isEmpty(editUserID.getText().toString())) {
-//                                dialogYesBtn.setEnabled(true);
-//                            } else {
-//                                dialogYesBtn.setEnabled(false);
-//                            }
-//                        }
-//                    });
                 dialogYesBtn.setEnabled(true);
 
                 dismiss();
