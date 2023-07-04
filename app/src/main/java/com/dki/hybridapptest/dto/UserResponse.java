@@ -2,7 +2,7 @@ package com.dki.hybridapptest.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UserResponse extends UserCommon /*implements Comparator<UserResponse>*/ {
+public class UserResponse extends UserCommon {
     @SerializedName("id")
     private String id;
 
@@ -65,15 +65,4 @@ public class UserResponse extends UserCommon /*implements Comparator<UserRespons
     public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
-
-//    @Override
-//    public int compare(UserResponse user1, UserResponse user2) {
-//        if (Integer.parseInt(user1.getId()) > Integer.parseInt(user2.getId())) {
-//            return 1;
-//        } else if (Integer.parseInt(user1.getId()) < Integer.parseInt(user2.getId())) {
-//            return -1;
-//        } else {
-//            return 0;
-//        }
-//    }
 }

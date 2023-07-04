@@ -1,5 +1,6 @@
 package com.dki.hybridapptest.adapters;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,15 +21,9 @@ import java.util.ArrayList;
 
 public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.ViewHolder> {
     private ArrayList<UserResponse> mUserList = new ArrayList<>();
+    private boolean mType;
 
-    public interface OnItemClickListener {
-        void onItemClick(UserResponse user);
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private OnItemClickListener mOnItemClickListener;
-        private UserResponse mUserResponse;
-
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         // 뷰 홀더
         private ImageView userAvatar;
         private TextView userIdType;
@@ -41,8 +36,10 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
 
         // 다이얼로그
         private UserDialog userDialog;
+        private TextView userValueType;
+        private boolean mType;
 
-        public ViewHolder(@NonNull View itemView/*, OnItemClickListener onItemClickListener*/) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             userAvatar = itemView.findViewById(R.id.item_user_avatar);
             userIdType = itemView.findViewById(R.id.dialog_user_id_type);
@@ -52,31 +49,25 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
             userLastName = itemView.findViewById(R.id.item_user_last_name_tv);
             userEmailType = itemView.findViewById(R.id.dialog_user_email_type);
             userEmail = itemView.findViewById(R.id.item_user_email_tv);
-
-
-//            mOnItemClickListener = onItemClickListener;
-//            itemView.setOnClickListener(this);
+            userValueType = itemView.findViewById(R.id.item_user_value_type);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (TextUtils.equals(userValueType.getText().toString(), "true")) {
+                        mType = true;
+                        userDialog = new UserDialog(itemView.getContext(), userId.getText().toString(), mType);
+                    } else {
+                        mType = false;
+                        userDialog = new UserDialog(itemView.getContext(), userId.getText().toString(),
+                                userEmail.getText().toString(),
+                                userFirstName.getText().toString(), userLastName.getText().toString());
+                    }
                     GLog.d("아이템을 클릭했습니다.");
                     GLog.d();
-                    userDialog = new UserDialog(itemView.getContext(), getAdapterPosition());
                     userDialog.show();
                 }
             });
-        }
-
-        public void bindData(UserResponse userResponse) {
-            mUserResponse = userResponse;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (mOnItemClickListener != null && mUserResponse != null) {
-                mOnItemClickListener.onItemClick(mUserResponse);
-            }
         }
     }
 
@@ -100,6 +91,7 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
         holder.userLastName.setText(" " + mUserList.get(position).getLastName());
         holder.userEmailType.getText();
         holder.userEmail.setText(mUserList.get(position).getEmail());
+        holder.userValueType.setText(Boolean.toString(mType));
     }
 
     @Override
@@ -107,13 +99,15 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
         return mUserList.size();
     }
 
-    public void addArrUser(ArrayList<UserResponse> userList) {
+    public void addArrUser(ArrayList<UserResponse> userList, boolean type) {
         mUserList.addAll(userList);
+        mType = type;
     }
 
-    public void addSortUser(int idNum, UserResponse user) {
+    public void addSortUser(int idNum, UserResponse user, boolean type) {
         mUserList.add(idNum, user);
         mUserList.sort(new SortArrayList());
+        mType = type;
         for (int i = 0; i < mUserList.size(); i++) {
             GLog.d(mUserList.get(i).getId());
             GLog.d(mUserList.get(i).getEmail());
