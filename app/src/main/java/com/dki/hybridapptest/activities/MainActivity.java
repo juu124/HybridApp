@@ -21,8 +21,12 @@ import androidx.core.app.ActivityCompat;
 
 import com.dki.hybridapptest.Interface.WebAppInterface;
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.retrofit.RetrofitApiManager;
+import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.utils.Constants;
 import com.dki.hybridapptest.utils.GLog;
+
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private WebView mWebView;
@@ -42,6 +46,17 @@ public class MainActivity extends AppCompatActivity {
         mWebSettings.setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(new WebAppInterface(this, mWebView), "DKITec");
         mWebView.loadUrl(Constants.WEB_VIEW_URL);
+
+        RetrofitApiManager.getInstance().requestPostUser(new RetrofitInterface() {
+            @Override
+            public void onResponse(Response response) {
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                GLog.d("오류 메세지 == " + t.toString());
+            }
+        });
 
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {

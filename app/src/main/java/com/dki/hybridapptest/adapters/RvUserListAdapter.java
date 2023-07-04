@@ -34,7 +34,6 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
 
         // 다이얼로그
         private UserDialog userDialog;
-        //        private boolean isAdd;
         private UserResponse userResponse;
 
         public ViewHolder(@NonNull View itemView) {
@@ -77,7 +76,7 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
                 .into(holder.userAvatar);
         holder.userName.getText();
         holder.userFirstName.setText(mUserList.get(position).getFirstName());
-        holder.userLastName.setText(" " + mUserList.get(position).getLastName());
+        holder.userLastName.setText(mUserList.get(position).getLastName());
         holder.userEmailType.getText();
         holder.userEmail.setText(mUserList.get(position).getEmail());
         holder.userResponse = mUserList.get(position);

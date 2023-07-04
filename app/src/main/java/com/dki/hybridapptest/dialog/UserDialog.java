@@ -22,26 +22,20 @@ import retrofit2.Response;
 public class UserDialog extends Dialog {
     private Context mContext;
     private Button dialogYesBtn;
-    private String mPosition;
+    private String mIdNum;
     private TextView item_user_id_tv;
     private TextView item_user_email_tv;
     private TextView item_user_first_name_tv;
     private TextView item_user_last_name_tv;
     private UserResponse mUser;
-    private boolean mType;
-
-    private String userPosition;
-    private String userEmail;
-    private String userFirstName;
-    private String userLastName;
 
     // 프로그래스 바
     private ProgressBar mProgressBar;
 
-    public UserDialog(@NonNull Context context, String position, UserResponse user) {
+    public UserDialog(@NonNull Context context, String idNum, UserResponse user) {
         super(context);
         mContext = context;
-        mPosition = position;
+        mIdNum = idNum;
         mUser = user;
     }
 
@@ -72,7 +66,7 @@ public class UserDialog extends Dialog {
             GLog.d("text 있음");
         } else {
             GLog.d("서버 데이터가 맞습니다 =====");
-            RetrofitApiManager.getInstance().requestOneUserInfo(Integer.parseInt(mPosition) + "", new RetrofitInterface() {
+            RetrofitApiManager.getInstance().requestOneUserInfo(mIdNum, new RetrofitInterface() {
                 @Override
                 public void onResponse(Response response) {
                     if (response.isSuccessful() && response.body() != null) {
@@ -85,7 +79,7 @@ public class UserDialog extends Dialog {
                             item_user_email_tv.setText(mUser.getEmail());
                             item_user_first_name_tv.setText(mUser.getFirstName());
                             item_user_last_name_tv.setText(mUser.getLastName());
-                            GLog.d("" + item_user_id_tv.getText());
+                            GLog.d("클릭한 서버 데이터 출력 == " + item_user_id_tv.getText());
                             dialogYesBtn.setEnabled(true);
                             GLog.d("text 있음");
                         } else {
