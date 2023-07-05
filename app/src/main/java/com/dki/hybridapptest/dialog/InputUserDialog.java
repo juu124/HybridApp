@@ -50,71 +50,52 @@ public class InputUserDialog extends Dialog {
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(editUserID.getText())) {
-                    // id 공백
-                    editUserID.requestFocus();
+                    editUserEmail.requestFocus();
                     Toast.makeText(mContext, "Id를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
                     try {
                         Integer.parseInt(editUserID.getText().toString());
-                        dialogYesBtn.setEnabled(false);
                     } catch (Exception e) {
-                        GLog.e("Exception ID == " + e.toString());
-                        Toast.makeText(mContext, "Id를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        GLog.e("Exception ID == " + e);
+                        Toast.makeText(mContext, "Id는 숫자만 입력해주세요.", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
 
                 if (TextUtils.isEmpty(editUserEmail.getText())) {
-                    // email 공백
                     editUserEmail.requestFocus();
                     Toast.makeText(mContext, "email를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                    try {
-                        editUserEmail.getText().toString();
-                        dialogYesBtn.setEnabled(false);
-                    } catch (Exception e) {
-                        GLog.e("Exception Email == " + e.toString());
-                        Toast.makeText(mContext, "Email를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    if (!editUserEmail.getText().toString().contains("@") || !editUserEmail.getText().toString().contains(".")) {
+                        Toast.makeText(mContext, "email 형식으로 입력해주세요.", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
 
                 if (TextUtils.isEmpty(editUserFirstName.getText())) {
-                    // email 공백
                     editUserFirstName.requestFocus();
                     Toast.makeText(mContext, "FirstName를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                    try {
-                        editUserFirstName.getText().toString();
-                        dialogYesBtn.setEnabled(false);
-                    } catch (Exception e) {
-                        GLog.e("Exception FirstName== " + e.toString());
-                        Toast.makeText(mContext, "FirstName를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    return;
                 }
+
                 if (TextUtils.isEmpty(editUserLastName.getText())) {
-                    // email 공백
                     editUserLastName.requestFocus();
                     Toast.makeText(mContext, "LastName를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                    try {
-                        Integer.parseInt(editUserLastName.getText().toString());
-                        dialogYesBtn.setEnabled(false);
-                    } catch (Exception e) {
-                        GLog.e("Exception LastName== " + e.toString());
-                        Toast.makeText(mContext, "LastName를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                    return;
                 }
 
                 mInputUserInfoListener.onInputPositiveClick(editUserID.getText().toString(),
                         editUserEmail.getText().toString(),
                         editUserFirstName.getText().toString(),
                         editUserLastName.getText().toString());
-                dialogYesBtn.setEnabled(true);
 
-                dismiss();
                 GLog.d("입력한 값은 \n" + "id == " + editUserID.getText().toString() + "\n" +
                         "email == " + editUserEmail.getText().toString() + "\n" +
                         "First Name == " + editUserFirstName.getText().toString() + "\n" +
                         "Last Name == " + editUserLastName.getText().toString());
+                dismiss();
             }
         });
 

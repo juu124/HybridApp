@@ -9,12 +9,6 @@ public class UserCreate extends UserCommon {
     @SerializedName("job")
     private String job;
 
-//    @SerializedName("id")
-//    private String id = null;
-//
-//    @SerializedName("createdAt")
-//    private String createdAt;
-
     public UserCreate(String mName, String mJob) {
         name = mName;
         job = mJob;
@@ -35,20 +29,4 @@ public class UserCreate extends UserCommon {
     public void setJob(String job) {
         this.job = job;
     }
-
-//    public String getId() {
-//        return id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
-//
-//    public String getCreatedAt() {
-//        return createdAt;
-//    }
-//
-//    public void setCreatedAt(String createdAt) {
-//        this.createdAt = createdAt;
-//    }
 }

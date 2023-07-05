@@ -32,15 +32,23 @@ public class UserDialog extends Dialog {
     private TextView item_user_last_name_tv;
     private UserResponse mUser;
     private RemoveUserListener mRemoveUserListener;
+    private String mId;
+    private String mEmail;
+    private String mFirstName;
+    private String mLastName;
+    private boolean mIsAdd;
 
     // 프로그래스 바
     private ProgressBar mProgressBar;
 
-    public UserDialog(@NonNull Context context, int position, UserResponse user, RemoveUserListener removeUserListener) {
+    public UserDialog(@NonNull Context context, boolean isAdd, String id, String email, String firstName, String lastName, RemoveUserListener removeUserListener) {
         super(context);
         mContext = context;
-        mPosition = position;
-        mUser = user;
+        mIsAdd = isAdd;
+        mId = id;
+        mEmail = email;
+        mFirstName = firstName;
+        mLastName = lastName;
         mRemoveUserListener = removeUserListener;
     }
 
@@ -62,26 +70,26 @@ public class UserDialog extends Dialog {
         dialogYesBtn.setEnabled(false);
         dialogRemoveBtn.setEnabled(false);
 
-        if (mUser.isAdd()) {
+        if (mIsAdd) {
             GLog.d("서버 데이터가 아닙니다 =====");
             mProgressBar.setVisibility(View.GONE);
-            item_user_id_tv.setText(mUser.getId());
-            item_user_email_tv.setText(mUser.getEmail());
-            item_user_first_name_tv.setText(mUser.getFirstName());
-            item_user_last_name_tv.setText(mUser.getLastName());
+            item_user_id_tv.setText(mId);
+            item_user_email_tv.setText(mEmail);
+            item_user_first_name_tv.setText(mFirstName);
+            item_user_last_name_tv.setText(mLastName);
             dialogYesBtn.setEnabled(true);
             dialogRemoveBtn.setEnabled(true);
             GLog.d("text 있음");
         } else {
             GLog.d("서버 데이터가 맞습니다 =====");
-            RetrofitApiManager.getInstance().requestOneUserInfo(mUser.getId(), new RetrofitInterface() {
+            RetrofitApiManager.getInstance().requestOneUserInfo(mId, new RetrofitInterface() {
                 @Override
                 public void onResponse(Response response) {
                     if (response.isSuccessful() && response.body() != null) {
                         GLog.d("onResponse");
                         UserDataSupport userResponse = (UserDataSupport) response.body();
                         mUser = userResponse.getDtoUser();
-                        if (userResponse.getDtoUser() != null) {
+                        if (mUser != null) {
                             mProgressBar.setVisibility(View.GONE);
                             item_user_id_tv.setText(mUser.getId());
                             item_user_email_tv.setText(mUser.getEmail());
@@ -90,7 +98,6 @@ public class UserDialog extends Dialog {
                             GLog.d("클릭한 서버 데이터 출력 == " + item_user_id_tv.getText());
                             dialogYesBtn.setEnabled(true);
                             dialogRemoveBtn.setEnabled(true);
-                            GLog.d("text 있음");
                         } else {
                             GLog.d("text 없음" + response.errorBody());
                         }
@@ -114,7 +121,7 @@ public class UserDialog extends Dialog {
         dialogRemoveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mRemoveUserListener.onRemoveClick(mPosition);
+                mRemoveUserListener.onRemoveClick();
                 Toast.makeText(mContext, "삭제", Toast.LENGTH_SHORT).show();
                 dismiss();
             }

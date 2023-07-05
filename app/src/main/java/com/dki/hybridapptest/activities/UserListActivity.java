@@ -150,7 +150,8 @@ public class UserListActivity extends AppCompatActivity {
                     public void onInputPositiveClick(String id, String email, String firstName, String lastName) {
                         UserResponse mUser = new UserResponse(id, email, firstName, lastName, Image, true);
                         GLog.d("저장 == " + id + ", " + email + ", " + firstName + ", " + lastName);
-                        rvUserListAdapter.addSortUser(Integer.parseInt(id), mUser);
+                        rvUserListAdapter.addUser(Integer.parseInt(id), mUser);
+                        rvUserListAdapter.sortUser();
                         rvUserListAdapter.notifyDataSetChanged();
                     }
 

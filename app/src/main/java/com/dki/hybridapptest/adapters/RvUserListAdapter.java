@@ -25,42 +25,34 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
         // 뷰 홀더
         private ImageView userAvatar;
-        private TextView userIdType;
         private TextView userId;
-        private TextView userName;
         private TextView userFirstName;
         private TextView userLastName;
-        private TextView userEmailType;
         private TextView userEmail;
-        private ArrayList<UserResponse> responses;
 
         // 다이얼로그
         private UserDialog userDialog;
-        private UserResponse userResponse;
+        private boolean isAdd;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             userAvatar = itemView.findViewById(R.id.item_user_avatar);
-            userIdType = itemView.findViewById(R.id.dialog_user_id_type);
             userId = itemView.findViewById(R.id.item_user_id_tv);
-            userName = itemView.findViewById(R.id.dialog_user_name_type);
             userFirstName = itemView.findViewById(R.id.item_user_first_name_tv);
             userLastName = itemView.findViewById(R.id.item_user_last_name_tv);
-            userEmailType = itemView.findViewById(R.id.dialog_user_email_type);
             userEmail = itemView.findViewById(R.id.item_user_email_tv);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    userDialog = new UserDialog(itemView.getContext(), getAdapterPosition(), userResponse, new RemoveUserListener() {
+                    userDialog = new UserDialog(itemView.getContext(), isAdd, userId.getText().toString(), userEmail.getText().toString(), userFirstName.getText().toString(), userLastName.getText().toString(), new RemoveUserListener() {
                         @Override
-                        public void onRemoveClick(int position) {
-                            responses.remove(position);
-                            notifyDataSetChanged();
+                        public void onRemoveClick() {
+                            mUserList.remove(getAdapterPosition());
+                            notifyItemRemoved(getAdapterPosition());
                         }
                     });
                     GLog.d("아이템을 클릭했습니다.");
-                    GLog.d();
                     userDialog.show();
                 }
             });
@@ -76,19 +68,15 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         GLog.d("onBindViewHolder");
-        holder.userIdType.getText();
         holder.userId.setText(mUserList.get(position).getId());
         Glide.with(holder.itemView)
                 .load(mUserList.get(position).getAvatar())
                 .placeholder(R.drawable.sample_image)
                 .into(holder.userAvatar);
-        holder.userName.getText();
         holder.userFirstName.setText(mUserList.get(position).getFirstName());
         holder.userLastName.setText(mUserList.get(position).getLastName());
-        holder.userEmailType.getText();
         holder.userEmail.setText(mUserList.get(position).getEmail());
-        holder.userResponse = mUserList.get(position);
-        holder.responses = mUserList;
+        holder.isAdd = mUserList.get(position).isAdd();
     }
 
     @Override
@@ -100,8 +88,16 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
         mUserList.addAll(userList);
     }
 
-    public void addSortUser(int idNum, UserResponse user) {
+    public void addUser(int idNum, UserResponse user) {
         mUserList.add(idNum - 1, user);
+        for (int i = 0; i < mUserList.size(); i++) {
+            GLog.d(mUserList.get(i).getId());
+            GLog.d(mUserList.get(i).getEmail());
+        }
+        notifyDataSetChanged();
+    }
+
+    public void sortUser() {
         mUserList.sort(new SortArrayList());
         for (int i = 0; i < mUserList.size(); i++) {
             GLog.d(mUserList.get(i).getId());

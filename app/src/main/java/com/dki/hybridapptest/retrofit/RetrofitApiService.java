@@ -1,6 +1,7 @@
 package com.dki.hybridapptest.retrofit;
 
 import com.dki.hybridapptest.dto.UserCreate;
+import com.dki.hybridapptest.dto.UserCreateResponse;
 import com.dki.hybridapptest.dto.UserDataSupport;
 import com.dki.hybridapptest.dto.UsersList;
 
@@ -22,5 +23,5 @@ public interface RetrofitApiService {
     Call<UsersList> getUserNextInfo(@Query("page") int page);
 
     @POST("users/")
-    Call<UserCreate> getUserInfo(@Body UserCreate userCreate);
+    Call<UserCreate> getUserInfo(@Body UserCreateResponse userCreateResponse);
 }

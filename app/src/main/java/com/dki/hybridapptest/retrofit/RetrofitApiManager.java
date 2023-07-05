@@ -1,6 +1,7 @@
 package com.dki.hybridapptest.retrofit;
 
 import com.dki.hybridapptest.dto.UserCreate;
+import com.dki.hybridapptest.dto.UserCreateResponse;
 import com.dki.hybridapptest.dto.UserDataSupport;
 import com.dki.hybridapptest.dto.UsersList;
 import com.dki.hybridapptest.utils.Constants;
@@ -110,8 +111,8 @@ public class RetrofitApiManager {
     }
 
     public void requestPostUser(RetrofitInterface retrofitInterface) {
-        UserCreate dtoPostUser = new UserCreate("aaa", "leader");
-        Build().create(RetrofitApiService.class).getUserInfo(dtoPostUser).enqueue(new Callback<UserCreate>() {
+        UserCreateResponse userCreateResponse = new UserCreateResponse("aaa", "leader");
+        Build().create(RetrofitApiService.class).getUserInfo(userCreateResponse).enqueue(new Callback<UserCreate>() {
             @Override
             public void onResponse(Call<UserCreate> call, Response<UserCreate> response) {
                 retrofitInterface.onResponse(response);
