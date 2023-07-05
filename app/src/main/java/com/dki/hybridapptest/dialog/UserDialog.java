@@ -32,24 +32,17 @@ public class UserDialog extends Dialog {
     private TextView item_user_last_name_tv;
     private UserResponse mUser;
     private RemoveUserListener mRemoveUserListener;
-    private String mId;
-    private String mEmail;
-    private String mFirstName;
-    private String mLastName;
-    private boolean mIsAdd;
+    private UserResponse mUserResponse;
 
     // 프로그래스 바
     private ProgressBar mProgressBar;
 
-    public UserDialog(@NonNull Context context, boolean isAdd, String id, String email, String firstName, String lastName, RemoveUserListener removeUserListener) {
+    public UserDialog(@NonNull Context context, UserResponse userResponse, RemoveUserListener removeUserListener) {
         super(context);
         mContext = context;
-        mIsAdd = isAdd;
-        mId = id;
-        mEmail = email;
-        mFirstName = firstName;
-        mLastName = lastName;
+        mUserResponse = userResponse;
         mRemoveUserListener = removeUserListener;
+        GLog.d("서버 데이터 ===== " + mUserResponse);
     }
 
     @Override
@@ -70,19 +63,19 @@ public class UserDialog extends Dialog {
         dialogYesBtn.setEnabled(false);
         dialogRemoveBtn.setEnabled(false);
 
-        if (mIsAdd) {
+        if (mUserResponse.isAdd()) {
             GLog.d("서버 데이터가 아닙니다 =====");
             mProgressBar.setVisibility(View.GONE);
-            item_user_id_tv.setText(mId);
-            item_user_email_tv.setText(mEmail);
-            item_user_first_name_tv.setText(mFirstName);
-            item_user_last_name_tv.setText(mLastName);
+            item_user_id_tv.setText(mUserResponse.getId());
+            item_user_email_tv.setText(mUserResponse.getEmail());
+            item_user_first_name_tv.setText(mUserResponse.getFirstName());
+            item_user_last_name_tv.setText(mUserResponse.getLastName());
             dialogYesBtn.setEnabled(true);
             dialogRemoveBtn.setEnabled(true);
             GLog.d("text 있음");
         } else {
             GLog.d("서버 데이터가 맞습니다 =====");
-            RetrofitApiManager.getInstance().requestOneUserInfo(mId, new RetrofitInterface() {
+            RetrofitApiManager.getInstance().requestOneUserInfo(mUserResponse.getId(), new RetrofitInterface() {
                 @Override
                 public void onResponse(Response response) {
                     if (response.isSuccessful() && response.body() != null) {

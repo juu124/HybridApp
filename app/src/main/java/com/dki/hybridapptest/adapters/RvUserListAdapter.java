@@ -45,11 +45,13 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    userDialog = new UserDialog(itemView.getContext(), isAdd, userId.getText().toString(), userEmail.getText().toString(), userFirstName.getText().toString(), userLastName.getText().toString(), new RemoveUserListener() {
+                    int index = getAdapterPosition();
+                    UserResponse userResponse = new UserResponse(userId.getText().toString(), userEmail.getText().toString(), userFirstName.getText().toString(), userLastName.getText().toString(), "", isAdd);
+                    userDialog = new UserDialog(itemView.getContext(), userResponse, new RemoveUserListener() {
                         @Override
                         public void onRemoveClick() {
-                            mUserList.remove(getAdapterPosition());
-                            notifyItemRemoved(getAdapterPosition());
+                            mUserList.remove(index);
+                            notifyItemRemoved(index);
                         }
                     });
                     GLog.d("아이템을 클릭했습니다.");
@@ -88,21 +90,18 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
         mUserList.addAll(userList);
     }
 
-    public void addUser(int idNum, UserResponse user) {
-        mUserList.add(idNum - 1, user);
-        for (int i = 0; i < mUserList.size(); i++) {
-            GLog.d(mUserList.get(i).getId());
-            GLog.d(mUserList.get(i).getEmail());
+    public void addUser(UserResponse user) {
+        if (user != null) {
+            int position = Integer.parseInt(user.getId());
+            if (position > mUserList.size()) {
+                position = mUserList.size();
+                user.setId(String.valueOf(position));
+            }
+            mUserList.add(user);
         }
-        notifyDataSetChanged();
     }
 
     public void sortUser() {
         mUserList.sort(new SortArrayList());
-        for (int i = 0; i < mUserList.size(); i++) {
-            GLog.d(mUserList.get(i).getId());
-            GLog.d(mUserList.get(i).getEmail());
-        }
-        notifyDataSetChanged();
     }
 }

@@ -23,5 +23,5 @@ public interface RetrofitApiService {
     Call<UsersList> getUserNextInfo(@Query("page") int page);
 
     @POST("users/")
-    Call<UserCreate> getUserInfo(@Body UserCreateResponse userCreateResponse);
+    Call<UserCreateResponse> getUserInfo(@Body UserCreate userCreate);
 }

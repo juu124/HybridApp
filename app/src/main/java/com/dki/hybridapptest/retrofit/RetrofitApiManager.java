@@ -111,15 +111,15 @@ public class RetrofitApiManager {
     }
 
     public void requestPostUser(RetrofitInterface retrofitInterface) {
-        UserCreateResponse userCreateResponse = new UserCreateResponse("aaa", "leader");
-        Build().create(RetrofitApiService.class).getUserInfo(userCreateResponse).enqueue(new Callback<UserCreate>() {
+        UserCreate userCreate = new UserCreate("aaa", "leader");
+        Build().create(RetrofitApiService.class).getUserInfo(userCreate).enqueue(new Callback<UserCreateResponse>() {
             @Override
-            public void onResponse(Call<UserCreate> call, Response<UserCreate> response) {
+            public void onResponse(Call<UserCreateResponse> call, Response<UserCreateResponse> response) {
                 retrofitInterface.onResponse(response);
             }
 
             @Override
-            public void onFailure(Call<UserCreate> call, Throwable t) {
+            public void onFailure(Call<UserCreateResponse> call, Throwable t) {
                 retrofitInterface.onFailure(t);
             }
         });
