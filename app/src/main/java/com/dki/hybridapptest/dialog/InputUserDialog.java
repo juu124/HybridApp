@@ -4,7 +4,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,6 +16,8 @@ import androidx.annotation.NonNull;
 import com.dki.hybridapptest.Interface.InputUserInfoListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.utils.GLog;
+
+import java.util.regex.Pattern;
 
 
 public class InputUserDialog extends Dialog {
@@ -25,6 +29,12 @@ public class InputUserDialog extends Dialog {
     private Button dialogNoBtn;
     private Button dialogYesBtn;
     private InputUserInfoListener mInputUserInfoListener;
+    private Pattern pattern = Patterns.EMAIL_ADDRESS;
+
+    public void showKeyboard(Context context, View view) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
 
     public InputUserDialog(@NonNull Context context, InputUserInfoListener inputUserInfoListener) {
         super(context);
@@ -49,13 +59,19 @@ public class InputUserDialog extends Dialog {
         dialogYesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(editUserID.getText())) {
-                    editUserEmail.requestFocus();
+                showKeyboard(getContext(), v);
+                String id = editUserID.getText().toString();
+                String email = editUserEmail.getText().toString();
+                String firstName = editUserFirstName.getText().toString();
+                String lastName = editUserLastName.getText().toString();
+                if (TextUtils.isEmpty(id)) {
+                    editUserID.requestFocus();
+                    showKeyboard(editUserID.getContext(), v);
                     Toast.makeText(mContext, "Id를 입력해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
                     try {
-                        Integer.parseInt(editUserID.getText().toString());
+                        Integer.parseInt(id);
                     } catch (Exception e) {
                         GLog.e("Exception ID == " + e);
                         Toast.makeText(mContext, "Id는 숫자만 입력해주세요.", Toast.LENGTH_SHORT).show();
@@ -63,38 +79,38 @@ public class InputUserDialog extends Dialog {
                     }
                 }
 
-                if (TextUtils.isEmpty(editUserEmail.getText())) {
+                if (TextUtils.isEmpty(email)) {
                     editUserEmail.requestFocus();
+                    showKeyboard(editUserEmail.getContext(), v);
                     Toast.makeText(mContext, "email를 입력해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 } else {
-                    if (!editUserEmail.getText().toString().contains("@") || !editUserEmail.getText().toString().contains(".")) {
+                    if (!pattern.matcher(email).matches()) {
                         Toast.makeText(mContext, "email 형식으로 입력해주세요.", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }
 
-                if (TextUtils.isEmpty(editUserFirstName.getText())) {
+                if (TextUtils.isEmpty(firstName)) {
                     editUserFirstName.requestFocus();
+                    showKeyboard(editUserFirstName.getContext(), v);
                     Toast.makeText(mContext, "FirstName를 입력해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (TextUtils.isEmpty(editUserLastName.getText())) {
+                if (TextUtils.isEmpty(lastName)) {
                     editUserLastName.requestFocus();
+                    showKeyboard(editUserLastName.getContext(), v);
                     Toast.makeText(mContext, "LastName를 입력해주세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                mInputUserInfoListener.onInputPositiveClick(editUserID.getText().toString(),
-                        editUserEmail.getText().toString(),
-                        editUserFirstName.getText().toString(),
-                        editUserLastName.getText().toString());
+                mInputUserInfoListener.onInputPositiveClick(id, email, firstName, lastName);
 
-                GLog.d("입력한 값은 \n" + "id == " + editUserID.getText().toString() + "\n" +
-                        "email == " + editUserEmail.getText().toString() + "\n" +
-                        "First Name == " + editUserFirstName.getText().toString() + "\n" +
-                        "Last Name == " + editUserLastName.getText().toString());
+                GLog.d("입력한 값은 \n" + "id == " + id + "\n" +
+                        "email == " + email + "\n" +
+                        "First Name == " + firstName + "\n" +
+                        "Last Name == " + lastName);
                 dismiss();
             }
         });
