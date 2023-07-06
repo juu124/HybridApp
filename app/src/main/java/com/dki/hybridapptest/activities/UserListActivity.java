@@ -1,6 +1,8 @@
 package com.dki.hybridapptest.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -144,7 +146,7 @@ public class UserListActivity extends AppCompatActivity {
         userRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rvUserListAdapter = new RvUserListAdapter();
         userRecyclerView.setAdapter(rvUserListAdapter);
-
+        Handler handler = new Handler(Looper.getMainLooper());
         // List Add 클릭
         btnUserListAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,6 +160,17 @@ public class UserListActivity extends AppCompatActivity {
                         rvUserListAdapter.addUser(mUser);
                         rvUserListAdapter.sortUser();
                         rvUserListAdapter.notifyDataSetChanged();
+                        try {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    userRecyclerView.smoothScrollToPosition(Integer.parseInt(mUser.getId()));
+                                }
+                            });
+                        } catch (Exception e) {
+                            GLog.d("숫자로 변환할 수 없습니다.");
+                            return;
+                        }
                     }
 
                     @Override
