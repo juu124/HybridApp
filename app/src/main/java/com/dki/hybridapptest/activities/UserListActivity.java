@@ -32,6 +32,8 @@ public class UserListActivity extends AppCompatActivity {
     private RvUserListAdapter rvUserListAdapter;
     private ArrayList<UserResponse> mUserList = new ArrayList<>();
     private UsersList usersDetail;
+    private int page;
+    private int totalPages;
 
     // 프로그래스 바
     private ProgressBar mProgressBar;
@@ -64,6 +66,8 @@ public class UserListActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     GLog.d("response Successful == " + response.body());
                     usersDetail = (UsersList) response.body();
+                    page = usersDetail.getPage();
+                    totalPages = usersDetail.getTotalPages();
                     mUserList = usersDetail.getArrDtoUser();
 
 //                     for문 처리 (for each)
@@ -84,7 +88,7 @@ public class UserListActivity extends AppCompatActivity {
                     rvUserListAdapter.addArrUser(mUserList);
                     rvUserListAdapter.notifyDataSetChanged();
                     mProgressBar.setVisibility(View.GONE);
-                    if (usersDetail.getPage() >= usersDetail.getTotalPages()) {
+                    if (page >= totalPages) {
                         btnUserListMore.setVisibility(View.GONE);
                         btnUserListAdd.setVisibility(View.VISIBLE);
                     } else {
@@ -106,19 +110,20 @@ public class UserListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mProgressBar.setVisibility(View.VISIBLE);
                 GLog.d("btnUserListMore onClick");
-
-                RetrofitApiManager.getInstance().requestUserNextList(usersDetail.getPage() + 1, new RetrofitInterface() {
+                RetrofitApiManager.getInstance().requestUserNextList(page + 1, new RetrofitInterface() {
                     @Override
                     public void onResponse(Response response) {
                         if (response.isSuccessful() && response.body() != null) {
                             usersDetail = (UsersList) response.body();
-                            if (usersDetail.getPage() <= usersDetail.getTotalPages()) {
+                            page = usersDetail.getPage();
+                            totalPages = usersDetail.getTotalPages();
+                            if (page <= totalPages) {
                                 mUserList = usersDetail.getArrDtoUser();
                             }
                             rvUserListAdapter.addArrUser(mUserList);
                             rvUserListAdapter.notifyDataSetChanged();
                             mProgressBar.setVisibility(View.GONE);
-                            if (usersDetail.getPage() >= usersDetail.getTotalPages()) {
+                            if (page >= totalPages) {
                                 btnUserListMore.setVisibility(View.GONE);
                                 btnUserListAdd.setVisibility(View.VISIBLE);
                             } else {
@@ -147,12 +152,12 @@ public class UserListActivity extends AppCompatActivity {
                 GLog.d("btnUserListAdd onClick");
                 mInputUserDialog = new InputUserDialog(UserListActivity.this, new InputUserInfoListener() {
                     @Override
-                    public void onInputPositiveClick(String id, String email, String firstName, String lastName) {
-                        UserResponse mUser = new UserResponse(id, email, firstName, lastName, Image, true);
-                        GLog.d("저장 == " + id + ", " + email + ", " + firstName + ", " + lastName);
+                    public void onInputPositiveClick(UserResponse userResponse) {
+                        UserResponse mUser = new UserResponse(userResponse.getId(), userResponse.getEmail(), userResponse.getFirstName(), userResponse.getLastName(), Image, true);
+                        GLog.d("저장 == " + userResponse.getId() + ", " + userResponse.getEmail() + ", " + userResponse.getFirstName() + ", " + userResponse.getLastName());
                         rvUserListAdapter.addUser(mUser);
                         rvUserListAdapter.sortUser();
-                        rvUserListAdapter.notifyItemInserted(Integer.parseInt(mUser.getId()));
+                        rvUserListAdapter.notifyDataSetChanged();
                     }
 
                     @Override

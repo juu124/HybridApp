@@ -1,7 +1,9 @@
 package com.dki.hybridapptest.Interface;
 
+import com.dki.hybridapptest.dto.UserResponse;
+
 public interface InputUserInfoListener {
-    public void onInputPositiveClick(String id, String email, String firstName, String lastName);
+    public void onInputPositiveClick(UserResponse userResponse);
 
     public void onInputNegativeClick();
 }

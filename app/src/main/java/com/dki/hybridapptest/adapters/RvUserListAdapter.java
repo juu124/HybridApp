@@ -92,11 +92,6 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
 
     public void addUser(UserResponse user) {
         if (user != null) {
-            int position = Integer.parseInt(user.getId());
-            if (position > mUserList.size()) {
-                position = mUserList.size();
-                user.setId(String.valueOf(position));
-            }
             mUserList.add(user);
         }
     }
