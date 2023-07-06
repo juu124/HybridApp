@@ -103,7 +103,12 @@ public class MainActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText(this, "앱 설정 창에서 전화 권한을 허용해주세요.", Toast.LENGTH_SHORT).show();
                         mAction = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        mAction.setData(Uri.parse("package:" + getPackageName()));
+                        try {
+                            mAction.setData(Uri.parse("package:" + getPackageName()));
+                        } catch (Exception e) {
+                            GLog.d("usri parse 불가 == " + e);
+                            return;
+                        }
                         startActivity(mAction);
                     }
                 }

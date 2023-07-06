@@ -111,7 +111,6 @@ public class UserListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mProgressBar.setVisibility(View.VISIBLE);
-                GLog.d("btnUserListMore onClick");
                 RetrofitApiManager.getInstance().requestUserNextList(page + 1, new RetrofitInterface() {
                     @Override
                     public void onResponse(Response response) {
@@ -151,25 +150,22 @@ public class UserListActivity extends AppCompatActivity {
         btnUserListAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GLog.d("btnUserListAdd onClick");
                 mInputUserDialog = new InputUserDialog(UserListActivity.this, new InputUserInfoListener() {
                     @Override
                     public void onInputPositiveClick(UserResponse userResponse) {
-                        UserResponse mUser = new UserResponse(userResponse.getId(), userResponse.getEmail(), userResponse.getFirstName(), userResponse.getLastName(), Image, true);
-                        GLog.d("저장 == " + userResponse.getId() + ", " + userResponse.getEmail() + ", " + userResponse.getFirstName() + ", " + userResponse.getLastName());
-                        rvUserListAdapter.addUser(mUser);
+                        rvUserListAdapter.addUser(userResponse);
                         rvUserListAdapter.sortUser();
+                        int position = rvUserListAdapter.getIndexUser(userResponse);
                         rvUserListAdapter.notifyDataSetChanged();
                         try {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    userRecyclerView.smoothScrollToPosition(Integer.parseInt(mUser.getId()));
+                                    userRecyclerView.smoothScrollToPosition(position);
                                 }
                             });
                         } catch (Exception e) {
                             GLog.d("숫자로 변환할 수 없습니다.");
-                            return;
                         }
                     }
 

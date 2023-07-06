@@ -49,7 +49,6 @@ public class WebAppInterface {
         }
     }
 
-
     @JavascriptInterface
     public void showDialog() {
         inputDialog = new InputDialog(mContext, new InputDialogClickListener() {

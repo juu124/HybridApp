@@ -10,8 +10,10 @@ public class UserCreateResponse extends UserCreate {
     @SerializedName("createdAt")
     private String createdAt;
 
-    public UserCreateResponse(String mName, String mJob) {
+    public UserCreateResponse(String mName, String mJob, String id, String createdAt) {
         super(mName, mJob);
+        this.id = id;
+        this.createdAt = createdAt;
     }
 
     public String getId() {
