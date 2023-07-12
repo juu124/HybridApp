@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.webkit.WebResourceRequest;
@@ -21,10 +23,14 @@ import androidx.core.app.ActivityCompat;
 
 import com.dki.hybridapptest.Interface.WebAppInterface;
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.bridge.AndroidBridge;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.utils.Constants;
 import com.dki.hybridapptest.utils.GLog;
+import com.dreamsecurity.magicxsign.MagicXSign;
+import com.dreamsecurity.magicxsign.MagicXSign_Type;
+import com.dreamsecurity.xsignweb.XSignWebPlugin;
 
 import retrofit2.Response;
 
@@ -33,19 +39,26 @@ public class MainActivity extends AppCompatActivity {
     private WebSettings mWebSettings;
     private Intent mAction;
     private SharedPreferences sharedPreferences;
+    private AndroidBridge androidBridge = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        GLog.d();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        GLog.d("onCreate");
         mWebView = findViewById(R.id.webview);
         mWebSettings = mWebView.getSettings();
-
         mWebSettings.setJavaScriptEnabled(true);
+
+        androidBridge = new AndroidBridge(mWebView, MainActivity.this);
+        mWebView.addJavascriptInterface(androidBridge, "DKITec");
+
+        //하이브리드 모바일 pki 인터페이스
+//        mWebView.addJavascriptInterface(new XSignWebPlugin(this, mWebView), "DKITec");
         mWebView.addJavascriptInterface(new WebAppInterface(this, mWebView), "DKITec");
         mWebView.loadUrl(Constants.WEB_VIEW_URL);
+
+        webPlugin_Init(MainActivity.this);
 
         RetrofitApiManager.getInstance().requestPostUser(new RetrofitInterface() {
             @Override
@@ -82,6 +95,35 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    public void webPlugin_Init(Context c) {
+        GLog.d("잘 들어왔습니다. =========" + c);
+        int SDK_INT = Build.VERSION.SDK_INT;
+        try {
+            MagicXSign xSign = null;
+            XSignWebPlugin xWeb = null;
+
+            xWeb = new XSignWebPlugin(this, this, mWebView);
+            xSign = new MagicXSign();
+
+            xSign.Init(this, MagicXSign_Type.XSIGN_DEBUG_LEVEL_1);
+            String mediaRootPath = Environment.getExternalStorageDirectory().getPath();
+
+            xSign.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI | MagicXSign_Type.XSIGN_PKI_TYPE_GPKI | MagicXSign_Type.XSIGN_PKI_TYPE_PPKI | MagicXSign_Type.XSIGN_PKI_TYPE_MPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER, MagicXSign_Type.XSIGN_PKI_CERT_SIGN, MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_ALL, mediaRootPath);
+
+            MagicXSign pki = new MagicXSign();
+
+            if (xWeb.setStorage(MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_DISK) == MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_DISK)
+                System.out.println("----- DB 사용 -----");
+
+            pki.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER,
+                    MagicXSign_Type.XSIGN_PKI_CERT_SIGN, MagicXSign_Type.XSIGN_PKI_TYPE_ALL, "/sdcard");
+
+            xSign.Finish();
+        } catch (Exception e) {
+            GLog.d("webPlugin_Init ====== " + e);
+        }
     }
 
     @Override

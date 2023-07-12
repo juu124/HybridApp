@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_alertDialog_divider">#00ffffff</color>
+
+    // 지문 인증장치 문구 색상
+    <color name="fido_color_fp_error">#d72a2a</color>
+    <color name="fido_color_fp_none">#666666</color>
+
+</resources>

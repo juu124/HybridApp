@@ -1,0 +1,21 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 33
+
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 33
+
+    }
+
+
+}
+
+dependencies {
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    api files('libs/MagicMRSv2_1.1.7.jar')
+//    api files('libs/MagicXSign_1.0.7.2.jar')
+
+}

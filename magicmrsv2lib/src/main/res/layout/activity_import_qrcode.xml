@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#b3000000"
+    tools:context="com.dreamsecurity.magicmrs.activity.MagicMRSImportQRCodeActivity">
+
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/zxing_barcode_scanner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:zxing_scanner_layout="@layout/custom_barcode_scanner" />
+
+    <RelativeLayout
+        android:id="@+id/import_qrcode_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+
+        <TextView
+            android:id="@+id/import_qrcode_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:text="QR 스캔"
+            android:textColor="#ffffff"
+            android:textSize="20dp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/import_qrcode_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/import_qrcode_title_layout"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="사각형 영역을 인증서 QR코드에\n맞추면 자동으로 인식합니다."
+            android:textColor="#ffffff"
+            android:textSize="18dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:gravity="center"
+            android:text="@string/str_import_scan_message2"
+            android:textColor="#1672e4"
+            android:textSize="20dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="90dp"
+            android:gravity="center"
+            android:text="@string/str_import_scan_message3"
+            android:textColor="#333333"
+            android:textSize="20dp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/import_auth_btn"
+        android:contentDescription="인증번호로 가져오기"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:background="#1672e4"
+        android:gravity="center"
+        android:text="@string/str_import_cert_auth"
+        android:textColor="#ffffff"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/backbtn"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_centerVertical="true"
+        android:background="@color/cancelBtn"
+        android:text="취소"
+        android:textColor="#ffffff"
+        android:textSize="18dp" />
+
+    <View
+        android:id="@+id/view_empty"
+        android:layout_width="300dp"
+        android:layout_height="440dp"
+        android:layout_centerInParent="true" />
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/img_mold_01"
+        android:id="@+id/iv_mold_01"
+        android:layout_alignStart="@id/view_empty"
+        android:layout_alignLeft="@id/view_empty"
+        android:layout_alignTop="@id/view_empty" />
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/img_mold_02"
+        android:id="@+id/iv_mold_02"
+        android:layout_alignEnd="@id/view_empty"
+        android:layout_alignRight="@id/view_empty"
+        android:layout_alignTop="@id/view_empty" />
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/img_mold_03"
+        android:id="@+id/iv_mold_03"
+        android:layout_alignStart="@id/view_empty"
+        android:layout_alignLeft="@id/view_empty"
+        android:layout_alignBottom="@id/view_empty" />
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/img_mold_04"
+        android:id="@+id/iv_mold_04"
+        android:layout_alignEnd="@id/view_empty"
+        android:layout_alignRight="@id/view_empty"
+        android:layout_alignBottom="@id/view_empty" />
+</RelativeLayout>

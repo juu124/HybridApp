@@ -1,0 +1,59 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.dreamsecurity.magic_mvaccine">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.INSTALL_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <!-- Android P(9.0) 타겟의 앱 빌드 시, 악성 앱 탐지 시 삭제 및 실시간 감시 서비스의 구동을 위해서는 아래의 퍼미션이 요구 됨에 따라 추가 -->
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
+    <!--    &lt;!&ndash; Android 11부터, 단말 내 설치된 앱의 검사를 진행하기 위해서는 아래의  퍼미션이 요구 됨에 따라 추가&ndash;&gt;-->
+    <!--    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"-->
+    <!--        tools:ignore="QueryAllPackagesPermission" />-->
+
+    <application
+        android:allowBackup="false"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="n">
+
+        <activity
+            android:name=".ScanResultActivity"
+            android:configChanges="orientation|screenSize"
+            android:launchMode="singleTask"
+            android:excludeFromRecents="true"
+            android:theme="@style/NoDisplayTheme" />
+        <activity
+            android:name=".ScanDialog"
+            android:excludeFromRecents="true"
+            android:theme="@style/TranslucentTheme" />
+        <activity
+            android:name=".DeleteMalwareActivity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/NoDisplayTheme" />
+
+        <service android:name=".VaccineService" />
+
+        <receiver
+            android:name=".SDMountedCheckReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_EJECT" />
+                <action android:name="android.intent.action.MEDIA_BAD_REMOVAL" />
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.MEDIA_REMOVED" />
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED" />
+
+                <data android:scheme="file" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".AppInstalledReceiver" />
+        <receiver android:name=".RootingCheckReceiver" />
+
+    </application>
+
+</manifest>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="mf_title_button_margin">40dp</dimen>
+    <dimen name="mf_title_button_top_margin">40dp</dimen>
+
+    <dimen name="passcode_insertBox_height">300dp</dimen>
+
+    <!-- 인증장치 리스트 화면 설정 -->
+    <dimen name="mf_auth_list_top_bottom_margin">25dp</dimen>
+    <dimen name="mf_auth_list_image_size">60dp</dimen>
+    <dimen name="mf_auth_list_text_margin">15dp</dimen>
+    <dimen name="mf_auth_list_text_size">20px</dimen>
+
+
+</resources>

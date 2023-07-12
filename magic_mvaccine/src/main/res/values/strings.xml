@@ -1,0 +1,11 @@
+<resources>
+    <string name="Magic_mVaccine_module_name">Magic mVaccine SDK</string>
+
+    <string name="mv_str_scan_result">바이러스 검사 결과</string>
+    <string name="mv_str_del_all">전체삭제</string>
+
+    <!-- Notification Contents -->
+    <string name="Magic_mVaccine_notification_contents">Magic mVaccine SDK 안전하게 보호 중</string>
+    <string name="StringValue">이미지가 열리지 않습니다.</string>
+
+</resources>

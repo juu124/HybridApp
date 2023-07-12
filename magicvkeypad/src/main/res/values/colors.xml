@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="hover">#D7000000</drawable>
+
+    <drawable name="non_hover">#A1000000</drawable>
+
+    <drawable name="keyPadBg">#cbd3da</drawable>
+
+</resources>

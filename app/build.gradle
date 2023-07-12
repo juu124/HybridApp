@@ -29,10 +29,20 @@ android {
 }
 
 dependencies {
+    api project(path: ':magicmrsv2lib')
+    implementation files(
+            "libs/MagicMRS.jar",
+            "libs/MagicSE2.jar",
+            "libs/MagicXSign_1.0.9.2.jar",
+            "libs/XSignWebPlugin_Client_v1.4.4.jar"
+    )
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation project(path: ':Lib_Magic_FIDO')
+    implementation project(path: ':magicvkeypad')
+    implementation project(path: ':magic_mvaccine')
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

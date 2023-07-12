@@ -14,3 +14,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "HybridAppTest"
 include ':app'
+include ':Lib_Magic_FIDO'
+include ':magic_mvaccine'
+include ':magicmrsv2lib'
+include ':magicvkeypad'

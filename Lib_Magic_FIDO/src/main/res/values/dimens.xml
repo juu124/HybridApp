@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    //인증장치 Title 여백
+    <dimen name="mf_title_button_margin">20dp</dimen>
+    <dimen name="mf_title_button_top_margin">30dp</dimen>
+
+    <dimen name="passcode_insertBox_height">300dp</dimen>
+
+    <dimen name="mf_auth_list_top_bottom_margin">25dp</dimen>
+    <dimen name="mf_auth_list_image_size">60dp</dimen>
+    <dimen name="mf_auth_list_text_margin">15dp</dimen>
+    <dimen name="mf_auth_list_text_size">20px</dimen>
+
+</resources>

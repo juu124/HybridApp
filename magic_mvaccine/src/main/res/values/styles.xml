@@ -1,0 +1,30 @@
+<resources>
+
+    <style name="VaccineTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+    <style name="TranslucentTheme" parent="VaccineTheme">
+        <item name="windowNoTitle">true</item>
+        <!-- Android O 버전에서 스크린 고정 옵션 사용시 에러 발생하기 때문에 추가 -->
+        <item name="android:screenOrientation">unspecified</item>
+
+        <item name="android:backgroundDimEnabled">true</item>
+
+        <!-- 투명정도를 나타내는 색-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <style name="NoDisplayTheme" parent="TranslucentTheme">
+        <item name="android:windowContentOverlay">@null</item>
+
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+
+</resources>

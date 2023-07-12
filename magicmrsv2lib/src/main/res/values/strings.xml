@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">MagicMRSV2</string>
+
+
+    <string name="str_import_scan_title">QR코드 스캔</string>
+    <string name="str_import_scan_message1">PC화면의&#160;</string>
+    <string name="str_import_scan_message2">QR코드를 스캔</string>
+    <string name="str_import_scan_message3">해주세요.</string>
+
+    <string name="str_import_authcode_title">인증번호 입력</string>
+    <string name="str_import_authcode_message">를 입력하세요.</string>
+
+
+    <string name="str_import_authcode_detail_message1">PC의 인증서 이동프로그램 또는 스마트폰의 인증서이동 앱을 실행 후 화면에 표시된 인증번호 8자리를 입력하세요.</string>
+    <string name="str_import_authcode_detail_message2">인증서 가져오기 버튼을 누르면 인증서 가져오기가 완료됩니다.</string>
+
+    <string name="str_export_cert_title">인증서 내보내기</string>
+    <string name="str_export_cert_message">인증서를 가져올 PC 혹은 단말기에&#10;인증번호를 입력하시거나 QR코드를 스캔해주세요.</string>
+
+    <string name="str_sessiontime_text">남은시간&#160;&#160;</string>
+
+    <string name="str_export_cert_okbtn">인증서 가져오기</string>
+
+    <string name="str_import_cert_auth">인증번호로 가져오기</string>
+
+    <string name="str_authnum">인증번호</string>
+    <string name="str_qrcode">QR 코드</string>
+
+    <string name="str_yes">예</string>
+    <string name="str_no">아니오</string>
+
+    <string name="str_alert_message">잠시만 기다려주세요.</string>
+
+    <string name="str_ssl_cert_verify">이 웹 사이트의 보안 인증서에 문제가 있습니다.&#10;계속 탐색하시겠습니까?</string>
+    <string name="str_notice">알림</string>
+
+    <string name="str_alert_error_message_1008">신뢰할 수 없는 서버입니다.</string>
+    <string name="str_alert_error_message_1009_1">인증번호가 올바르지 않습니다.&#10;다시 입력해 주세요.&#40;현재&#160;</string>
+    <string name="str_alert_error_message_1009_2">회 남음&#41;</string>
+    <string name="str_alert_error_message_1010">인증번호 입력 횟수를 초과하여 이 창을 종료합니다.&#10;인증서 가져오기를 재시도 하시기 바랍니다.</string>
+    <string name="str_alert_error_message_1012">인증서와 개인키의 키쌍이 일치 하지 않습니다</string>
+    <string name="str_alert_error_message_not_input_authcode">인증번호 8자리를 입력하지 않으셨습니다.</string>
+
+</resources>

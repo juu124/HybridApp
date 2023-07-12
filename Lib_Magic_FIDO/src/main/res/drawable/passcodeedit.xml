@@ -1,0 +1,36 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:left="-10dp"
+        android:right="-10dp"
+        android:top="-10dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+
+            <stroke
+                android:width="2dp"
+                android:color="#3498db" />
+        </shape>
+    </item>
+</layer-list>
+
+    <!--<?xml version="1.0" encoding="utf-8"?>--><!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >--><!--<item android:bottom="2dp" android:top="-2dp" android:right="-2dp" android:left="-2dp">--><!--<shape--><!--android:shape="rectangle">--><!--<stroke android:width="2dp" android:color="#422222" />--><!--<solid android:color="#00000000" />-->
+
+    <!--</shape>--><!--</item>-->
+
+    <!--</layer-list>-->
+
+
+    <!-- 아래에만 밑줄 --><!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">--><!--<item android:top="-10dp"--><!--android:left="-10dp"--><!--android:right="-10dp">--><!--<shape android:shape="rectangle">--><!--<solid android:color="@android:color/transparent"/>-->
+
+    <!--<stroke android:width="2dp"--><!--android:color="#3498db"/>--><!--</shape>--><!--</item>--><!--</layer-list>-->
+
+
+    <!--<?xml version="1.0" encoding="UTF-8"?>--><!--<shape xmlns:android="http://schemas.android.com/apk/res/android" >-->
+
+    <!--<solid android:color="#00FFFFFF" />-->
+
+    <!--<stroke--><!--android:width="1dip"--><!--android:color="#DFDFDF" />-->
+
+    <!--<padding--><!--android:bottom="0dip"--><!--android:left="0dip"--><!--android:right="0dip"--><!--android:top="0dip" />-->
+
+    <!--</shape>-->

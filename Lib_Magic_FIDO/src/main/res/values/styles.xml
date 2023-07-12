@@ -1,0 +1,44 @@
+<resources>
+
+    <!-- 커스텀 커서 설정 -->
+    <style name="custom_cursor_style">
+        <item name="android:layout_width">1.5dp</item> <!-- 커서 두께 설정 -->
+        <item name="android:layout_height">25dp</item> <!-- 커서 길 설정 -->
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_marginBottom">15dp</item>
+        <item name="android:src">@drawable/cursor_anim</item>
+        <item name="android:paddingTop">3dp</item>
+        <item name="android:paddingBottom">3dp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="inputbox_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:background">@drawable/pass_text_field</item>
+        <item name="android:focusable">false</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+
+    <style name="PatternDialogStyle" parent="@android:style/Theme.Holo.Dialog">
+        <!-- landscape 일 때의 너비 -->
+        <item name="android:windowMinWidthMajor">70%</item>
+        <!-- portrait 일 때의 너비 -->
+        <item name="android:windowMinWidthMinor">70%</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+
+    <style name="PatternFullStyle" parent="@android:style/Theme.Holo.Light">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Transaction_AlertDialog" parent="@android:style/Theme.Holo.Light.Dialog" />
+
+
+</resources>

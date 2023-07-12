@@ -10,7 +10,11 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/Lib_Magic_FIDO" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/magic_mvaccine" />
+            <option value="$PROJECT_DIR$/magicmrsv2lib" />
+            <option value="$PROJECT_DIR$/magicvkeypad" />
           </set>
         </option>
       </GradleProjectSettings>

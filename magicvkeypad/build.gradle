@@ -1,0 +1,25 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 33
+
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 33
+
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    api files('libs/MagicVKeypad_v1.4.1.jar')
+}

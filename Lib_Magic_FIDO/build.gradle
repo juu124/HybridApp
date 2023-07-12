@@ -1,0 +1,39 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 33
+
+    defaultConfig {
+        minSdkVersion 18
+        targetSdkVersion 33
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    lint {
+        abortOnError true
+        baseline file('lint-baseline.xml')
+        warningsAsErrors true
+    }
+
+
+}
+
+dependencies {
+    api files('libs/lib_Magic_RPSDK_v1.14.0.jar')
+    api files('libs/lib_Magic_FIDO_Client_v1.0.32.jar')
+    api files('libs/lib_Magic_Authenticator_v1.2.0.jar')
+    api files('libs/lib_Magic_UAFProtocol_v1.1.0.jar')
+    api files('libs/Auth_lib_Magic_PasscodeAuth_v1.1.0.jar')
+    api files('libs/Auth_lib_Magic_Pattern_v1.1.1.jar')
+    api files('libs/Auth_lib_Magic_FingerAuth_v1.0.27.jar')
+    implementation files('libs/Auth_lib_Magic_AuthWrapper_v1.2.0.jar')
+    implementation files('libs/org.apache.http.legacy.jar')
+    implementation files('libs/jcaos-client-1.4.9.1.jar')
+    implementation 'com.google.code.gson:gson:2.10'
+
+}
