@@ -54,8 +54,8 @@ public class FIDOAuthentication {
             //subjDn 값이 있을경우 getRegistedCertListWithUserID로 인증서 추출
             try {
                 KFIDOCertInfo kCertificateInfo[] = mAuth.getRegistedCertListWithUserID(mSubjdn);
-//				GLog.d("FIDOAuthentication", "kCertificateInfo : " + kCertificateInfo);
-//				GLog.d("FIDOAuthentication", "kCertificateInfo.length : " + kCertificateInfo.length);
+                GLog.d("kCertificateInfo : " + kCertificateInfo);
+                GLog.d("kCertificateInfo.length : " + kCertificateInfo.length);
                 if (kCertificateInfo != null && kCertificateInfo.length == 1) {
                     settingValue.put(ContextKeys.KEY_CERTIFICATE, kCertificateInfo[0]); // value Type : KFIDOCertInfo
                 }
