@@ -13,6 +13,8 @@
 <input type="button" value="world" onClick="showAndroidToast('world')"/><br><br>
 <input type="button" value="show Dialog" onClick="showDialog()"/><br><br>
 <input type="button" value="show User Information" onClick="showUserList()"/><br><br>
+<input type="button" value="show User Information CertificationList"
+       onClick="showCertificationList()"/><br><br>
 <script type="text/javascript">
     function showAndroidToast(toast) {
         DKITec.showToast(toast);
@@ -32,6 +34,10 @@
 
     function showUserList() {
         DKITec.showUserList();
+    }
+
+    function showCertificationList() {
+        DKITec.showCertificationList();
     }
 
 </script>

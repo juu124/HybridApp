@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/bgcolor"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_common_title" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/txt_cert_index"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:text="인증서 정보"
+                android:singleLine="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:shrinkColumns="1,3,5,7,9,11"
+                android:stretchColumns="2,4,6,8,10"
+                android:background="@drawable/round_corner">
+
+                <TableRow
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView android:text="이름" />
+
+                    <TextView
+                        android:id="@+id/txt_cert_info_name"
+                        android:layout_marginLeft="15dp" />
+                </TableRow>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:background="#ffffff"
+                    android:layout_height="1dp" />
+
+                <TableRow
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView android:text="발급자" />
+
+                    <TextView
+                        android:id="@+id/txt_cert_info_issur"
+                        android:layout_marginLeft="15dp" />
+                </TableRow>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:background="#ffffff"
+                    android:layout_height="1dp" />
+
+                <TableRow
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView android:text="용도" />
+
+                    <TextView
+                        android:id="@+id/txt_cert_info_objective"
+                        android:layout_marginLeft="15dp" />
+                </TableRow>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:background="#ffffff"
+                    android:layout_height="1dp" />
+
+                <TableRow
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView android:text="목적" />
+
+                    <TextView
+                        android:id="@+id/txt_cert_info_purpose"
+                        android:layout_marginLeft="15dp" />
+                </TableRow>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:background="#ffffff"
+                    android:layout_height="1dp" />
+
+                <TableRow
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView android:text="DN" />
+
+                    <TextView
+                        android:id="@+id/txt_cert_info_dn"
+                        android:layout_marginLeft="15dp" />
+                </TableRow>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:background="#ffffff"
+                    android:layout_height="1dp" />
+
+                <TableRow
+                    android:layout_marginTop="10dp"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView android:text="유효기간(From)" />
+
+                    <TextView
+                        android:id="@+id/txt_cert_info_from"
+                        android:layout_marginLeft="15dp" />
+                </TableRow>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:background="#ffffff"
+                    android:layout_height="1dp" />
+
+                <TableRow
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView android:text="유효기간(To)" />
+
+                    <TextView
+                        android:id="@+id/txt_cert_info_to"
+                        android:layout_marginLeft="15dp" />
+                </TableRow>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:background="#ffffff"
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="1dp" />
+
+            </TableLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_change_password"
+                android:visibility="gone"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:text="현재 비밀번호\n(Sample 인증서 비밀번호: qwer1234)"
+                    android:textColor="#000000"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edit_input_curPassword"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:inputType="textPassword" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#000000"
+                    android:text="변경 비밀번호"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/edit_input_changePassword"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:inputType="textPassword" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_password_change"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="2dp"
+                        android:text="변경"
+                        android:onClick="selectBtnPasswordChange"
+                        android:background="@drawable/btn_red"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/btn_password_change_cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:text="취소"
+                        android:onClick="selectBtnPasswordChange"
+                        android:background="@drawable/btn_blue"
+                        android:layout_weight="1" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

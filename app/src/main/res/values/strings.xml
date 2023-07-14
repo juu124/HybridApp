@@ -3,4 +3,31 @@
     <string name="hello_world">Hello World</string>
     <string name="hello">hello</string>
     <string name="world">world</string>
+    <string name="action_settings">Settings</string>
+    <string name="dialog_confirm_ok">확인</string>
+    <string name="dialog_confirm_delete">삭제</string>
+    <string name="dialog_input_plainText">평문 입력</string>
+    <string name="dialog_input_cert_password">인증서 비밀번호 입력\n(Sample 인증서 비밀번호: qwer1234)</string>
+    <string name="dialog_input_vid">인증서 VID 입력\n(Sample 인증서 VID: 7001011112121)</string>
+    <string name="function_list_cert_sign">인증서 서명</string>
+    <string name="function_list_cert_delete">인증서 삭제</string>
+    <string name="function_list_cert_change_passwd">인증서 비밀번호 변경</string>
+    <string name="function_list_cert_check_vid">인증서 본인확인</string>
+    <string name="function_list_cert_asymmetric_enc_dec">비대칭키 암/복호화</string>
+    <string name="function_list_cert_cms_enc_dec">EnvelopedData 암/복호화</string>
+    <!--  2020.02.05 : XML 서명 추가  -->
+    <string name="function_list_cert_xml_sign">XML 서명</string>
+    <!--  20210326 wj : PFX 추가  -->
+    <string name="function_cert_pfx_export">PFX Export</string>
+    <string name="function_cert_pfx_import">PFX Import</string>
+    <!--  20210426 wj : 개인키 암호화  -->
+    <string name="function_cert_encPriKey">개인키 암호화</string>
+    <string name="function_list_crypto_symmetric_enc_dec">대칭키 암/복호화</string>
+    <string name="function_list_crypto_hash">Hash 생성</string>
+    <string name="function_list_crypto_base64">Base64 생성</string>
+    <string name="function_cert_detail">인증서 상세 정보</string>
+    <string name="function_cert_list_info">인증서 목록</string>
+    <string name="function_cert_list_sign">서명용 인증서</string>
+    <string name="function_cert_list_km">암호용 인증서</string>
+    <string name="function_ucpid_request_info">UCPID Request Info.</string>
 </resources>

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -43,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        GLog.d();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mWebView = findViewById(R.id.webview);
@@ -106,21 +106,42 @@ public class MainActivity extends AppCompatActivity {
 
             xWeb = new XSignWebPlugin(this, this, mWebView);
             xSign = new MagicXSign();
+            GLog.d("0");
 
             xSign.Init(this, MagicXSign_Type.XSIGN_DEBUG_LEVEL_1);
             String mediaRootPath = Environment.getExternalStorageDirectory().getPath();
-
+            GLog.d("1");
             xSign.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI | MagicXSign_Type.XSIGN_PKI_TYPE_GPKI | MagicXSign_Type.XSIGN_PKI_TYPE_PPKI | MagicXSign_Type.XSIGN_PKI_TYPE_MPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER, MagicXSign_Type.XSIGN_PKI_CERT_SIGN, MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_ALL, mediaRootPath);
 
+            GLog.d("2");
             MagicXSign pki = new MagicXSign();
 
+            GLog.d("3");
             if (xWeb.setStorage(MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_DISK) == MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_DISK)
                 System.out.println("----- DB 사용 -----");
 
-            pki.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER,
-                    MagicXSign_Type.XSIGN_PKI_CERT_SIGN, MagicXSign_Type.XSIGN_PKI_TYPE_ALL, "/sdcard");
+            try {
+                GLog.d("4");
+                pki.Init(MainActivity.this, MagicXSign_Type.XSIGN_DEBUG_LEVEL_0);
+                int count = -1;
+                pki.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER,
+                        MagicXSign_Type.XSIGN_PKI_CERT_SIGN, MagicXSign_Type.XSIGN_PKI_TYPE_ALL, "/sdcard");
+                count = pki.MEDIA_GetCertCount();
+                GLog.d("count : " + count);
+                GLog.d("6");
 
-            xSign.Finish();
+                int nMediaType[] = new int[1];
+                for (int i = 0; i < count; i++) {
+                    GLog.d("7");
+                    byte[] signCert = pki.MEDIA_ReadCert(i, MagicXSign_Type.XSIGN_PKI_CERT_SIGN, nMediaType);
+                    byte[] signPri = pki.MEDIA_ReadPriKey(i, MagicXSign_Type.XSIGN_PKI_CERT_SIGN);
+                    pki.MEDIA_WriteCertAndPriKey(Base64.decode(signCert, Base64.DEFAULT), Base64.decode(signPri, Base64.DEFAULT), MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_DISK);
+                }
+                GLog.d("8");
+                pki.MEDIA_UnLoad();
+            } catch (Exception e) {
+                GLog.d("webPlugin_Init ====== " + e);
+            }
         } catch (Exception e) {
             GLog.d("webPlugin_Init ====== " + e);
         }

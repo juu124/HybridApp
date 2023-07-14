@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_common_title" />
+
+    <TextView
+        android:id="@+id/txt_current_cert_loading_path"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:paddingLeft="5dp"
+        android:background="#ff9933"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:text="/sdcard"
+        android:textColor="#ffffff" />
+
+    <ListView
+        android:id="@+id/lst_cert_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="2dp"
+        android:cacheColorHint="@color/CacheColor"
+        android:drawSelectorOnTop="true"
+        android:background="@drawable/bgcolor" />
+
+</LinearLayout>

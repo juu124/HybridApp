@@ -14,9 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HybridAppTest"
         tools:targetApi="31">
-        <activity
-            android:name=".activities.UserListActivity"
-            android:exported="false" />
+
         <activity
             android:name=".activities.HelloWorldActivity"
             android:exported="false" />
@@ -29,6 +27,33 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.UserCertificationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.UserListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.XSignBaseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.XSignCertDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.XSignCertListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.XSignProcessResultActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.XSignSettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.XSignUcpidActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.XSignXMLActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

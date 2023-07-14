@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.activities.HelloWorldActivity;
+import com.dki.hybridapptest.activities.UserCertificationActivity;
 import com.dki.hybridapptest.activities.UserListActivity;
 import com.dki.hybridapptest.dialog.InputDialog;
 import com.dki.hybridapptest.utils.GLog;
@@ -28,6 +29,7 @@ public class WebAppInterface {
 
     Handler handler = new Handler();
 
+    // Say hello, hello, world 버튼 이벤트
     @JavascriptInterface
     public void showToast(String word) {
         handler.post(new Runnable() {
@@ -49,6 +51,7 @@ public class WebAppInterface {
         }
     }
 
+    // show Dialog 버튼 이벤트
     @JavascriptInterface
     public void showDialog() {
         inputDialog = new InputDialog(mContext, new InputDialogClickListener() {
@@ -71,11 +74,21 @@ public class WebAppInterface {
         inputDialog.show();
     }
 
+    // show User Information 선택
     @JavascriptInterface
     public void showUserList() {
         GLog.d("user infomation을 선택했나요?");
         Toast.makeText(mContext, "유저 리스트 액티비티", Toast.LENGTH_SHORT).show();
         mIntent = new Intent(mContext, UserListActivity.class);
+        mContext.startActivity(mIntent);
+    }
+
+    // show User Information Certification 선택
+    @JavascriptInterface
+    public void showCertificationList() {
+        GLog.d("showCertificationList 클릭");
+        Toast.makeText(mContext, "showCertificationList 클릭", Toast.LENGTH_SHORT).show();
+        mIntent = new Intent(mContext, UserCertificationActivity.class);
         mContext.startActivity(mIntent);
     }
 }

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <include layout="@layout/layout_common_title" />
+
+    <ListView
+        android:id="@+id/lst_function_list"
+        android:layout_weight="1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:cacheColorHint="@color/CacheColor"
+        android:drawSelectorOnTop="true"
+        android:background="@drawable/bgcolor"></ListView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_cert_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:layout_marginRight="2dp"
+            android:onClick="selectBottomBtn"
+            android:background="@drawable/btn_blue"
+            android:text="인증서목록" />
+
+        <Button
+            android:id="@+id/btn_xsign_setting"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:textColor="#ffffff"
+            android:layout_marginRight="2dp"
+            android:onClick="selectBottomBtn"
+            android:background="@drawable/btn_blue"
+            android:text="Debug 설정" />
+
+        <Button
+            android:id="@+id/btn_exit"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@drawable/btn_blue"
+            android:textSize="15sp"
+            android:textColor="#ffffff"
+            android:onClick="selectBottomBtn"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:text="종료" />
+    </LinearLayout>
+</LinearLayout>

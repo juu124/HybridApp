@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_common_title" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:background="#ff9933"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:gravity="center_horizontal"
+        android:text="처리 결과"
+        android:textColor="#000000" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:background="@drawable/bgcolor"
+        android:layout_height="fill_parent">
+
+        <TextView
+            android:id="@+id/txt_process_result"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textColor="#000000"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:paddingTop="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" />
+    </ScrollView>
+
+
+</LinearLayout>

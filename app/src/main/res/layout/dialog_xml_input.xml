@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/txt_signedInfo_desc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="XML SignedInfo"
+        android:textColor="@color/WHITE"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_signedInfoVal"
+        android:layout_width="fill_parent"
+        android:layout_height="180dp"
+        android:scrollbars="vertical"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/txt_password_desc"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/WHITE"
+        android:text="비밀번호"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/xml_password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPassword"
+        android:singleLine="true" />
+</LinearLayout>

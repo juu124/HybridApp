@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/layout_common_title" />
+
+    <TextView
+        android:id="@+id/txt_current_cert_loading_path"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:background="#ff9933"
+        android:textStyle="bold"
+        android:text="MagicXSign Debug Level 설정"
+        android:textSize="14sp"
+        android:textColor="#ffffff" />
+
+    <RadioGroup
+        android:id="@+id/debug_level_group"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/debug_level0"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:text=" Debug Level 0\n [로그 남기지 않음]" />
+
+        <RadioButton
+            android:id="@+id/debug_level1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:text=" Debug Level 1\n [모든 로그 남김]" />
+
+        <RadioButton
+            android:id="@+id/debug_level2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:text=" Debug Level 2\n [Warnning 이상의 로그 남김]" />
+
+        <RadioButton
+            android:id="@+id/debug_level3"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:text=" Debug Level 3\n [Error 이상의 로그 남김]" />
+    </RadioGroup>
+
+    <TextView
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:background="#ff9933"
+        android:textStyle="bold"
+        android:text="인증서 Loading 경로 설정"
+        android:textSize="14sp"
+        android:textColor="#ffffff" />
+
+    <RadioGroup
+        android:id="@+id/radio"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RadioButton
+            android:id="@+id/radio5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SD Card" />
+
+        <RadioButton
+            android:id="@+id/radio6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SQLite" />
+    </RadioGroup>
+
+</LinearLayout>

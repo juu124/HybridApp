@@ -112,6 +112,7 @@ public class AndroidBridge {
         Log.d(TAG, "AndroidBridge 입니다. 인증서 관련 처리 ==========================");
         this.mWebView = webView;
         this.mActivity = activity;
+
         //인증서 관련 처리
         processCertificate = new ProcessCertificate(mActivity);
         pki = new MagicXSign();
