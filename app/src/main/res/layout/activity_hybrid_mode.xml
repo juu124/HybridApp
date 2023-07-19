@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <WebView
+        android:id="@+id/webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </WebView>
+
+
+    <RelativeLayout
+        android:gravity="center_vertical"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/back_btn"
+            android:text="뒤로" />
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:background="@drawable/line"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:textIsSelectable="true"
+                android:id="@+id/EncryptData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textIsSelectable="true"
+                android:layout_marginTop="10dp"
+                android:id="@+id/DecryptData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:textIsSelectable="true"
+                android:layout_marginTop="10dp"
+                android:id="@+id/RSAEncryptData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+
+        </LinearLayout>
+
+        <Button
+            android:layout_marginTop="10dp"
+            android:id="@+id/Btn_E2EDataSend"
+            android:text="E2E 암호화 데이터 전송"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+    </LinearLayout>
+
+
+    <include
+        android:id="@+id/num_keypad"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/ds_numkeypad"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/num_Keyboard_row"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/ds_numkeypadrow"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/char_keypad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/ds_charkeypad"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/num_Keyboard_row_right"
+        layout="@layout/ds_numkeypadrow_right"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+
+</RelativeLayout>

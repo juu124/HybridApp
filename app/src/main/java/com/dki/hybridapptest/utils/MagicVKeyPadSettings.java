@@ -2,7 +2,7 @@ package com.dki.hybridapptest.utils;
 
 import com.dreamsecurity.magicvkeypad.MagicVKeypadType;
 
-public class MagicVKeayPadSettings {
+public class MagicVKeyPadSettings {
 
     //보안키패드 라이센스
     public static String strLicense = "J7xMz5SURoVs9+DU8xXy9QwY2mqjI2zwldVE2ZddtuiJumBZpEwnezvLlNbitffIKmGUZiCFfwg16Jk2gRxSHauHuHzxwAvzhjQzjfeQpR+Llh60wE9/8SVvO0IRWbl+UWFYhJn0A9/X8TCVTjxa7+OFcOGCi2vKyRmX2p2WXuBJcIVgBLp6VN0m6Ez5gW/g2IutAUriF+/9uf8RACtsxcfXJsPZ8X50mMNirdfog8Vd9LtebVgzVP3E45xK2XbMvexiKvxmlO23sCamRgtdlu9zFXf8qi5YpmJOUl51f8debydvcxaJJC23ToWXLlbLTM2NUvA+zs7Xic6yT0UWKw==";
@@ -16,9 +16,15 @@ public class MagicVKeayPadSettings {
     public static int maskingType = MagicVKeypadType.MAGICVKEYPAD_TYPE_DEFAULTMASKING;
     public static boolean bAllowCapture = false;
     public static int maxLength = 120;
+    public static boolean bMultiClick = false;
+    public static boolean bUseDummydata = false;
+    public static boolean bUseReplace = true;
 
     public static String charFieldName = "insertChar";
     public static String numFieldName = "insertNum";
     public static boolean bUseSpeaker = false;
+
+    public static String E2ETestUrl = "http://10.10.30.130:8080/MagicKeypadServer/decryptKeypadRecord.jsp";
+
 
 }

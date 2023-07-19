@@ -22,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import com.dki.hybridapptest.Interface.WebAppInterface;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.bridge.AndroidBridge;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         //하이브리드 모바일 pki 인터페이스
 //        mWebView.addJavascriptInterface(new XSignWebPlugin(this, mWebView), "DKITec");
-        mWebView.addJavascriptInterface(new WebAppInterface(this, mWebView), "DKITec");
         mWebView.loadUrl(Constants.WEB_VIEW_URL);
 
         webPlugin_Init(MainActivity.this);

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
@@ -14,16 +16,24 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
 import com.dki.hybridapptest.BuildConfig;
+import com.dki.hybridapptest.Interface.InputDialogClickListener;
 import com.dki.hybridapptest.ProcessCertificate;
+import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.activities.HelloWorldActivity;
+import com.dki.hybridapptest.activities.HybridModeActivity;
+import com.dki.hybridapptest.activities.UserCertificationActivity;
+import com.dki.hybridapptest.activities.UserListActivity;
+import com.dki.hybridapptest.dialog.InputDialog;
 import com.dki.hybridapptest.kfido.FIDOAuthentication;
 import com.dki.hybridapptest.kfido.FIDODeRegistration;
 import com.dki.hybridapptest.kfido.FIDORegistration;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
-import com.dki.hybridapptest.utils.MagicVKeayPadSettings;
+import com.dki.hybridapptest.utils.MagicVKeyPadSettings;
 import com.dki.hybridapptest.utils.PreferenceManager;
 import com.dki.hybridapptest.utils.Utils;
 import com.dream.magic.fido.rpsdk.callback.FIDOCallbackResult;
@@ -99,7 +109,7 @@ public class AndroidBridge {
 
     private boolean mIsInvisible;
 
-    private MagicVKeypad magicVKeypad = null;
+    private MagicVKeypad magicVKeypad;
     public final int ALERT_REQUEST = 0xA3;
 
     public static int iSignType = 2;
@@ -107,10 +117,18 @@ public class AndroidBridge {
     public static String sLastError = null;
 
     private JSONArray arrSignText;
+//    private Context mContext;
+
+    private Intent mIntent;
+    private InputDialog inputDialog;
+    private String strfieldID;
+    private String strViewMode;
+    Handler handler = new Handler(Looper.getMainLooper());
 
     public AndroidBridge(WebView webView, Activity activity) {
         Log.d(TAG, "AndroidBridge 입니다. 인증서 관련 처리 ==========================");
         this.mWebView = webView;
+//        mContext = context;
         this.mActivity = activity;
 
         //인증서 관련 처리
@@ -183,6 +201,85 @@ public class AndroidBridge {
 
     public String getUcpidData() {
         return mUcpidData;
+    }
+
+    // HybridModeActivity 보안 키보드 버튼 클릭
+    @JavascriptInterface
+    public void showKeyboard() {
+        GLog.d("showKeyboard 클릭");
+        Toast.makeText(mActivity, "showKeyboard 클릭", Toast.LENGTH_SHORT).show();
+        mIntent = new Intent(mActivity, HybridModeActivity.class);
+        mActivity.startActivity(mIntent);
+    }
+
+
+    // Say hello, hello, world 버튼 이벤트
+    @JavascriptInterface
+    public void showToast(String word) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.loadUrl("javascript:nativeToWeb()");
+            }
+        });
+        if (TextUtils.equals(word, mActivity.getString(R.string.hello))) {
+            mIntent = new Intent(mActivity, HelloWorldActivity.class);
+            mActivity.startActivity(mIntent);
+        } else if (TextUtils.equals(word, mActivity.getString(R.string.world))) {
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+                    builder.setTitle("Alert").setMessage(mActivity.getString(R.string.hello_world));
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                }
+            });
+        } else {
+            Toast.makeText(mActivity, word, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // show Dialog 버튼 이벤트
+    @JavascriptInterface
+    public void showDialog() {
+        GLog.d("잘 들어왔습니다 =====");
+        inputDialog = new InputDialog(mActivity, new InputDialogClickListener() {
+            @Override
+            public void onInputPositiveClick(String text) {
+                startCharKeyPad();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        GLog.d("text =======" + text);
+                        mWebView.loadUrl("javascript:nativeToWebWithMsg('" + text + "')");
+                    }
+                });
+            }
+
+            @Override
+            public void onInputNegativeClick() {
+            }
+        });
+        inputDialog.show();
+    }
+
+    // show User Information 선택
+    @JavascriptInterface
+    public void showUserList() {
+        GLog.d("user infomation을 선택했나요?");
+        Toast.makeText(mActivity, "유저 리스트 액티비티", Toast.LENGTH_SHORT).show();
+        mIntent = new Intent(mActivity, UserListActivity.class);
+        mActivity.startActivity(mIntent);
+    }
+
+    // show User Information Certification 선택
+    @JavascriptInterface
+    public void showCertificationList() {
+        GLog.d("showCertificationList 클릭");
+        Toast.makeText(mActivity, "showCertificationList 클릭", Toast.LENGTH_SHORT).show();
+        mIntent = new Intent(mActivity, UserCertificationActivity.class);
+        mActivity.startActivity(mIntent);
     }
 
     //외부 브라우저 호출
@@ -663,14 +760,14 @@ public class AndroidBridge {
                             PreferenceManager.setInt(mActivity, Constant.PATTERN, failCnt);
                         }
 
-                        showToast(fidoResult.getDescription() + "(" + fidoResult.getErrorCode() + ")");
+                        showToastMessage(fidoResult.getDescription() + "(" + fidoResult.getErrorCode() + ")");
 
 //                        Intent alertIntent = new Intent(mActivity, EmptyActivity.class);
 //                        mActivity.startActivityForResult(alertIntent, ALERT_REQUEST);
 
                     } else {
                         try {
-                            showToast("Auth Success");
+                            showToastMessage("Auth Success");
                             //등록된 인증서 가져와야 함
                             ArrayList<byte[]> getSignedData = mAuth.getSignedData();
                             if (!getSignedData.isEmpty()) {
@@ -807,11 +904,11 @@ public class AndroidBridge {
                             PreferenceManager.setInt(mActivity, Constant.PATTERN, failCnt);
                         }
 
-                        showToast(fidoResult.getDescription() + "(" + fidoResult.getErrorCode() + ")");
+                        showToastMessage(fidoResult.getDescription() + "(" + fidoResult.getErrorCode() + ")");
 
                     } else {
                         try {
-                            showToast("Auth Success");
+                            showToastMessage("Auth Success");
                             //등록된 인증서 가져와야 함
                             ArrayList<byte[]> getSignedData = mAuth.getSignedData();
                             if (!getSignedData.isEmpty()) {
@@ -1041,7 +1138,7 @@ public class AndroidBridge {
                     JSONObject data = new JSONObject();
 
                     if (fidoResult.getErrorCode() != FidoResult.RESULT_SUCCESS) {
-                        showToast(fidoResult.getDescription() + "(" + fidoResult.getErrorCode() + ")");
+                        showToastMessage(fidoResult.getDescription() + "(" + fidoResult.getErrorCode() + ")");
                         try {
                             obj.put("resultCode", "FAIL");
                             data.put("errorCode", fidoResult.getErrorCode());
@@ -1058,7 +1155,7 @@ public class AndroidBridge {
                             ArrayList<byte[]> getSignedData = reg.getSignedData();
                             if (!getSignedData.isEmpty()) {
                                 if (getSignedData.size() > 0) {
-                                    showToast("REG Success");
+                                    showToastMessage("REG Success");
                                     byte[] localData = getSignedData.get(0);
                                     String signedData = Base64.encodeToString(localData, Base64.DEFAULT);
                                     GLog.d("signedData : " + signedData);
@@ -1073,7 +1170,7 @@ public class AndroidBridge {
                                 }
                             }
                         } catch (Exception e) {
-                            showToast("REG Fail");
+                            showToastMessage("REG Fail");
                             try {
                                 obj.put("resultCode", "SUCCESS");
                                 data.put("signedData", "");
@@ -1096,7 +1193,7 @@ public class AndroidBridge {
 
                     // FIDO Client에 전송하지 못 하였을 경우.
                     if (fidoResult.getErrorCode() != FidoResult.RESULT_SUCCESS) {
-                        showToast(fidoResult.getDescription() + "(" + fidoResult.getErrorCode() + ")");
+                        showToastMessage(fidoResult.getDescription() + "(" + fidoResult.getErrorCode() + ")");
                         try {
                             obj.put("resultCode", "FAIL");
                             data.put("errorCode", fidoResult.getErrorCode());
@@ -1112,7 +1209,7 @@ public class AndroidBridge {
                             ArrayList<byte[]> getSignedData = reg.getSignedData();
                             if (!getSignedData.isEmpty()) {
                                 if (getSignedData.size() > 0) {
-                                    showToast("DEREG Success");
+                                    showToastMessage("DEREG Success");
                                     byte[] localData = getSignedData.get(0);
                                     String signedData = Base64.encodeToString(localData, Base64.DEFAULT);
                                     GLog.d("signedData : " + signedData);
@@ -1127,7 +1224,7 @@ public class AndroidBridge {
                                 }
                             }
                         } catch (Exception e) {
-                            showToast("DEREG Fail");
+                            showToastMessage("DEREG Fail");
                             try {
                                 obj.put("resultCode", "SUCCESS");
                                 data.put("signedData", "");
@@ -1154,40 +1251,175 @@ public class AndroidBridge {
         }
     };
 
-    //보안 키패드 호출
+
+    boolean bUseDummyData = false;
+
+
     @JavascriptInterface
-    public void showKeyPad(String strJsonObject) {
-        GLog.d("strJsonObject : " + strJsonObject);
-        magicVKeypad = new MagicVKeypad();
+    public void callMagicVKeypadAndroid(final String fieldID,
+                                        final String viewMode,
+                                        final String keypadType,
+                                        final String option) {
+        GLog.d();
+        GLog.d("fieldID == " + fieldID + "\n" +
+                "viewMode == " + viewMode + "\n" +
+                "keypadType == " + keypadType + "\n" +
+                "option == " + option);
+        strfieldID = fieldID;
+        strViewMode = viewMode;
 
-        JSONObject jsonObject = null;
-        String callback = "";
+        JSONObject options = null;
         try {
-            if (!strJsonObject.equals("")) {
-                jsonObject = new JSONObject(strJsonObject);
+            options = new JSONObject(String.valueOf(option));
+            if (options.getBoolean("UseDummyData")) {
+                bUseDummyData = true;
+            } else {
+                bUseDummyData = false;
+            }
+            if (viewMode.equals("FULL_TYPE")) {
+                if (keypadType.equals("CHAR_TYPE")) { // 풀모드 - 문자키패드
+                    //title 설정
+//                magicVKeypad.setTitleText(title);
+                    // subTitle 설정
+//                magicVKeypad.setSubTitleText(subTitle);
+                    // 입력 필드명 설정
+                    magicVKeypad.setFieldName(fieldID);
+                    // 마스킹 설정
+                    magicVKeypad.setMasking(options.getInt("MaskingType"));
+                    // 풀모드 설정
+                    magicVKeypad.setFullMode(true);
+                    // 입력 길이 제한
+                    magicVKeypad.setMaxLength(options.getInt("MaxLength"));
+                    // 화면 고정(DEFAULT: FALSE)
+                    if (options.getBoolean("PortraitFix"))
+                        magicVKeypad.setPortraitFixed(true);
+                    else
+                        magicVKeypad.setPortraitFixed(false);
 
-                if (!jsonObject.isNull("callback")) {
-                    callback = jsonObject.getString("callback");
+                    if (options.getBoolean("UseSpeaker"))
+                        magicVKeypad.setUseSpeaker(true);
+                    else
+                        magicVKeypad.setUseSpeaker(false);
+                    // 스크린샷 허용
+                    if (options.getBoolean("Screenshot"))
+                        magicVKeypad.setScreenshot(true);
+                    else {
+                        magicVKeypad.setScreenshot(false);
+                    }
+                    // 키패드 실행
+                    magicVKeypad.startCharKeypad(mOnClickInterface);
+                } else { // 풀모드 - 숫자키패드
+                    //title 설정
+//                magicVKeypad.setTitleText(title);
+                    //subTitle 설정
+//                magicVKeypad.setSubTitleText(subTitle);
+                    // 마스킹 타입 설정
+                    magicVKeypad.setMasking(options.getInt("MaskingType"));
+                    // 화면 세로 고정(DEFAULT: FALSE)
+                    if (options.getBoolean("PortraitFix"))
+                        magicVKeypad.setPortraitFixed(true);
+                    else
+                        magicVKeypad.setPortraitFixed(false);
+                    // 입력 필드명 설정
+                    magicVKeypad.setFieldName(fieldID);
+                    // 풀모드 설정
+                    magicVKeypad.setFullMode(true);
+                    // 키패드 재배치 허용(DEFAULT : FALSE)
+                    if (options.getBoolean("UseReplace"))
+                        magicVKeypad.setNumUseReplace(true);
+                    else
+                        magicVKeypad.setNumUseReplace(false);
+                    // 입력 길이 제한
+                    magicVKeypad.setMaxLength(options.getInt("MaxLength"));
+//                if(screenshot.equals("TRUE")){
+//                    magicVKeypad.setScreenshot(true);
+//                }
+                    // 키패드 실행
+                    magicVKeypad.startNumKeypad(mOnClickInterface);
                 }
-                setCallbakckFuction(callback);
+            } else if (viewMode.equals("HALF_TYPE")) {
+                if (keypadType.equals("CHAR_TYPE")) { // 하프모드 - 문자키패드
+                    if (magicVKeypad.isKeyboardOpen()) {
+                        GLog.d();
+                        magicVKeypad.closeKeypad();
+                    }
+                    GLog.d();
+                    // 입력 필드명 설정
+                    magicVKeypad.setFieldName(fieldID);
+                    // masking 설정
+                    magicVKeypad.setMasking(options.getInt("MaskingType"));
+                    // 하프모드 설정
+                    magicVKeypad.setFullMode(false);
+                    // 입력 길이 제한
+                    magicVKeypad.setMaxLength(options.getInt("MaxLength"));
+                    // 키패드 실행
+                    magicVKeypad.startCharKeypad(mOnClickInterface);
+                }
+            } else { // 하프모드 - 숫자키패드
+                if (magicVKeypad.isKeyboardOpen()) {
+                    magicVKeypad.closeKeypad();
+                }
+                // 필드이름 지정
+                magicVKeypad.setFieldName(fieldID);
+                // masking 설정
+                magicVKeypad.setMasking(options.getInt("MaskingType"));
+                // 입력 길이 제한
+                magicVKeypad.setMaxLength(options.getInt("MaxLength"));
+                // 하프모드 설정
+                magicVKeypad.setFullMode(false);
+                /// 키패드 재배치 허용(DEFAULT : FALSE)
+                if (options.getBoolean("UseReplace"))
+                    magicVKeypad.setNumUseReplace(true);
+                else
+                    magicVKeypad.setNumUseReplace(false);
+                //키패드 실행
+                magicVKeypad.startNumKeypad(mOnClickInterface);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        //가상키보드 클래스 생성
-        settingKeyPad();
-        //문자 키패드를 활성화
-        startCharKeyPad();
     }
 
+
+    //보안 키패드 호출
+//    @JavascriptInterface
+//    public void showKeyPad(String strJsonObject) {
+//        GLog.d("잘 들어왔다");
+//        GLog.d("strJsonObject : " + strJsonObject);
+//        magicVKeypad = new MagicVKeypad();
+//
+//        JSONObject jsonObject = null;
+//        String callback = "";
+//        try {
+//            if (!strJsonObject.equals("")) {
+//                jsonObject = new JSONObject(strJsonObject);
+//
+//                if (!jsonObject.isNull("callback")) {
+//                    callback = jsonObject.getString("callback");
+//                }
+//                setCallbakckFuction(callback);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        //가상키보드 클래스 생성
+//        settingKeyPad();
+//        //문자 키패드를 활성화
+//        startCharKeyPad();
+//    }
+
     public void settingKeyPad() {
+        GLog.d("============");
+        magicVKeypad = new MagicVKeypad();
+
         // 키패드 라이선스 값 (드림시큐리티에게 패키지명 전달 후 받은 라이선스 값)
-        String strLicense = MagicVKeayPadSettings.strLicense;
+        String strLicense = MagicVKeyPadSettings.strLicense;
+
         boolean successLicense = magicVKeypad.initializeMagicVKeypad(mActivity, strLicense); // true : 검증 성공, false : 검증 실패
 
         if (successLicense) {
-            if (MagicVKeayPadSettings.bUseE2E) {
+            if (MagicVKeyPadSettings.bUseE2E) {
                 setPublickeyForE2E();
             }
         } else {
@@ -1197,23 +1429,24 @@ public class AndroidBridge {
 
     //키패드 옵션 설정 및 키패드 열기
     public void startCharKeyPad() {
+        GLog.d("==========");
         if (magicVKeypad.isKeyboardOpen()) {
             magicVKeypad.closeKeypad();
         }
         //풀모드 설정
-        magicVKeypad.setFullMode(MagicVKeayPadSettings.bIsFullMode);
+        magicVKeypad.setFullMode(MagicVKeyPadSettings.bIsFullMode);
         // 세로고정 설정
-        magicVKeypad.setPortraitFixed(MagicVKeayPadSettings.bIsPortFix);
+        magicVKeypad.setPortraitFixed(MagicVKeyPadSettings.bIsPortFix);
         // masking 방식 지정
-        magicVKeypad.setMasking(MagicVKeayPadSettings.maskingType);
+        magicVKeypad.setMasking(MagicVKeyPadSettings.maskingType);
         // 스크린 샷 X
-        magicVKeypad.setScreenshot(MagicVKeayPadSettings.bAllowCapture);
+        magicVKeypad.setScreenshot(MagicVKeyPadSettings.bAllowCapture);
         // 입력 글자수 제한
-        magicVKeypad.setMaxLength(MagicVKeayPadSettings.maxLength);
+        magicVKeypad.setMaxLength(MagicVKeyPadSettings.maxLength);
         //사용할 키패드의 fieldName 설정(키패드 열기 전 무조건 설정 해야함)
-        magicVKeypad.setFieldName(MagicVKeayPadSettings.charFieldName);
+        magicVKeypad.setFieldName(MagicVKeyPadSettings.charFieldName);
         // 외부스피커 설정
-        magicVKeypad.setUseSpeaker(MagicVKeayPadSettings.bUseSpeaker);
+        magicVKeypad.setUseSpeaker(MagicVKeyPadSettings.bUseSpeaker);
         // 문자키패드 열기
         magicVKeypad.startCharKeypad(mOnClickInterface);
     }
@@ -1221,31 +1454,31 @@ public class AndroidBridge {
     // E2E 를 위한 공개키 설정
     private void setPublickeyForE2E() {
         try {
-            magicVKeypad.setPublickeyForE2E(MagicVKeayPadSettings.publicKey, true);
+            magicVKeypad.setPublickeyForE2E(MagicVKeyPadSettings.publicKey, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private MagicVKeypadOnClickInterface mOnClickInterface = new MagicVKeypadOnClickInterface() {
-
         @Override
         public void onMagicVKeypadClick(MagicVKeypadResult magicVKeypadResult) {
-
             int licenseResult = magicVKeypadResult.getLicenseResult();
-            if (licenseResult != 0) {
-                GLog.d("라이선스 검증 실패");
-            }
+            GLog.d("licenseResult === " + licenseResult);
+//            if (licenseResult != 0) {
+//                GLog.d("라이선스 검증 실패");
+//            }
+
             byte[] decData = null;
 
-            if (MagicVKeayPadSettings.bIsFullMode) { // 풀모드
-                if (!MagicVKeayPadSettings.bUseE2E)
+            if (MagicVKeyPadSettings.bIsFullMode) { // 풀모드
+                if (!MagicVKeyPadSettings.bUseE2E)
                     decData = magicVKeypad.getDecryptData(magicVKeypadResult.getEncryptData());
                 if (magicVKeypadResult.getEncryptData() != null)
                     RSAEncryptData = new String(magicVKeypadResult.getEncryptData());
 
                 if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_CANCEL_BUTTON) {
-                    if (magicVKeypadResult.getFieldName().equals(MagicVKeayPadSettings.numFieldName)) {
+                    if (magicVKeypadResult.getFieldName().equals(MagicVKeyPadSettings.numFieldName)) {
 //                        insertNum.setText("");
                     } else {
                         charResultData = "";
@@ -1265,8 +1498,8 @@ public class AndroidBridge {
 
                 } else if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_OK_BUTTON) {
 
-                    if (magicVKeypadResult.getFieldName().equals(MagicVKeayPadSettings.numFieldName)) {
-                        if (!MagicVKeayPadSettings.bUseE2E) {
+                    if (magicVKeypadResult.getFieldName().equals(MagicVKeyPadSettings.numFieldName)) {
+                        if (!MagicVKeyPadSettings.bUseE2E) {
                             if (decData != null) {
 //                                insertNum.setText(new String(magicVKeypad.getDecryptData(magicVKeypadResult.getEncryptData())));
                             }
@@ -1276,10 +1509,10 @@ public class AndroidBridge {
                                 RSAEncryptData = new String(magicVKeypadResult.getEncryptData());
                             }
                         }
-                    } else if (magicVKeypadResult.getFieldName().equals(MagicVKeayPadSettings.charFieldName)) {
+                    } else if (magicVKeypadResult.getFieldName().equals(MagicVKeyPadSettings.charFieldName)) {
 
                         if (decData != null) {
-                            if (!MagicVKeayPadSettings.bUseE2E) {
+                            if (!MagicVKeyPadSettings.bUseE2E) {
 //                                insertChar.setText(new String(magicVKeypad.getDecryptData(magicVKeypadResult.getEncryptData())));
 //                                charResultData = new String(magicVKeypad.getDecryptData(magicVKeypadResult.getEncryptData()));
 //                                insertChar.setText(charResultData);
@@ -1331,7 +1564,7 @@ public class AndroidBridge {
                     }
 
                     if (magicVKeypadResult.getEncryptData() != null) {
-                        if (!MagicVKeayPadSettings.bUseE2E) {
+                        if (!MagicVKeyPadSettings.bUseE2E) {
                             AESEncData = byteArrayToHex(magicVKeypadResult.getEncryptData());
                             AESDecData = new String(decData);
 //                            tv_AESEncryptData.setText("AES256 암호화 데이터 : " + AESEncData);
@@ -1342,14 +1575,18 @@ public class AndroidBridge {
                     }
                 }
             } else { // 하프모드
-                if (!MagicVKeayPadSettings.bUseE2E) {
+                if (!MagicVKeyPadSettings.bUseE2E) {
+                    GLog.d();
                     decData = magicVKeypad.getDecryptData(magicVKeypadResult.getEncryptData());
                     if (decData != null) {
+
+                        GLog.d();
                         AESDecData = byteArrayToHex(magicVKeypadResult.getEncryptData());
                         AESEncData = new String(decData);
                     }
                 }
 
+                GLog.d();
                 if (magicVKeypad.getEncryptData() != null)
                     RSAEncryptData = new String(magicVKeypad.getEncryptData());
 
@@ -1358,9 +1595,9 @@ public class AndroidBridge {
 
                     magicVKeypad.closeKeypad();
 
-                    if (magicVKeypadResult.getFieldName().equals(MagicVKeayPadSettings.charFieldName)) {
+                    if (magicVKeypadResult.getFieldName().equals(MagicVKeyPadSettings.charFieldName)) {
 //                        insertChar.setText("");
-                    } else if (magicVKeypadResult.getFieldName().equals(MagicVKeayPadSettings.numFieldName)) {
+                    } else if (magicVKeypadResult.getFieldName().equals(MagicVKeyPadSettings.numFieldName)) {
 //                        insertNum.setText("");
                     }
 
@@ -1380,7 +1617,7 @@ public class AndroidBridge {
                 else if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_OK_BUTTON) {
 
                     if (magicVKeypadResult.getEncryptData() != null) {
-                        if (!MagicVKeayPadSettings.bUseE2E) {
+                        if (!MagicVKeyPadSettings.bUseE2E) {
 //                            tv_AESEncryptData.setText("AES256 암호화 데이터 : " + byteArrayToHex(magicVKeypadResult.getEncryptData()));
 //                            tv_AESDecryptData.setText("AES256 복호화 데이터 : " + new String(decData));
                         } else {
@@ -1415,7 +1652,7 @@ public class AndroidBridge {
 
                 } else if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_CHAR_NUM_BUTTON) {
 
-                    if (magicVKeypadResult.getFieldName().equals(MagicVKeayPadSettings.numFieldName)) {
+                    if (magicVKeypadResult.getFieldName().equals(MagicVKeyPadSettings.numFieldName)) {
                         if (decData == null) {
 //                            insertNum.setText("");
                         } else {
@@ -1423,11 +1660,11 @@ public class AndroidBridge {
 //                                insertNum.setText(new String(decData));
                             }
                         }
-                    } else if (magicVKeypadResult.getFieldName().equals(MagicVKeayPadSettings.charFieldName)) {
+                    } else if (magicVKeypadResult.getFieldName().equals(MagicVKeyPadSettings.charFieldName)) {
                         if (decData == null) {
 //                            insertChar.setText("");
                         } else {
-                            if (!MagicVKeayPadSettings.bUseE2E) {
+                            if (!MagicVKeyPadSettings.bUseE2E) {
 //                                insertChar.setText(new String(magicVKeypad.getDecryptData(magicVKeypadResult.getEncryptData())));
                             }
                         }
@@ -2450,7 +2687,7 @@ public class AndroidBridge {
                 }
 
                 if (magicMRSResult.getErrorCode() == 0) {
-                    showToast(type + "에 성공하였습니다.");
+                    showToastMessage(type + "에 성공하였습니다.");
                     // QRCode로 인증서 가져오기 , AuthCode로 가져오기
                     if (i == MagicMRSConfig.MAGICMRS_TYPE_IMPORT_QRCODE || i == MagicMRSConfig.MAGICMRS_TYPE_IMPORT_AUTHCODE) {
                         // 인증서 저장
@@ -2465,7 +2702,7 @@ public class AndroidBridge {
 
                     String result = makeJsonResult(false, i, magicMRSResult.getErrorCode());
                     callbackFunction(getCallbackFunction(), result);
-                    showToast(type + "에 실패하였습니다.(" + magicMRSResult.getErrorCode() + ")");
+                    showToastMessage(type + "에 실패하였습니다.(" + magicMRSResult.getErrorCode() + ")");
 
                 }
 
@@ -2529,7 +2766,7 @@ public class AndroidBridge {
         return result;
     }
 
-    private void showToast(final String msg) {
+    private void showToastMessage(final String msg) {
         if (Constant.IS_DEBUG) {
             mActivity.runOnUiThread(new Runnable() {
                 public void run() {
