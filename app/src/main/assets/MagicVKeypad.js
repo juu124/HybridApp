@@ -95,11 +95,6 @@ function inputData(fieldName, data) {
 }
 
 function callMagicVKeypadAndroid(fieldName, viewMode, keypadType, option) {
-    console.log("잘들어옴");
-    console.log("fieldName" + fieldName + "\n" +
-            "viewMode" + viewMode + "\n" +
-            "keypadType" + keypadType + "\n" +
-            "option" + option);
     window.MagicVKeypad.callMagicVKeypadAndroid(fieldName, viewMode.value, keypadType.value, option);
 
     alert(option);
@@ -118,13 +113,8 @@ function callMagicVKeypadIOS(fieldName, viewMode, keypadType, option) {
 function callMagicVKeypad(inputFieldName, viewMode, keypadType, option) {
     
     var fieldName = document.getElementById(inputFieldName.getAttribute('id')).getAttribute('id');
-    console.log(fieldName);
     if (/Android/i.test(navigator.userAgent)) {
         callMagicVKeypadAndroid(fieldName, viewMode, keypadType, option);
-        console.log("fieldName" + fieldName + "\n" +
-        "viewMode" + viewMode + "\n" +
-        "keypadType" + keypadType + "\n" +
-        "option" + option);
         // 안드로이드
     } else if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
         // iOS 아이폰, 아이패드, 아이팟
