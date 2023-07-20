@@ -1259,7 +1259,7 @@ public class AndroidBridge {
                 bUseDummyData = false;
             }
 
-            // 풀모드
+            // 풀모드(CHAR, NUM) - 현재 라이브러리 문제로 작동 되지 않음
             if (viewMode.equals("FULL_TYPE")) {
                 GLog.d("풀모드");
                 if (keypadType.equals("CHAR_TYPE")) { // 풀모드 - 문자키패드
@@ -1343,12 +1343,10 @@ public class AndroidBridge {
 
                 // 하프모드
             } else if (viewMode.equals("HALF_TYPE")) {
-                GLog.d("하프모드");
                 if (keypadType.equals("CHAR_TYPE")) { // 하프모드 - 문자키패드
                     if (magicVKeypad.isKeyboardOpen()) {
                         magicVKeypad.closeKeypad();
                     }
-                    GLog.d();
                     // 입력 필드명 설정
                     magicVKeypad.setFieldName(fieldID);
 
@@ -1368,94 +1366,61 @@ public class AndroidBridge {
 
                     // 키패드 실행
                     magicVKeypad.startCharKeypad(mOnClickInterface);
+
+                } else { // 하프모드 - 숫자키패드
+                    if (magicVKeypad.isKeyboardOpen()) {
+                        magicVKeypad.closeKeypad();
+                    }
+                    // 필드이름 지정
+                    magicVKeypad.setFieldName(fieldID);
+
+                    // masking 설정
+                    magicVKeypad.setMasking(options.getInt("MaskingType"));
+
+                    // 입력 길이 제한
+                    magicVKeypad.setMaxLength(options.getInt("MaxLength"));
+
+                    // 하프모드 설정
+                    magicVKeypad.setFullMode(false);
+
+                    // 화면 고정(DEFAULT: FALSE)
+                    if (options.getBoolean("PortraitFix"))
+                        magicVKeypad.setPortraitFixed(true);
+                    else
+                        magicVKeypad.setPortraitFixed(false);
+
+                    //재배치 설정
+                    if (options.getBoolean("UseReplace"))
+                        magicVKeypad.setNumUseReplace(true);
+                    else
+                        magicVKeypad.setNumUseReplace(false);
+
+                    if (options.getBoolean("UseSpeaker"))
+                        magicVKeypad.setUseSpeaker(true);
+                    else
+                        magicVKeypad.setUseSpeaker(false);
+
+                    magicVKeypad.setMultiClick(MagicVKeyPadSettings.bMultiClick);
+
+                    // 키패드 실행
+                    Log.d(TAG, "숫자 하프 키패드 ====");
+                    magicVKeypad.startNumKeypad(mOnClickInterface);
                 }
-            } else { // 하프모드 - 숫자키패드
-                if (magicVKeypad.isKeyboardOpen()) {
-                    GLog.d("숫자키패드");
-                    magicVKeypad.closeKeypad();
-                }
-                // 필드이름 지정
-                magicVKeypad.setFieldName(fieldID);
-
-                // masking 설정
-                magicVKeypad.setMasking(options.getInt("MaskingType"));
-
-                // 입력 길이 제한
-                magicVKeypad.setMaxLength(options.getInt("MaxLength"));
-
-                // 하프모드 설정
-                magicVKeypad.setFullMode(false);
-
-                // 화면 고정(DEFAULT: FALSE)
-                if (options.getBoolean("PortraitFix"))
-                    magicVKeypad.setPortraitFixed(true);
-                else
-                    magicVKeypad.setPortraitFixed(false);
-
-
-                //재배치 설정
-                if (options.getBoolean("UseReplace"))
-                    magicVKeypad.setNumUseReplace(true);
-                else
-                    magicVKeypad.setNumUseReplace(false);
-
-                if (options.getBoolean("UseSpeaker"))
-                    magicVKeypad.setUseSpeaker(true);
-                else
-                    magicVKeypad.setUseSpeaker(false);
-
-                magicVKeypad.setMultiClick(MagicVKeyPadSettings.bMultiClick);
-
-                // 키패드 실행
-                magicVKeypad.startNumKeypad(mOnClickInterface);
-
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-
-    //보안 키패드 호출
-//    @JavascriptInterface
-//    public void showKeyPad(String strJsonObject) {
-//        GLog.d("잘 들어왔다");
-//        GLog.d("strJsonObject : " + strJsonObject);
-//        magicVKeypad = new MagicVKeypad();
-//
-//        JSONObject jsonObject = null;
-//        String callback = "";
-//        try {
-//            if (!strJsonObject.equals("")) {
-//                jsonObject = new JSONObject(strJsonObject);
-//
-//                if (!jsonObject.isNull("callback")) {
-//                    callback = jsonObject.getString("callback");
-//                }
-//                setCallbakckFuction(callback);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//
-//        //가상키보드 클래스 생성
-//        settingKeyPad();
-//        //문자 키패드를 활성화
-//        startCharKeyPad();
-//    }
-
     public void settingKeyPad() {
-        GLog.d("============");
         magicVKeypad = new MagicVKeypad();
 
         // 키패드 라이선스 값 (드림시큐리티에게 패키지명 전달 후 받은 라이선스 값)
         String strLicense = MagicVKeyPadSettings.strLicense;
 
-        GLog.d("============" + strLicense);
         boolean successLicense = magicVKeypad.initializeMagicVKeypad(mActivity, strLicense); // true : 검증 성공, false : 검증 실패
         GLog.d("============" + successLicense);
         if (successLicense) {
-            GLog.d("============" + successLicense);
             if (MagicVKeyPadSettings.bUseE2E) {
                 setPublickeyForE2E();
             }
@@ -1466,7 +1431,6 @@ public class AndroidBridge {
 
     //키패드 옵션 설정 및 키패드 열기
     public void startCharKeyPad() {
-        GLog.d("==========");
         if (magicVKeypad.isKeyboardOpen()) {
             magicVKeypad.closeKeypad();
         }
@@ -1502,15 +1466,12 @@ public class AndroidBridge {
         public void onMagicVKeypadClick(MagicVKeypadResult magicVKeypadResult) {
 
             int licenseResult = magicVKeypadResult.getLicenseResult();
-            Log.d(TAG, "licenseResult === " + licenseResult);
             if (licenseResult != 0) {
                 Log.d("TEST", "라이선스 검증 실패");
             }
 
             byte[] decData = null;
-
             String strPlaintext = "";
-
 
             if (decData != null) {
                 strPlaintext = new String(decData);
@@ -1529,11 +1490,10 @@ public class AndroidBridge {
                         RSAEncryptData = new String(magicVKeypadResult.getEncryptData());
                 }
 
-                if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_OK_BUTTON) { // 확인 버튼 클릭
+                if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_OK_BUTTON) { // 확인
                     if (!MagicVKeyPadSettings.bUseE2E) {
                         if (decData != null) {
                             strPlaintext = "";
-
                             for (int i = 0; i < decData.length; i++) {
                                 strPlaintext = strPlaintext + "•";
                             }
@@ -1542,16 +1502,9 @@ public class AndroidBridge {
                         HybridResult.strScript = strScript;
 
                         mWebView.loadUrl(strScript);
-
-                        if (magicVKeypadResult.getEncryptData() != null) {
-//                            tv_AESEncryptData.setText("AES256 암호화 데이터 : " + byteArrayToHex(magicVKeypadResult.getEncryptData()));
-//                            tv_AESDecryptData.setText("AES256 복호화 데이터 : " + new String(magicVKeypad.getDecryptData((magicVKeypadResult.getEncryptData()))));
-                        }
                     } else {
                         strScript += strfieldID + "','" + "" + "')";
                         mWebView.loadUrl(strScript);
-//                        if (magicVKeypadResult.getEncryptData() != null)
-//                            tv_RSAEncryptData.setText("RSA 암호화 데이터 : " + new String(magicVKeypadResult.getEncryptData()));
                     }
                 }
             }
@@ -1560,35 +1513,29 @@ public class AndroidBridge {
                 GLog.d("하프모드 ");
                 if (!MagicVKeyPadSettings.bUseE2E) {
                     decData = magicVKeypad.getDecryptData(magicVKeypadResult.getEncryptData());
-                    GLog.d("decData ===== " + decData);
                     if (decData != null) {
                         AESDecData = byteArrayToHex(magicVKeypadResult.getEncryptData());
                         AESEncData = new String(decData);
-                        GLog.d("AESEncData ===== " + AESEncData);
                     }
                 }
-                if (magicVKeypad.getEncryptData() != null)
-                    RSAEncryptData = new String(magicVKeypad.getEncryptData());
 
-                if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_CANCEL_BUTTON) {
+                if (magicVKeypad.getEncryptData() != null) {
+                    RSAEncryptData = new String(magicVKeypad.getEncryptData());
+                }
+
+                if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_CANCEL_BUTTON) { // 취소
                     magicVKeypad.closeKeypad();
                     strScript += strViewMode + "','" + strfieldID + "','" + "" + "')";
                     HybridResult.strScript = strScript;
                     mWebView.loadUrl(strScript);
                 } else if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_OK_BUTTON) { // 확인
                     if (magicVKeypadResult.getEncryptData() != null) {
-                        GLog.d("확인 AESEncData ==== " + AESEncData);
                         if (MagicVKeyPadSettings.bUseE2E == false) {
-//                            tv_AESEncryptData.setText("AES256 암호화 데이터 : " + byteArrayToHex(magicVKeypadResult.getEncryptData()));
-//                            tv_AESDecryptData.setText("AES256 복호화 데이터 : " + new String(magicVKeypad.getDecryptData(magicVKeypadResult.getEncryptData())));
-
+                            GLog.d("확인 AESEncData ==== " + AESEncData);
                         } else {
                             RSAEncryptData = new String(magicVKeypad.getEncryptData());
-//                            tv_RSAEncryptData.setText("RSA 암호화 데이터 : " + RSAEncryptData);
-
                         }
                     }
-
                     magicVKeypad.closeKeypad();
                 } else if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_CHAR_NUM_BUTTON) {
                     if (MagicVKeyPadSettings.bUseE2E) {
@@ -1597,7 +1544,6 @@ public class AndroidBridge {
                     } else {
                         if (decData != null) {
                             strPlaintext = "";
-
                             for (int i = 0; i < decData.length; i++) {
                                 strPlaintext = strPlaintext + "•";
                             }
