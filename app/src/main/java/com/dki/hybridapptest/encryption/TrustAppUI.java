@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.trustapp;
+package com.dki.hybridapptest.encryption;
 
 
 import android.app.Activity;
@@ -26,7 +26,7 @@ public class TrustAppUI {
     // /////////////////////////////////////////////
     static Context _context = null;
     static Activity activity = null;
-    //    static com.example.trustappandroid.TrustAppUI popup;
+    static TrustAppUI popup;
     static String strError = "";
     static String strErrorMessage = "";
     protected static String strTokenB64;
@@ -92,9 +92,6 @@ public class TrustAppUI {
             final String strDisplayString) {
 
         _context = context;
-
-        // debug 출력 : 미출력은 주석처리
-        aap.setDebugMode(true);
 
         // ///////////////////////////
         // View START

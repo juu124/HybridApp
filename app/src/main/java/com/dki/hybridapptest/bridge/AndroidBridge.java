@@ -24,6 +24,7 @@ import com.dki.hybridapptest.activities.HybridModeActivity;
 import com.dki.hybridapptest.activities.UserCertificationActivity;
 import com.dki.hybridapptest.activities.UserListActivity;
 import com.dki.hybridapptest.dialog.InputDialog;
+import com.dki.hybridapptest.encryption.EncryptionActivity;
 import com.dki.hybridapptest.kfido.FIDOAuthentication;
 import com.dki.hybridapptest.kfido.FIDODeRegistration;
 import com.dki.hybridapptest.kfido.FIDORegistration;
@@ -201,6 +202,16 @@ public class AndroidBridge {
     public String getUcpidData() {
         return mUcpidData;
     }
+
+    // 구간 암호화
+    @JavascriptInterface
+    public void showEncryption() {
+        GLog.d("showEncryption 클릭");
+        Toast.makeText(mActivity, "showEncryption 클릭", Toast.LENGTH_SHORT).show();
+        mIntent = new Intent(mActivity, EncryptionActivity.class);
+        mActivity.startActivity(mIntent);
+    }
+
 
     // HybridModeActivity 보안 키보드 버튼 클릭
     @JavascriptInterface

@@ -7,8 +7,14 @@ android {
     compileSdk 33
 
     defaultConfig {
+        // 현재 앱 패키지 ID (라이선스 부여 안되어 있음)
 //        applicationId "com.dki.hybridapptest"
-        applicationId "com.dreamsecurity.example.magicvkeypad"
+
+        // 보안 키보드(magicvkeypad) 실행시 관련 라이선스 패키지 ID
+//        applicationId "com.dreamsecurity.example.magicvkeypad"
+
+        // 구간 암호화 실행시 관련 라이선스 패키지 ID
+        applicationId "com.example.trustappandroid"
         minSdk 24
         targetSdk 33
         versionCode 1

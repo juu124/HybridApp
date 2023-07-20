@@ -4,11 +4,11 @@ import com.dreamsecurity.magicvkeypad.MagicVKeypadType;
 
 public class MagicVKeyPadSettings {
 
-    //보안키패드 라이센스
-    // 신정원 kcredit-mydatacenter-aos 보안키패드 라이센스
+    //보안키패드 라이선스
+    // 신정원 kcredit-mydatacenter-aos 보안키패드 라이선스
 //    public static String strLicense = "J7xMz5SURoVs9+DU8xXy9QwY2mqjI2zwldVE2ZddtuiJumBZpEwnezvLlNbitffIKmGUZiCFfwg16Jk2gRxSHauHuHzxwAvzhjQzjfeQpR+Llh60wE9/8SVvO0IRWbl+UWFYhJn0A9/X8TCVTjxa7+OFcOGCi2vKyRmX2p2WXuBJcIVgBLp6VN0m6Ez5gW/g2IutAUriF+/9uf8RACtsxcfXJsPZ8X50mMNirdfog8Vd9LtebVgzVP3E45xK2XbMvexiKvxmlO23sCamRgtdlu9zFXf8qi5YpmJOUl51f8debydvcxaJJC23ToWXLlbLTM2NUvA+zs7Xic6yT0UWKw==";
 
-    // MagicVKeypadSample 보안키패드 라이센스
+    // MagicVKeypadSample 보안키패드 라이선스
     public static String strLicense = "mThjeTgwnJw20h0RKNbtpeiQ8nF47Z5IHyXnLAvUu5fXg4b5Mgf1FB3Jt9AG4fbtR6RCIj39/Fbctw6mwTIpz9IIUB57zp//LrYZG3sv4tuEzW7w3EE8f5/qJWBNB/Tp5eygfMn2a0MO732rtWRh9jknu+KWstyQ4Dv6hplbXWZxwZzg4jQg9JVKNuL8bASsWlqwvdQTihqc5zUDqRsqurWf68aY/+GM3ylG1ilNH0wRlSLiDm/Qm7uGgSme39z118YEi6DLT+W488GJHPzmPCl2pTGq3GtfAFrjLWHZWopDoWiESbHXRVUzXoDQw3y5VqRbxlo8O2Gh+K1lOp5ZDw==";
 
     //공개키 스트링

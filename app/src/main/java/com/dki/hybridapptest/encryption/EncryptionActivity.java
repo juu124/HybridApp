@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.trustapp;
+package com.dki.hybridapptest.encryption;
 
 import android.Manifest;
 import android.content.Context;
@@ -26,22 +26,18 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-
-public class TrustAppActivity extends AppCompatActivity {
+public class EncryptionActivity extends AppCompatActivity {
     private final String TAG = "TRUSTAPP";
 
 
-    // http://192.168.0.35:8443/AppAdmin5.0/trustapp/
+    // https://192.168.0.35:8443/AppAdmin4.5/trustapp/
 
     // APPLICATION_ID는 앱 버전이 바뀔 때마다 새로 생성된 것을 받아야 한다.
     // 기존 버전과 동일하게 설정하면 두 앱의 해쉬가 다르므로 한 버전은 반드시 오류가 발생한다.
-
-    // APK
-    // AAB ecs.timeservice.org
-    private String APPLICATION_ID = "MIICuQSCAbEwggGtBBBhbmRyb2lkX3Rlc3RfMDAyBBtjb20uZXhhbXBsZS50cnVzdGFwcGFuZHJvaWQEDjIwMjMwMzA2MTY0NDExBDBodHRwOi8vZWNzLnRpbWVzZXJ2aWNlLm9yZy9BcHBBZG1pbjUuMC90cnVzdGFwcC8EggEmMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAtArc1WKsiCRJyTq3CBcjE9Wm02OVg7PAVwjXcpMcM890g7Anzy6h6m/VXiPt+VSbk6dIgazdm9VJagCf+H3u/DTX0nrSNOySMziv74+8/7hwIOCFMAbdbXpwLhp4vCFZEy+YkCnGND53ZvGc7SfSwJKVEdRUfxRtu9kaEo55kAIwZ01WpBTiVYBHdACdRTOIkah2dWCHbRVG+HS8DVQHJaKtzJcZxfiKm6/vcyEjDjWazLox/a2vqK47z5vfOZ+RmQPt5Aq/kxj3I3KKdPYSCVtCfGSGoZob9nXWaioeA93dVtZXFcXKchKemAV5HxuH0JnK0MRAtDN966+pflU3BwIDAQABBBBhbmRyb2lkX3Rlc3RfMDAyBIIBAKphX5DP9hZpC5laKMHVRYUEjyKi/itV8+xM7E7icSrLTftU/kvub9LXyjSX5CzibEO2Zzx7Caogd3PeaEb0JSg5E6kNEDgdPG3wTlWuwVOmSbnx6m62gTDWDILXq1dTDxpTkwRLbkVuIXvf+p+I5VL1dRzFVTgxvNTGvx0tsxcDz95F9wP4bEY7NAQjQOYZo9L4MXG3vl/EsPdqjHCRDVItBCzAkxeX6UqWLRcHV7ZKwnlShmhlFEzfmBvAQY9/tcA8F/kBMl4MsG4RZ3FZEgfHVPYxVQT4+SxqZQNY6ioYZtajmnXAB5mrhNIPglmhENGKV5pbbakpV4L/5m8+JyQ=";
+    private String APPLICATION_ID = "MIICyASCAcAwggG8BBh0cnVzdGFwcGFuZHJvaWRfMjAyMTA1MDgEG2NvbS5leGFtcGxlLnRydXN0YXBwYW5kcm9pZAQOMjAyMTA1MDgxODQ1NTAEL2h0dHBzOi8vMTkyLjE2OC4wLjM1Ojg0NDMvQXBwQWRtaW40LjUvdHJ1c3RhcHAvBIIBJjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALQK3NVirIgkSck6twgXIxPVptNjlYOzwFcI13KTHDPPdIOwJ88uoepv1V4j7flUm5OnSIGs3ZvVSWoAn/h97vw019J60jTskjM4r++PvP+4cCDghTAG3W16cC4aeLwhWRMvmJApxjQ+d2bxnO0n0sCSlRHUVH8UbbvZGhKOeZACMGdNVqQU4lWAR3QAnUUziJGodnVgh20VRvh0vA1UByWircyXGcX4ipuv73MhIw41msy6Mf2tr6iuO8+b3zmfkZkD7eQKv5MY9yNyinT2EglbQnxkhqGaG/Z11moqHgPd3VbWVxXFynISnpgFeR8bh9CZytDEQLQzfeuvqX5VNwcCAwEAAQQYdHJ1c3RhcHBhbmRyb2lkXzIwMjEwNTA4BIIBAIiccCJDx9E/50wGow+53umxwU6iqwCxdp5yizzmQKckwocIko0RHWYAdtZg083P/kQnfqdokR8pWfODDuhulH4T/G3nWij07D+xZirHqZ8XEPVRiz34I+tuVkoaWxyW2lRzeaQ7mJv/B6j2RaVm7Y+IpCj2GS2ZLzVZY0XaJdqmrsO/mqpJaHeHc/h4WOOcsOOCgR1qiI/v/kih8+lmfJVvHmQOZTy/yit4ON7RUZPhU2G7H4xk/MCFLm7lr/h7/dTu7oOgTFNCimETDeb6vYf0SblZ+Hhzmj+cRnGV9pGvQ0gX4KtcqXW+L6ANHxz0JEXK9bJnQtG9OLNG1KSnxzA=";
 
     // 샘플용 서버 검증 URL
-    private static final String SERVER_URL_VERIFY = "http://ecs.timeservice.org/AppAdmin5.0/trustapp_svr/trustapp_server_demo.jsp";
+    private static final String SERVER_URL_VERIFY = "https://192.168.0.35:8443/AppAdmin4.5/trustapp_svr/trustapp_server_demo.jsp";
 
     // TARGET_CLIENT:[TRUSTAPP]
     // NAME:[com.example.trustappandroid],CODE=[F2C984EFA0C5C59755B4]
@@ -53,25 +49,25 @@ public class TrustAppActivity extends AppCompatActivity {
 
     // Self Sign SSL 인증서 등록 : 정식 인증서일 경우 호출할 필요 없으나, 사설인증서일 경우 등록 필요
     private static String PEM_SSL_CERT = "-----BEGIN CERTIFICATE-----\n" +
-            "MIIDaDCCAlCgAwIBAgIJAOzVPBN1gwFiMA0GCSqGSIb3DQEBCwUAMGIxCzAJBgNV\n" +
-            "BAYTAktSMQ4wDAYDVQQIEwVTZW91bDEOMAwGA1UEBxMFU2VvdWwxDDAKBgNVBAoT\n" +
-            "A3R0YTEMMAoGA1UECxMDZGV2MRcwFQYDVQQDEw4yMTAuMTA0LjE4MS4zNDAeFw0y\n" +
-            "MTA5MjcwODM2MDRaFw0yMTEyMjYwODM2MDRaMGIxCzAJBgNVBAYTAktSMQ4wDAYD\n" +
-            "VQQIEwVTZW91bDEOMAwGA1UEBxMFU2VvdWwxDDAKBgNVBAoTA3R0YTEMMAoGA1UE\n" +
-            "CxMDZGV2MRcwFQYDVQQDEw4yMTAuMTA0LjE4MS4zNDCCASIwDQYJKoZIhvcNAQEB\n" +
-            "BQADggEPADCCAQoCggEBAKDjIwMjjHK/uBPy8dlPsfHjYfChCywqt/hxT82bPwFK\n" +
-            "+FiYeMMapr+jG2cc3UOyg5nSqj9xrTPvs1XGsNXf6UieEf0WU13XQmQso6aC/V0e\n" +
-            "pdl1+MSjawdVe1mzINeNSY0fbhD1rVUjfQdw0mc4RoOqIcWs9++vpeg5LG80oczv\n" +
-            "a5ycGTqDfRVFzBC8WWVfAA6knPAGbE7yGNJkYLHmL8m2hpQzZfh2M42QR6jVD/gM\n" +
-            "yvnq80o9/yXdOTroQa//szqSpv9RLT6SyTPBGFtni8WDcz7CB6XQsshDiSc8SbZU\n" +
-            "5WVztB7Q8ARccM5jz5T9mYZWTM1HHS+mhWHQdvH1oMkCAwEAAaMhMB8wHQYDVR0O\n" +
-            "BBYEFFjGnvpBhp69wPOO7TX97RlFBdxQMA0GCSqGSIb3DQEBCwUAA4IBAQB6muhL\n" +
-            "P7S3HHotDaIUxsbJuhCxAn3n514/uXib/RBOUczXRkxu66GqVoqye8iTgFjyFnlD\n" +
-            "rjx+H0ntWELTa5IDoGTDQwaQOidr4nmZKrUMsWiEgA9StXXU0RpYTjNg10ghKuxf\n" +
-            "p7Jd7dpsbW197l20KVAhRlX3qWPGTW1iOwSWaO2TExp+PLbXu8Ym6HtqMmnaXYbw\n" +
-            "FNUo5K7kNj2cstZqD2cZhPF2D78InTkC7Qvw4pEvGW8JtJtIWT8Mah3b3+Rrclbj\n" +
-            "IqmAoq9vTZKSGwoe3W9S3YrYgaeb1+kzwLhM7V2INeGKkQvMvQYnoqqkpgpYlPIs\n" +
-            "kDiF/eX0E4pxkda4\n" +
+            "MIIDZTCCAk2gAwIBAgIEM0ZY7TANBgkqhkiG9w0BAQsFADBjMQswCQYDVQQGEwJL\n" +
+            "UjEQMA4GA1UECBMHVW5rbm93bjEQMA4GA1UEBxMHVW5rbm93bjEQMA4GA1UEChMH\n" +
+            "ZXhhbXBsZTEMMAoGA1UECxMDZGV2MRAwDgYDVQQDEwdzc2xjZXJ0MB4XDTIxMDUw\n" +
+            "ODA5MjQwMloXDTMxMDUwNjA5MjQwMlowYzELMAkGA1UEBhMCS1IxEDAOBgNVBAgT\n" +
+            "B1Vua25vd24xEDAOBgNVBAcTB1Vua25vd24xEDAOBgNVBAoTB2V4YW1wbGUxDDAK\n" +
+            "BgNVBAsTA2RldjEQMA4GA1UEAxMHc3NsY2VydDCCASIwDQYJKoZIhvcNAQEBBQAD\n" +
+            "ggEPADCCAQoCggEBAKT5M5gkyVeWUClb9lq8+DorZBoju3Qu0Lld7YuLI0JVNiwP\n" +
+            "Mkc25qwew47WnQ5X3fr/AZa+fP9sDXtR3mitkpvK7D2LMhubiPCT3veCg1AAkfOb\n" +
+            "32P+TnkWLaeXfPqXK/xFCe0JsC059BM+IIPt24YJsERm85i2GVlIVFjYRqTK2iM5\n" +
+            "YFpw1RCwE6eDLpblN4AT9bnZKo5sq9O702h06mzVzkDp6qQx80usWeHnHL+t0+Ru\n" +
+            "ATgu/ah6JdP/aqzMqFomlt9gNy8f19dkVFHu8y+FHSPAZ9YG/F4SnrFsCDlZ8r4w\n" +
+            "znfon2MCy70nvLYoTXO+JLSkuU1IYVcUp/aJTrkCAwEAAaMhMB8wHQYDVR0OBBYE\n" +
+            "FFmAbqBodTYPFOuZP9UHVcoEdO5UMA0GCSqGSIb3DQEBCwUAA4IBAQCTCU1aR3UP\n" +
+            "cZd5u57ul88vL21v+wCsGHOKgiQvLZsBkI0Pt6RciMo4z4N3PbBNFSqmLu4FEDAg\n" +
+            "JOtwL44IoIV2UpqHK2amy1tXyjLi1DmtIAm4v2q0MBGZmJvefei0hhUSghaET5E2\n" +
+            "ZT2/FPlKsrpIrelxlCjvmiy9dWVvhjXzTIT6nqgzF6/tC5EmE5sPzodIv0BX1HaM\n" +
+            "S5KzZ3b9B1lpeIyVa9kbOAkNcB/UzrhjKJt47734myI1F2JBEd07xo0QojU1OUIM\n" +
+            "yIDAmEs2z67LzfxOwY7zfM7C9UAv8kOPKaOxHkK/XMsSEWAWXJqsJ2QplFnpKYWt\n" +
+            "9PlK2VBWmQca\n" +
             "-----END CERTIFICATE-----";
 
     private static Context ctx;
@@ -92,10 +88,7 @@ public class TrustAppActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        String apkPath = getApplicationInfo().sourceDir;
-        Log.d("Main", "111122228=" + apkPath);
+        setContentView(R.layout.activity_encryption);
 
         // License / ApplicationID SET
         TrustAppUI.PACKAGE_LIC = TRUSTAPP_LIC_CODE;
@@ -104,13 +97,13 @@ public class TrustAppActivity extends AppCompatActivity {
         aap.setDebugMode(true);
 
         // Self Sign SSL 인증서 등록 : 정식 인증서일 경우 호출할 필요 없으나, 사설인증서일 경우 등록 필요
-        // TrustAppToolkit.AddTrustedCert(PEM_SSL_CERT);
+        TrustAppToolkit.AddTrustedCert(PEM_SSL_CERT);
 
         // 앱위변조 검증(해쉬계산을 먼저한다) : 속도 개선을 위해 처음에 넣어준다.
         // TrustAppToolkit.i(context, check_rooting, check_tegrak_app)
         TrustAppToolkit.i(this, false, false);
 
-        ctx = TrustAppActivity.this;
+        ctx = EncryptionActivity.this;
 
 
         txtResult = (TextView) findViewById(R.id.txt_result);
@@ -120,7 +113,7 @@ public class TrustAppActivity extends AppCompatActivity {
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // 앱위변조 검증 테스트 시작
+                // 앱위변조 검증 테스트 시작 
                 startTrustApp();
             }
         });
@@ -147,8 +140,8 @@ public class TrustAppActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, READ_PHONE_STATE_PERMISSON);
             }
         }
-    }
 
+    }
 
     /* AppDefence 앱위변조 검증 테스트 : 검증서버에 서버검증토큰을 요청하여 클라이언트검증값을 생성한다. */
     private void startTrustApp() {
@@ -167,7 +160,7 @@ public class TrustAppActivity extends AppCompatActivity {
 
                     loginProcess();
                 } else {
-                    /*
+                    /* 
                     여기에서 에러가 발생하는 경우는
                     1. 토큰에 포함된 프로그램 해쉬값이 계산한 프로그램 해쉬값과 일치하지 않음
                     2. 토큰 이상 (통신 이상으로 인해 전체를 못 받은 경우)
@@ -185,12 +178,11 @@ public class TrustAppActivity extends AppCompatActivity {
 
         // 위변조검증 시작
         TrustAppUI.StartTrustApp_Start(
-                TrustAppActivity.this,        // UI를 위한 CONTEXT
+                EncryptionActivity.this,        // UI를 위한 CONTEXT
                 "SampleAndroid",        // App 명칭 : 이력 관리용
                 null                    // 화면 출력용 문자열 : 없을 경우 default 문자열
         );
     }
-
 
     public static void alert(String title, String value) {
         AlertDialog successAlt = new AlertDialog.Builder(ctx)
@@ -205,7 +197,6 @@ public class TrustAppActivity extends AppCompatActivity {
                 .create();
         successAlt.show();
     }
-
 
     /*
     앱위변조 검증 테스트 : 샘플임!!
@@ -331,6 +322,4 @@ public class TrustAppActivity extends AppCompatActivity {
                 break;
         }
     }
-
-
 }
