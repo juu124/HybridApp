@@ -109,10 +109,26 @@ public class AndroidBridge {
     private String strViewMode;
     Handler handler = new Handler(Looper.getMainLooper());
 
-    public AndroidBridge(WebView webView, Activity activity) {
-        Log.d(TAG, "AndroidBridge 입니다. 인증서 관련 처리 ==========================");
+    public AndroidBridge(WebView webView, Activity activity, MagicVKeypad magicVKeypad) {
         this.mWebView = webView;
-//        mContext = context;
+        this.mActivity = activity;
+        this.magicVKeypad = magicVKeypad;
+
+        //인증서 관련 처리
+        processCertificate = new ProcessCertificate(mActivity);
+        pki = new MagicXSign();
+
+        kCertificate = new KCertificate();
+        MagicFIDOUtil.setSSLEnable(false);
+
+        magicFIDOUtil = new MagicFIDOUtil(mActivity);
+        patternOption = new Hashtable<String, Object>();
+        settingKeyPad();
+
+    }
+
+    public AndroidBridge(WebView webView, Activity activity) {
+        this.mWebView = webView;
         this.mActivity = activity;
 
         //인증서 관련 처리
@@ -124,7 +140,6 @@ public class AndroidBridge {
 
         magicFIDOUtil = new MagicFIDOUtil(mActivity);
         patternOption = new Hashtable<String, Object>();
-
     }
 
     public AndroidBridge() {
@@ -227,14 +242,12 @@ public class AndroidBridge {
     // show Dialog 버튼 이벤트
     @JavascriptInterface
     public void showDialog() {
-        GLog.d("잘 들어왔습니다 =====");
         inputDialog = new InputDialog(mActivity, new InputDialogClickListener() {
             @Override
             public void onInputPositiveClick(String text) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        GLog.d("text =======" + text);
                         mWebView.loadUrl("javascript:nativeToWebWithMsg('" + text + "')");
                     }
                 });
@@ -250,8 +263,6 @@ public class AndroidBridge {
     // show User Information 선택
     @JavascriptInterface
     public void showUserList() {
-        GLog.d("user infomation을 선택했나요?");
-        Toast.makeText(mActivity, "유저 리스트 액티비티", Toast.LENGTH_SHORT).show();
         mIntent = new Intent(mActivity, UserListActivity.class);
         mActivity.startActivity(mIntent);
     }
@@ -260,7 +271,6 @@ public class AndroidBridge {
     @JavascriptInterface
     public void showCertificationList() {
         GLog.d("showCertificationList 클릭");
-        Toast.makeText(mActivity, "showCertificationList 클릭", Toast.LENGTH_SHORT).show();
         mIntent = new Intent(mActivity, UserCertificationActivity.class);
         mActivity.startActivity(mIntent);
     }
@@ -999,7 +1009,7 @@ public class AndroidBridge {
 //    };
 
     //간편인증서(FaceID, 지문, 패턴) 등록, 삭제, 재등록
-    @JavascriptInterface
+//    @JavascriptInterface
 //    public void simpleAuthMgt(String strJsonObject) {
 //
 //        GLog.d("simpleAuthMgt - strJsonObject : " + strJsonObject);
@@ -1234,7 +1244,6 @@ public class AndroidBridge {
 //        }
 //    };
 
-
     boolean bUseDummyData = false;
 
     @JavascriptInterface
@@ -1287,14 +1296,12 @@ public class AndroidBridge {
                     else
                         magicVKeypad.setUseSpeaker(false);
 
-
                     // 스크린샷 허용
                     if (options.getBoolean("Screenshot"))
                         magicVKeypad.setScreenshot(true);
                     else {
                         magicVKeypad.setScreenshot(false);
                     }
-
 
                     // 키패드 실행
                     magicVKeypad.startCharKeypad(mOnClickInterface);
@@ -1309,7 +1316,6 @@ public class AndroidBridge {
                         magicVKeypad.setPortraitFixed(true);
                     else
                         magicVKeypad.setPortraitFixed(false);
-
 
                     // 입력 필드명 설정
                     magicVKeypad.setFieldName(fieldID);
@@ -1413,8 +1419,6 @@ public class AndroidBridge {
     }
 
     public void settingKeyPad() {
-        magicVKeypad = new MagicVKeypad();
-
         // 키패드 라이선스 값 (드림시큐리티에게 패키지명 전달 후 받은 라이선스 값)
         String strLicense = MagicVKeyPadSettings.strLicense;
 

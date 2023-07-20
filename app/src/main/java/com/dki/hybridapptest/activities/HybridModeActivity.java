@@ -1,13 +1,11 @@
 package com.dki.hybridapptest.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dki.hybridapptest.HybridResult;
 import com.dki.hybridapptest.R;
@@ -60,11 +58,11 @@ public class HybridModeActivity extends Activity {
 
         // 웹뷰 셋팅
         mWebview.getSettings().setJavaScriptEnabled(true);
-        mAndroidBridge = new AndroidBridge(mWebview, HybridModeActivity.this);
+        settingKeypad(magicVKeypad);
+        mAndroidBridge = new AndroidBridge(mWebview, HybridModeActivity.this, magicVKeypad);
         mWebview.addJavascriptInterface(mAndroidBridge, "MagicVKeypad");
         mWebview.setAccessibilityDelegate(new View.AccessibilityDelegate());
         mWebview.getSettings().setDomStorageEnabled(true);
-        mAndroidBridge.settingKeyPad();
 
         JSONObject postData = new JSONObject();
 
@@ -176,8 +174,10 @@ public class HybridModeActivity extends Activity {
 
     @Override
     public void onBackPressed() {
-
+        GLog.d();
+        GLog.d("magicVKeypad.isKeyboardOpen()값은 == " + magicVKeypad.isKeyboardOpen());
         if (magicVKeypad.isKeyboardOpen()) {
+            GLog.d("키보드 열어져있음");
             // 키패드를 닫는다.
             magicVKeypad.closeKeypad();
         } else {
@@ -195,18 +195,22 @@ public class HybridModeActivity extends Activity {
     }
 
     // 키패드 선언 및 라이선스 검증
-    private void settingKeypad(Context context) {
-        magicVKeypad = new MagicVKeypad();
-
-        // 키패드 라이선스 값 (드림시큐리티에게 패키지명 전달 후 받은 라이선스 값)
-        String strLicense = MagicVKeyPadSettings.strLicense;
-
-        boolean successLicense = magicVKeypad.initializeMagicVKeypad(context, strLicense);
-
-        if (!successLicense) {
-            Toast.makeText(this, "라이선스 검증 실패", Toast.LENGTH_SHORT).show();
+    private void settingKeypad(MagicVKeypad magicVKeypad) {
+        if (magicVKeypad != null) {
+            this.magicVKeypad = magicVKeypad;
+        } else {
+            this.magicVKeypad = new MagicVKeypad();
         }
-        if (MagicVKeyPadSettings.bUseE2E) setPublickeyForE2E();
+
+//        // 키패드 라이선스 값 (드림시큐리티에게 패키지명 전달 후 받은 라이선스 값)
+//        String strLicense = MagicVKeyPadSettings.strLicense;
+//
+//        boolean successLicense = magicVKeypad.initializeMagicVKeypad(context, strLicense);
+//
+//        if (!successLicense) {
+//            Toast.makeText(this, "라이선스 검증 실패", Toast.LENGTH_SHORT).show();
+//        }
+//        if (MagicVKeyPadSettings.bUseE2E) setPublickeyForE2E();
     }
 
 
