@@ -15,6 +15,15 @@
         android:theme="@style/Theme.HybridAppTest"
         tools:targetApi="31">
         <activity
+            android:name=".activities.HalfWebViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.FullWebViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.MoveWebViewActivity"
+            android:exported="false" />
+        <activity
             android:name=".encryption.EncryptionActivity"
             android:exported="false" />
         <activity

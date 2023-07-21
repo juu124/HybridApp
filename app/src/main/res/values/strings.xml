@@ -30,4 +30,7 @@
     <string name="function_cert_list_sign">서명용 인증서</string>
     <string name="function_cert_list_km">암호용 인증서</string>
     <string name="function_ucpid_request_info">UCPID Request Info.</string>
+    <string name="full_mode">Full Mode</string>
+    <string name="half_mode">Half Mode</string>
+    <string name="move">move</string>
 </resources>

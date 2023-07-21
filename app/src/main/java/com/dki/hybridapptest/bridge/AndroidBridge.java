@@ -19,8 +19,11 @@ import com.dki.hybridapptest.HybridResult;
 import com.dki.hybridapptest.Interface.InputDialogClickListener;
 import com.dki.hybridapptest.ProcessCertificate;
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.activities.FullWebViewActivity;
+import com.dki.hybridapptest.activities.HalfWebViewActivity;
 import com.dki.hybridapptest.activities.HelloWorldActivity;
 import com.dki.hybridapptest.activities.HybridModeActivity;
+import com.dki.hybridapptest.activities.MoveWebViewActivity;
 import com.dki.hybridapptest.activities.UserCertificationActivity;
 import com.dki.hybridapptest.activities.UserListActivity;
 import com.dki.hybridapptest.dialog.InputDialog;
@@ -36,7 +39,6 @@ import com.dream.magic.fido.rpsdk.client.LOCAL_AUTH_TYPE;
 import com.dream.magic.fido.rpsdk.client.MagicFIDOUtil;
 import com.dream.magic.fido.rpsdk.util.KFidoUtil;
 import com.dream.magic.fido.uaf.protocol.kfido.KCertificate;
-import com.dreamsecurity.magicmrs.MagicMRS;
 import com.dreamsecurity.magicvkeypad.MagicVKeypad;
 import com.dreamsecurity.magicvkeypad.MagicVKeypadOnClickInterface;
 import com.dreamsecurity.magicvkeypad.MagicVKeypadResult;
@@ -52,12 +54,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class AndroidBridge {
-
     private WebView mWebView;
     private Activity mActivity;
-
-    private MagicMRS mMagicMRS = null;
-    private ProcessCertificate processCertificate = null;
+    private Intent mIntent;
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     private String mCallbackFuntion = "";
     private String mAuthCode = "";
@@ -68,47 +68,42 @@ public class AndroidBridge {
     private String mUcpidData = ""; //UCPID 원문
 
     private String color = "";
-
-    private String RSAEncryptData = "";
-    private String charResultData = "";
-    private String AESEncData = "";
-    private String AESDecData = "";
-
-    private String TAG = "AndroidBridge";
-
-    private MagicXSign pki;
-
     private FIDOAuthentication mAuth = null;
     private FIDORegistration reg = null;
     private FIDODeRegistration mDeregist = null;
 
     private final byte[] tobeData1 = "Hello".getBytes();
-
     private int failCnt;
     private String mCertType;
-
-    private KCertificate kCertificate = null;
-
-    private MagicFIDOUtil magicFIDOUtil = null;
-    private Hashtable<String, Object> patternOption = null;
-
-    private boolean mIsInvisible;
-
-    private MagicVKeypad magicVKeypad;
     public final int ALERT_REQUEST = 0xA3;
 
-    public static int iSignType = 2;
-    public static int iLastError = 0;
-    public static String sLastError = null;
+    // 패턴 선 숨기기
+    private boolean mIsInvisible;
+    private Hashtable<String, Object> patternOption = null;
 
+    // 인증서
+    private KCertificate kCertificate = null;
+    private MagicFIDOUtil magicFIDOUtil = null;
+    private ProcessCertificate processCertificate = null;
+    private MagicXSign pki;
     private JSONArray arrSignText;
-//    private Context mContext;
 
-    private Intent mIntent;
+    // show Dialog 버튼 이벤트
     private InputDialog inputDialog;
-    private String strfieldID;
+
+    // 보안 키패드
+    private String RSAEncryptData = "";
+    private String charResultData = "";
+    private String AESEncData = "";
+    private String AESDecData = "";
+    private MagicVKeypad magicVKeypad;
     private String strViewMode;
-    Handler handler = new Handler(Looper.getMainLooper());
+    private String strfieldID;
+
+    // 웹뷰 move
+    private String url;
+    private boolean fullMode = true;
+
 
     public AndroidBridge(WebView webView, Activity activity, MagicVKeypad magicVKeypad) {
         this.mWebView = webView;
@@ -143,8 +138,42 @@ public class AndroidBridge {
         patternOption = new Hashtable<String, Object>();
     }
 
+    public AndroidBridge(Activity activity, String url, boolean fullMode) {
+        GLog.d("== 생성자");
+        this.mActivity = activity;
+        this.url = url;
+        this.fullMode = fullMode;
+
+        //인증서 관련 처리
+        processCertificate = new ProcessCertificate(mActivity);
+        pki = new MagicXSign();
+
+        kCertificate = new KCertificate();
+        MagicFIDOUtil.setSSLEnable(false);
+
+        magicFIDOUtil = new MagicFIDOUtil(mActivity);
+        patternOption = new Hashtable<String, Object>();
+        modeWebView();
+    }
+
     public AndroidBridge() {
 
+    }
+
+    public void modeWebView() {
+        GLog.d("modeWebView == ");
+        //todo :: webview type, url을 가져와서 새 화면 Full/HAlf Mode Acivity 이동
+        if (!TextUtils.isEmpty(url)) {
+            if (!fullMode) {
+                mIntent = new Intent(mActivity, HalfWebViewActivity.class);
+                mIntent.putExtra("url", url);
+                mActivity.startActivity(mIntent);
+            } else {
+                mIntent = new Intent(mActivity, FullWebViewActivity.class);
+                mIntent.putExtra("url", url);
+                mActivity.startActivity(mIntent);
+            }
+        }
     }
 
     public void setCallbakckFuction(String callbakckFuction) {
@@ -202,6 +231,16 @@ public class AndroidBridge {
     public String getUcpidData() {
         return mUcpidData;
     }
+
+    // 웹뷰 페이지 이동 이벤트
+    @JavascriptInterface
+    public void moveWebView() {
+        GLog.d("move Web View 클릭");
+        Toast.makeText(mActivity, "move Web View 클릭", Toast.LENGTH_SHORT).show();
+        mIntent = new Intent(mActivity, MoveWebViewActivity.class);
+        mActivity.startActivity(mIntent);
+    }
+
 
     // 구간 암호화
     @JavascriptInterface
@@ -1419,8 +1458,6 @@ public class AndroidBridge {
 
                     magicVKeypad.setMultiClick(MagicVKeyPadSettings.bMultiClick);
 
-                    // 키패드 실행
-                    Log.d(TAG, "숫자 하프 키패드 ====");
                     magicVKeypad.startNumKeypad(mOnClickInterface);
                 }
             }
