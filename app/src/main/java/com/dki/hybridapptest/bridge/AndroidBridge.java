@@ -24,6 +24,7 @@ import com.dki.hybridapptest.activities.HalfWebViewActivity;
 import com.dki.hybridapptest.activities.HelloWorldActivity;
 import com.dki.hybridapptest.activities.HybridModeActivity;
 import com.dki.hybridapptest.activities.MoveWebViewActivity;
+import com.dki.hybridapptest.activities.SWInfoActivity;
 import com.dki.hybridapptest.activities.UserCertificationActivity;
 import com.dki.hybridapptest.activities.UserListActivity;
 import com.dki.hybridapptest.dialog.InputDialog;
@@ -119,7 +120,7 @@ public class AndroidBridge {
 
         magicFIDOUtil = new MagicFIDOUtil(mActivity);
         patternOption = new Hashtable<String, Object>();
-        settingKeyPad();
+        licenseAuth();
 
     }
 
@@ -230,6 +231,15 @@ public class AndroidBridge {
 
     public String getUcpidData() {
         return mUcpidData;
+    }
+
+    // 정보 표시
+    @JavascriptInterface
+    public void showSWInfo() {
+        GLog.d("show SW Info 클릭");
+        Toast.makeText(mActivity, "show SW Info 클릭", Toast.LENGTH_SHORT).show();
+        mIntent = new Intent(mActivity, SWInfoActivity.class);
+        mActivity.startActivity(mIntent);
     }
 
     // 웹뷰 페이지 이동 이벤트
@@ -1466,7 +1476,7 @@ public class AndroidBridge {
         }
     }
 
-    public void settingKeyPad() {
+    public void licenseAuth() {
         // 키패드 라이선스 값 (드림시큐리티에게 패키지명 전달 후 받은 라이선스 값)
         String strLicense = MagicVKeyPadSettings.strLicense;
 

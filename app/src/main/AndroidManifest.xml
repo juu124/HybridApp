@@ -15,6 +15,9 @@
         android:theme="@style/Theme.HybridAppTest"
         tools:targetApi="31">
         <activity
+            android:name=".activities.SWInfoActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.HalfWebViewActivity"
             android:exported="false" />
         <activity
