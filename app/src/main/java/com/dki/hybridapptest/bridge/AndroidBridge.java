@@ -68,6 +68,7 @@ public class AndroidBridge {
     private String mSn = "";      //sn
     private String mUcpidData = ""; //UCPID 원문
 
+    // FIDO 인증
     private String color = "";
     private FIDOAuthentication mAuth = null;
     private FIDORegistration reg = null;
@@ -105,7 +106,6 @@ public class AndroidBridge {
     private String url;
     private boolean fullMode = true;
 
-
     public AndroidBridge(WebView webView, Activity activity, MagicVKeypad magicVKeypad) {
         this.mWebView = webView;
         this.mActivity = activity;
@@ -140,7 +140,6 @@ public class AndroidBridge {
     }
 
     public AndroidBridge(Activity activity, String url, boolean fullMode) {
-        GLog.d("== 생성자");
         this.mActivity = activity;
         this.url = url;
         this.fullMode = fullMode;
@@ -158,22 +157,17 @@ public class AndroidBridge {
     }
 
     public AndroidBridge() {
-
     }
 
     public void modeWebView() {
-        GLog.d("modeWebView == ");
-        //todo :: webview type, url을 가져와서 새 화면 Full/HAlf Mode Acivity 이동
         if (!TextUtils.isEmpty(url)) {
             if (!fullMode) {
                 mIntent = new Intent(mActivity, HalfWebViewActivity.class);
-                mIntent.putExtra("url", url);
-                mActivity.startActivity(mIntent);
             } else {
                 mIntent = new Intent(mActivity, FullWebViewActivity.class);
-                mIntent.putExtra("url", url);
-                mActivity.startActivity(mIntent);
             }
+            mIntent.putExtra("url", url);
+            mActivity.startActivity(mIntent);
         }
     }
 

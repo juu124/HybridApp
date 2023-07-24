@@ -18,7 +18,7 @@ android {
         minSdk 24
         targetSdk 33
         versionCode 1
-        versionName "1.0"
+        versionName "1.0" // 앱 버전 (업데이트 할 때마다 수정하는 곳)
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -40,6 +40,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+    // 모듈 라이브러리
     implementation project(path: ':Lib_Magic_FIDO')
     implementation project(path: ':magicmrsv2lib')
     implementation project(path: ':magicvkeypad')

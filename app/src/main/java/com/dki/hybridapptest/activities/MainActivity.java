@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private AndroidBridge androidBridge = null;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
         //하이브리드 모바일 pki 인터페이스
 //        mWebView.addJavascriptInterface(new XSignWebPlugin(this, mWebView), "DKITec");
         mWebView.loadUrl(Constants.WEB_VIEW_URL);
-
         webPlugin_Init(MainActivity.this);
 
         RetrofitApiManager.getInstance().requestPostUser(new RetrofitInterface() {
@@ -146,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // 핸드폰 권한 확인 (전화)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
