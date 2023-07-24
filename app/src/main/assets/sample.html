@@ -71,8 +71,12 @@
         DKITec.moveWebView();
     }
 
+    function swInfo(value) {
+        console.log("SW INfo : " + value);
+    }
+
     function showSWInfo() {
-        DKITec.showSWInfo();
+        DKITec.showSWInfo('{"callback":"swInfo"}');
     }
 
 </script>

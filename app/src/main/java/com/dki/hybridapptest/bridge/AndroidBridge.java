@@ -3,8 +3,11 @@ package com.dki.hybridapptest.bridge;
 import static com.dream.magic.fido.authenticator.common.asm.authinfo.ASMInstallAuth.byteArrayToHex;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -15,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
+import com.dki.hybridapptest.BuildConfig;
 import com.dki.hybridapptest.HybridResult;
 import com.dki.hybridapptest.Interface.InputDialogClickListener;
 import com.dki.hybridapptest.ProcessCertificate;
@@ -24,7 +28,6 @@ import com.dki.hybridapptest.activities.HalfWebViewActivity;
 import com.dki.hybridapptest.activities.HelloWorldActivity;
 import com.dki.hybridapptest.activities.HybridModeActivity;
 import com.dki.hybridapptest.activities.MoveWebViewActivity;
-import com.dki.hybridapptest.activities.SWInfoActivity;
 import com.dki.hybridapptest.activities.UserCertificationActivity;
 import com.dki.hybridapptest.activities.UserListActivity;
 import com.dki.hybridapptest.dialog.InputDialog;
@@ -227,13 +230,149 @@ public class AndroidBridge {
         return mUcpidData;
     }
 
+    //콜백 함수 호출 공통으로 사용
+    public void callbackFunction(String callback, String result) {
+
+        GLog.d("callback : " + callback);
+        GLog.d("result : " + result);
+
+        if (callback == null || callback.equals("")) {
+            return;
+        }
+
+        try {
+            mWebView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mWebView.loadUrl("javascript:" + callback + "('" + result + "')");
+                }
+            });
+
+        } catch (NullPointerException ne) {
+            ne.printStackTrace();
+        }
+    }
+
+    // device 브랜드 가져오기
+    public String getDeviceBrand() {
+        return Build.BRAND;
+    }
+
+    // device 모델명 가져오기
+    public String getDeviceModel() {
+        return Build.MODEL;
+    }
+
+    // device Android OS 버전 가져오기
+    public String getDeviceOs() {
+        return Build.VERSION.RELEASE;
+    }
+
     // 정보 표시
     @JavascriptInterface
-    public void showSWInfo() {
+    public void showSWInfo(String strJsonObject) {
         GLog.d("show SW Info 클릭");
-        Toast.makeText(mActivity, "show SW Info 클릭", Toast.LENGTH_SHORT).show();
-        mIntent = new Intent(mActivity, SWInfoActivity.class);
-        mActivity.startActivity(mIntent);
+        GLog.d("getDeviceInfo - strJsonObject : " + strJsonObject);
+
+        String deviceModel = getDeviceModel();
+        String deviceOs = getDeviceOs();
+        JSONObject jsonObject = null;
+        String callback = "";
+        try {
+            if (!strJsonObject.equals("")) {
+                jsonObject = new JSONObject(strJsonObject);
+                if (!jsonObject.isNull("callback")) {
+                    callback = jsonObject.getString("callback");
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        MagicFIDOUtil magicFIDOUtil = new MagicFIDOUtil(mActivity);
+        boolean isAvailableFingerPrint = magicFIDOUtil.isAvailableFIDO(LOCAL_AUTH_TYPE.LOCAL_FINGERPRINT_TYPE);
+        JSONObject obj = new JSONObject();
+        JSONObject data = new JSONObject();
+
+        SharedPreferences prefs = mActivity.getSharedPreferences(PreferenceManager.PREFERENCES_NAME, Context.MODE_PRIVATE);
+        boolean isInvisiblePattern = prefs.getBoolean(Constant.PATTERN_INVISIBLE, false);
+        boolean isFirstLaunch = prefs.getBoolean(Constant.FIRST_LAUNCH, true);
+
+        try {
+            if (isFirstLaunch) {
+                data.put("faceid", "N");
+                if (isAvailableFingerPrint) { //
+                    data.put("fingerprint", "Y");
+                } else {
+                    data.put("fingerprint", "N");
+                }
+                data.put("appVersion", BuildConfig.VERSION_NAME);
+                data.put("isInvisiblePattern", isInvisiblePattern);
+                data.put("firstLaunch", isFirstLaunch);
+                data.put("deviceModel", deviceModel);
+                data.put("deviceOs", deviceOs);
+                obj.put("resultCode", "SUCCESS");
+                obj.put("data", data);
+
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean(Constant.FIRST_LAUNCH, false);
+                editor.apply();
+            } else {
+                data.put("faceid", "N");
+                if (isAvailableFingerPrint) {
+                    data.put("fingerprint", "Y");
+                } else {
+                    data.put("fingerprint", "N");
+                }
+                data.put("appVersion", BuildConfig.VERSION_NAME);
+                data.put("isInvisiblePattern", isInvisiblePattern);
+                data.put("firstLaunch", isFirstLaunch);
+                data.put("deviceModel", deviceModel);
+                data.put("deviceOs", deviceOs);
+                obj.put("resultCode", "SUCCESS");
+                obj.put("data", data);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            try {
+                if (isFirstLaunch) {
+                    data.put("faceid", "N");
+                    if (isAvailableFingerPrint) { //
+                        data.put("fingerprint", "Y");
+                    } else {
+                        data.put("fingerprint", "N");
+                    }
+                    data.put("appVersion", BuildConfig.VERSION_NAME);
+                    data.put("isInvisiblePattern", isInvisiblePattern);
+                    data.put("firstLaunch", isFirstLaunch);
+                    data.put("deviceModel", deviceModel);
+                    data.put("deviceOs", deviceOs);
+                    obj.put("resultCode", "SUCCESS");
+                    obj.put("data", data);
+
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putBoolean(Constant.FIRST_LAUNCH, false);
+                    editor.apply();
+                } else {
+                    data.put("faceid", "N");
+                    if (isAvailableFingerPrint) {
+                        data.put("fingerprint", "Y");
+                    } else {
+                        data.put("fingerprint", "N");
+                    }
+                    data.put("appVersion", BuildConfig.VERSION_NAME);
+                    data.put("isInvisiblePattern", isInvisiblePattern);
+                    data.put("firstLaunch", isFirstLaunch);
+                    data.put("deviceModel", deviceModel);
+                    data.put("deviceOs", deviceOs);
+                    obj.put("resultCode", "SUCCESS");
+                    obj.put("data", data);
+                }
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+        }
+        callbackFunction(callback, obj.toString());
     }
 
     // 웹뷰 페이지 이동 이벤트

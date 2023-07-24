@@ -35,6 +35,9 @@ public class Constant {
     //앱 처음 실행시 튜토리얼 실행
     public static String TUTORIAL_KEY = "TUTORIAL";
 
+    //앱 최초 실행
+    public static String FIRST_LAUNCH = "FIRST_LAUNCH";
+
     //패턴 선보이기
     public static String PATTERN_INVISIBLE = "PATTERN_INVISIBLE";
 
