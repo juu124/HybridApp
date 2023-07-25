@@ -51,9 +51,6 @@ public class MainActivity extends AppCompatActivity {
 
         androidBridge = new AndroidBridge(mWebView, MainActivity.this);
         mWebView.addJavascriptInterface(androidBridge, "DKITec");
-
-        //하이브리드 모바일 pki 인터페이스
-//        mWebView.addJavascriptInterface(new XSignWebPlugin(this, mWebView), "DKITec");
         mWebView.loadUrl(Constants.WEB_VIEW_URL);
         webPlugin_Init(MainActivity.this);
 
@@ -68,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // webView 화면
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
@@ -94,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // web 플러그 인 초기화
     public void webPlugin_Init(Context c) {
         GLog.d("잘 들어왔습니다. =========" + c);
         int SDK_INT = Build.VERSION.SDK_INT;

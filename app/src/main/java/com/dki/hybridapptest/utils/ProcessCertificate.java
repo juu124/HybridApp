@@ -1,8 +1,7 @@
-package com.dki.hybridapptest;
+package com.dki.hybridapptest.utils;
 
 import android.content.Context;
 
-import com.dki.hybridapptest.utils.GLog;
 import com.dreamsecurity.magicmrs.MRSCertificate;
 import com.dreamsecurity.magicmrs.etc.MagicMRSConfig;
 import com.dreamsecurity.magicxsign.MagicXSign;

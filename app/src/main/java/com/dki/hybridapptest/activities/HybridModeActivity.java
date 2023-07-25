@@ -7,10 +7,10 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.dki.hybridapptest.HybridResult;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.bridge.AndroidBridge;
 import com.dki.hybridapptest.utils.GLog;
+import com.dki.hybridapptest.utils.HybridResult;
 import com.dki.hybridapptest.utils.MagicVKeyPadSettings;
 import com.dreamsecurity.magicvkeypad.MagicVKeypad;
 
@@ -27,7 +27,6 @@ import java.util.Map;
 
 
 public class HybridModeActivity extends Activity {
-
     private WebView mWebview;
     private Button backButton = null;
 
@@ -58,11 +57,15 @@ public class HybridModeActivity extends Activity {
 
         // 웹뷰 셋팅
         mWebview.getSettings().setJavaScriptEnabled(true);
-        settingKeypad(magicVKeypad);
-        mAndroidBridge = new AndroidBridge(mWebview, HybridModeActivity.this, magicVKeypad);
         mWebview.addJavascriptInterface(mAndroidBridge, "MagicVKeypad");
         mWebview.setAccessibilityDelegate(new View.AccessibilityDelegate());
         mWebview.getSettings().setDomStorageEnabled(true);
+
+        // 보안 키보드 셋팅
+        settingKeypad(magicVKeypad);
+
+        mAndroidBridge = new AndroidBridge(mWebview, HybridModeActivity.this);
+        mAndroidBridge.licenseAuth(magicVKeypad);
 
         JSONObject postData = new JSONObject();
 
@@ -191,28 +194,16 @@ public class HybridModeActivity extends Activity {
 
             finish();
         }
-
     }
 
-    // 키패드 선언 및 라이선스 검증
+    // 키패드 선언 및 null 체크
     private void settingKeypad(MagicVKeypad magicVKeypad) {
         if (magicVKeypad != null) {
             this.magicVKeypad = magicVKeypad;
         } else {
             this.magicVKeypad = new MagicVKeypad();
         }
-
-//        // 키패드 라이선스 값 (드림시큐리티에게 패키지명 전달 후 받은 라이선스 값)
-//        String strLicense = MagicVKeyPadSettings.strLicense;
-//
-//        boolean successLicense = magicVKeypad.initializeMagicVKeypad(context, strLicense);
-//
-//        if (!successLicense) {
-//            Toast.makeText(this, "라이선스 검증 실패", Toast.LENGTH_SHORT).show();
-//        }
-//        if (MagicVKeyPadSettings.bUseE2E) setPublickeyForE2E();
     }
-
 
     private void setPublickeyForE2E() {
         try {

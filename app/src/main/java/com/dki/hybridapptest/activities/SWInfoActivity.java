@@ -8,7 +8,7 @@
 //import androidx.appcompat.app.AppCompatActivity;
 //
 //import com.dki.hybridapptest.BuildConfig;
-//import com.dki.hybridapptest.DeviceInfo;
+//import com.dki.hybridapptest.utils.DeviceInfo;
 //import com.dki.hybridapptest.R;
 //
 //public class SWInfoActivity extends AppCompatActivity {
