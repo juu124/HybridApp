@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.dki.hybridapptest">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- <uses-permission android:name="android.permission.USE_FINGERPRINT" />는 deprecated 되어서 USE_BIOMETRIC으로 대채함 -->
+    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
+    <queries>
+        <package android:name="kr.or.mydatacenter.pds" />  <!--외부 앱 사용 -->
+    </queries>
 
     <application
         android:allowBackup="false"
@@ -16,9 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HybridAppTest"
         tools:targetApi="31">
-        <!--        <activity-->
-        <!--            android:name=".activities.SWInfoActivity"-->
-        <!--            android:exported="false" />-->
+        <!-- <activity -->
+        <!-- android:name=".activities.SWInfoActivity" -->
+        <!-- android:exported="false" /> -->
         <activity
             android:name=".activities.WebViewSizeChangeActivity"
             android:exported="false" />

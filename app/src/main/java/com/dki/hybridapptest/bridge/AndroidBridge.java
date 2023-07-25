@@ -6,6 +6,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
@@ -205,6 +207,28 @@ public class AndroidBridge {
         }
     }
 
+    // 앱 스토어 이동하기
+    @JavascriptInterface
+    public void showFunctionTest() {
+        mIntent = new Intent(Intent.ACTION_VIEW);
+        String packageName = "kr.or.mydatacenter.pds";
+        PackageManager packageManager = mActivity.getPackageManager();
+
+        try {
+            // 앱이 설치되어 있는 경우
+            PackageInfo packageInfo = packageManager.getPackageInfo(packageName, 0);
+            mIntent = packageManager.getLaunchIntentForPackage(packageName);
+            GLog.d("설치 된 상태 ");
+
+        } catch (Exception e) {
+            // 설치가 안되어 있는 경우
+            GLog.d("설치 안된 상태");
+            mIntent.setData(Uri.parse("market://details?id=" + "kr.or.mydatacenter.pds")); // 예시로 신정원 앱 'MyPDS(나의금융생활)' 패키지 명으로 지정했음.
+//            mIntent.setData(Uri.parse("market://details?id=" + getPackageName()));   // 앱이 등록이 되어있는 상태라면 정상적인 화면이 나올것.
+        }
+        mActivity.startActivity(mIntent);
+    }
+
     // SW 정보 표시
     @JavascriptInterface
     public void showSWInfo(String strJsonObject) {
@@ -352,10 +376,9 @@ public class AndroidBridge {
         mActivity.startActivity(mIntent);
     }
 
-
     // Say hello, hello, world 버튼 이벤트
     @JavascriptInterface
-    public void showToast(String word) {
+    public void onClickButton(String word) {
         handler.post(new Runnable() {
             @Override
             public void run() {

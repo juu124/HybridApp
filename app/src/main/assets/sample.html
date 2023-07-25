@@ -29,10 +29,12 @@
 <br><br>
 <input type="button" value="SW Info" onClick="showSWInfo()"/>
 <br><br>
+<input type="button" value="function test" onClick="showFunctionTest()"/>
+<br><br>
 <script type="text/javascript" language="javascript">
 
     function showAndroidToast(toast) {
-        DKITec.showToast(toast);
+        DKITec.onClickButton(toast);
     }
 
     function nativeToWeb() {
@@ -79,9 +81,16 @@
         DKITec.showSWInfo('{"callback":"swInfo"}');
     }
 
+    function showFunctionTest() {
+        DKITec.showFunctionTest();
+    }
+
+
 </script>
 <a href="tel:01012345678">Call 010-1234-5678</a>
 <br><br>
 <a href="mailto:dkitectest@gmail.com">E-mail : dkitectest@gmail.com</a>
+<br><br>
+<a href="https://www.google.co.kr/?hl=ko">https://www.google.co.kr/?hl=ko</a>
 </body>
 </html>

@@ -65,13 +65,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // webView 화면
+        // webView 화면 (전화, e-mail, 외부 url 링크)
         mWebView.setWebViewClient(new WebViewClient() {
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
                 if (TextUtils.isEmpty(url)) {
                     GLog.d("url is null");
                 } else {
+                    // 전화
                     if (url.startsWith("tel:")) {
                         if ((checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)) {
                             GLog.d("CALL_PHONE PERMISSION_DENIED 입니다.");
@@ -80,11 +81,16 @@ public class MainActivity extends AppCompatActivity {
                             mAction = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
                             startActivity(mAction);
                         }
-                    } else if (url.startsWith("mailto:")) {
+                    }
+                    // 이메일
+                    else if (url.startsWith("mailto:")) {
                         mAction = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
                         startActivity(mAction);
-                    } else {
-                        Toast.makeText(MainActivity.this, "없음", Toast.LENGTH_SHORT).show();
+                    }
+                    // 외부 url 링크
+                    else if (url.startsWith("https:")) {
+                        mAction = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(mAction);
                     }
                 }
                 return true;
