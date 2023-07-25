@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -19,12 +18,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.dki.hybridapptest.BuildConfig;
-import com.dki.hybridapptest.HybridResult;
 import com.dki.hybridapptest.Interface.InputDialogClickListener;
-import com.dki.hybridapptest.ProcessCertificate;
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.activities.FullWebViewActivity;
-import com.dki.hybridapptest.activities.HalfWebViewActivity;
 import com.dki.hybridapptest.activities.HelloWorldActivity;
 import com.dki.hybridapptest.activities.HybridModeActivity;
 import com.dki.hybridapptest.activities.MoveWebViewActivity;
@@ -36,9 +31,12 @@ import com.dki.hybridapptest.kfido.FIDOAuthentication;
 import com.dki.hybridapptest.kfido.FIDODeRegistration;
 import com.dki.hybridapptest.kfido.FIDORegistration;
 import com.dki.hybridapptest.utils.Constant;
+import com.dki.hybridapptest.utils.DeviceInfo;
 import com.dki.hybridapptest.utils.GLog;
+import com.dki.hybridapptest.utils.HybridResult;
 import com.dki.hybridapptest.utils.MagicVKeyPadSettings;
 import com.dki.hybridapptest.utils.PreferenceManager;
+import com.dki.hybridapptest.utils.ProcessCertificate;
 import com.dream.magic.fido.rpsdk.client.LOCAL_AUTH_TYPE;
 import com.dream.magic.fido.rpsdk.client.MagicFIDOUtil;
 import com.dream.magic.fido.rpsdk.util.KFidoUtil;
@@ -109,24 +107,10 @@ public class AndroidBridge {
     private String url;
     private boolean fullMode = true;
 
-    public AndroidBridge(WebView webView, Activity activity, MagicVKeypad magicVKeypad) {
-        this.mWebView = webView;
-        this.mActivity = activity;
-        this.magicVKeypad = magicVKeypad;
-
-        //인증서 관련 처리
-        processCertificate = new ProcessCertificate(mActivity);
-        pki = new MagicXSign();
-
-        kCertificate = new KCertificate();
-        MagicFIDOUtil.setSSLEnable(false);
-
-        magicFIDOUtil = new MagicFIDOUtil(mActivity);
-        patternOption = new Hashtable<String, Object>();
-        licenseAuth();
-
+    public AndroidBridge() {
     }
 
+    // AndroidBride 기본 생성자
     public AndroidBridge(WebView webView, Activity activity) {
         this.mWebView = webView;
         this.mActivity = activity;
@@ -140,38 +124,6 @@ public class AndroidBridge {
 
         magicFIDOUtil = new MagicFIDOUtil(mActivity);
         patternOption = new Hashtable<String, Object>();
-    }
-
-    public AndroidBridge(Activity activity, String url, boolean fullMode) {
-        this.mActivity = activity;
-        this.url = url;
-        this.fullMode = fullMode;
-
-        //인증서 관련 처리
-        processCertificate = new ProcessCertificate(mActivity);
-        pki = new MagicXSign();
-
-        kCertificate = new KCertificate();
-        MagicFIDOUtil.setSSLEnable(false);
-
-        magicFIDOUtil = new MagicFIDOUtil(mActivity);
-        patternOption = new Hashtable<String, Object>();
-        modeWebView();
-    }
-
-    public AndroidBridge() {
-    }
-
-    public void modeWebView() {
-        if (!TextUtils.isEmpty(url)) {
-            if (!fullMode) {
-                mIntent = new Intent(mActivity, HalfWebViewActivity.class);
-            } else {
-                mIntent = new Intent(mActivity, FullWebViewActivity.class);
-            }
-            mIntent.putExtra("url", url);
-            mActivity.startActivity(mIntent);
-        }
     }
 
     public void setCallbakckFuction(String callbakckFuction) {
@@ -230,13 +182,13 @@ public class AndroidBridge {
         return mUcpidData;
     }
 
-    //콜백 함수 호출 공통으로 사용
+    // 콜백 함수 호출 공통으로 사용
     public void callbackFunction(String callback, String result) {
-
         GLog.d("callback : " + callback);
         GLog.d("result : " + result);
 
-        if (callback == null || callback.equals("")) {
+        // 콜백 값 null 체크
+        if (TextUtils.isEmpty(callback)) {
             return;
         }
 
@@ -253,29 +205,13 @@ public class AndroidBridge {
         }
     }
 
-    // device 브랜드 가져오기
-    public String getDeviceBrand() {
-        return Build.BRAND;
-    }
-
-    // device 모델명 가져오기
-    public String getDeviceModel() {
-        return Build.MODEL;
-    }
-
-    // device Android OS 버전 가져오기
-    public String getDeviceOs() {
-        return Build.VERSION.RELEASE;
-    }
-
-    // 정보 표시
+    // SW 정보 표시
     @JavascriptInterface
     public void showSWInfo(String strJsonObject) {
-        GLog.d("show SW Info 클릭");
         GLog.d("getDeviceInfo - strJsonObject : " + strJsonObject);
 
-        String deviceModel = getDeviceModel();
-        String deviceOs = getDeviceOs();
+        String deviceModel = DeviceInfo.getDeviceModel();  // 디바이스 모델명
+        String deviceOs = DeviceInfo.getDeviceOs();  // 디바이스 OS명
         JSONObject jsonObject = null;
         String callback = "";
         try {
@@ -295,17 +231,21 @@ public class AndroidBridge {
         JSONObject data = new JSONObject();
 
         SharedPreferences prefs = mActivity.getSharedPreferences(PreferenceManager.PREFERENCES_NAME, Context.MODE_PRIVATE);
-        boolean isInvisiblePattern = prefs.getBoolean(Constant.PATTERN_INVISIBLE, false);
-        boolean isFirstLaunch = prefs.getBoolean(Constant.FIRST_LAUNCH, true);
+        boolean isInvisiblePattern = prefs.getBoolean(Constant.PATTERN_INVISIBLE, false);  // 패턴
+        boolean isFirstLaunch = prefs.getBoolean(Constant.FIRST_LAUNCH, true);  // 최초 실행 여부
 
         try {
+            // 어플 최초 실행함
             if (isFirstLaunch) {
                 data.put("faceid", "N");
-                if (isAvailableFingerPrint) { //
+                if (isAvailableFingerPrint) {
+                    // 지문 인식 가능
                     data.put("fingerprint", "Y");
                 } else {
+                    // 지문 인식 가능하지 않음
                     data.put("fingerprint", "N");
                 }
+
                 data.put("appVersion", BuildConfig.VERSION_NAME);
                 data.put("isInvisiblePattern", isInvisiblePattern);
                 data.put("firstLaunch", isFirstLaunch);
@@ -314,16 +254,21 @@ public class AndroidBridge {
                 obj.put("resultCode", "SUCCESS");
                 obj.put("data", data);
 
+                // 앱 최초 실행하지 않음
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean(Constant.FIRST_LAUNCH, false);
                 editor.apply();
             } else {
+                // 어플 최초 실행하지 않음
                 data.put("faceid", "N");
                 if (isAvailableFingerPrint) {
+                    // 지문 인식 가능
                     data.put("fingerprint", "Y");
                 } else {
+                    // 지문 인식 가능하지 않음
                     data.put("fingerprint", "N");
                 }
+
                 data.put("appVersion", BuildConfig.VERSION_NAME);
                 data.put("isInvisiblePattern", isInvisiblePattern);
                 data.put("firstLaunch", isFirstLaunch);
@@ -335,13 +280,17 @@ public class AndroidBridge {
         } catch (JSONException e) {
             e.printStackTrace();
             try {
+                // 어플 최초 실행함
                 if (isFirstLaunch) {
                     data.put("faceid", "N");
-                    if (isAvailableFingerPrint) { //
+                    if (isAvailableFingerPrint) {
+                        // 지문 인식 가능
                         data.put("fingerprint", "Y");
                     } else {
+                        // 지문 인식 가능하지 않음
                         data.put("fingerprint", "N");
                     }
+
                     data.put("appVersion", BuildConfig.VERSION_NAME);
                     data.put("isInvisiblePattern", isInvisiblePattern);
                     data.put("firstLaunch", isFirstLaunch);
@@ -350,16 +299,20 @@ public class AndroidBridge {
                     obj.put("resultCode", "SUCCESS");
                     obj.put("data", data);
 
+                    // 앱 최초 실행하지 않음
                     SharedPreferences.Editor editor = prefs.edit();
                     editor.putBoolean(Constant.FIRST_LAUNCH, false);
                     editor.apply();
                 } else {
                     data.put("faceid", "N");
                     if (isAvailableFingerPrint) {
+                        // 지문 인식 가능
                         data.put("fingerprint", "Y");
                     } else {
+                        // 지문 인식 가능하지 않음
                         data.put("fingerprint", "N");
                     }
+
                     data.put("appVersion", BuildConfig.VERSION_NAME);
                     data.put("isInvisiblePattern", isInvisiblePattern);
                     data.put("firstLaunch", isFirstLaunch);
@@ -372,14 +325,13 @@ public class AndroidBridge {
                 e1.printStackTrace();
             }
         }
+        // 콜백 함수
         callbackFunction(callback, obj.toString());
     }
 
-    // 웹뷰 페이지 이동 이벤트
+    // 웹뷰 페이지 이동
     @JavascriptInterface
     public void moveWebView() {
-        GLog.d("move Web View 클릭");
-        Toast.makeText(mActivity, "move Web View 클릭", Toast.LENGTH_SHORT).show();
         mIntent = new Intent(mActivity, MoveWebViewActivity.class);
         mActivity.startActivity(mIntent);
     }
@@ -388,18 +340,14 @@ public class AndroidBridge {
     // 구간 암호화
     @JavascriptInterface
     public void showEncryption() {
-        GLog.d("showEncryption 클릭");
-        Toast.makeText(mActivity, "showEncryption 클릭", Toast.LENGTH_SHORT).show();
         mIntent = new Intent(mActivity, EncryptionActivity.class);
         mActivity.startActivity(mIntent);
     }
 
 
-    // HybridModeActivity 보안 키보드 버튼 클릭
+    // HybridModeActivity 보안 키보드 버튼
     @JavascriptInterface
     public void showKeyboard() {
-        GLog.d("showKeyboard 클릭");
-        Toast.makeText(mActivity, "showKeyboard 클릭", Toast.LENGTH_SHORT).show();
         mIntent = new Intent(mActivity, HybridModeActivity.class);
         mActivity.startActivity(mIntent);
     }
@@ -414,10 +362,13 @@ public class AndroidBridge {
                 mWebView.loadUrl("javascript:nativeToWeb()");
             }
         });
+        // hello 버튼일 때
         if (TextUtils.equals(word, mActivity.getString(R.string.hello))) {
             mIntent = new Intent(mActivity, HelloWorldActivity.class);
             mActivity.startActivity(mIntent);
-        } else if (TextUtils.equals(word, mActivity.getString(R.string.world))) {
+        }
+        // world 버튼일 떄
+        else if (TextUtils.equals(word, mActivity.getString(R.string.world))) {
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -463,12 +414,11 @@ public class AndroidBridge {
     // show User Information Certification 선택
     @JavascriptInterface
     public void showCertificationList() {
-        GLog.d("showCertificationList 클릭");
         mIntent = new Intent(mActivity, UserCertificationActivity.class);
         mActivity.startActivity(mIntent);
     }
 
-    //외부 브라우저 호출
+    // 외부 브라우저 호출
     @JavascriptInterface
     public void openBrowser(String strJsonObject) {
         JSONObject jsonObject = null;
@@ -1291,7 +1241,7 @@ public class AndroidBridge {
 
                 GLog.d("subjectDn : " + subjectDn);
 
-                //전달 받은 dn과 값은 값을갖고 있는 지 확인
+                // 전달 받은 dn과 값은 값을 가지고 있는 지 확인
                 if (userKey.equals(subjectDn)) {
                     byte[] signCert = pki.MEDIA_ReadCert(i, MagicXSign_Type.XSIGN_PKI_CERT_SIGN, nMediaType);
                     byte[] signPri = pki.MEDIA_ReadPriKey(i, MagicXSign_Type.XSIGN_PKI_CERT_SIGN);
@@ -1439,6 +1389,7 @@ public class AndroidBridge {
 
     boolean bUseDummyData = false;
 
+    // 보안 키패드 설정
     @JavascriptInterface
     public void callMagicVKeypadAndroid(final String fieldID,
                                         final String viewMode,
@@ -1609,7 +1560,8 @@ public class AndroidBridge {
         }
     }
 
-    public void licenseAuth() {
+    public void licenseAuth(MagicVKeypad magicVKeypad) {
+        this.magicVKeypad = magicVKeypad;
         // 키패드 라이선스 값 (드림시큐리티에게 패키지명 전달 후 받은 라이선스 값)
         String strLicense = MagicVKeyPadSettings.strLicense;
 
