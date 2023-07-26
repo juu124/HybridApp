@@ -25,11 +25,13 @@ public class WebViewSizeChangeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        GLog.d();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_web_view);
 
         mWebView = findViewById(R.id.webview);
         mWebSettings = mWebView.getSettings();
+        mWebSettings.setDomStorageEnabled(true);
         displayMetrics = getApplicationContext().getResources().getDisplayMetrics();   // 해당 기기 화면 사이즈
 
         mIntent = getIntent();
@@ -50,6 +52,7 @@ public class WebViewSizeChangeActivity extends AppCompatActivity {
 
         GLog.d("url === " + url);
         mWebSettings.setJavaScriptEnabled(true);
+//        url = "https://www.google.com/webhp?hl=ko&sa=X&ved=0ahUKEwiMqPnqkKuAAxWMc3AKHecBAjUQPAgI";
         mWebView.loadUrl(url);
     }
 }

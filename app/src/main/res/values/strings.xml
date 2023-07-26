@@ -33,4 +33,6 @@
     <string name="full_mode">Full Mode</string>
     <string name="half_mode">Half Mode</string>
     <string name="move">move</string>
+    <!--  앱 종료  -->
+    <string name="close_app_message" translatable="false">앱을 종료하시겠습니까?</string>
 </resources>

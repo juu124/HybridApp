@@ -34,15 +34,31 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
     public static String TAG = "Utils";
+    public static final int KHMER_BEGIN_UNICODE = 6016;
+    public static final int KHMER_END_UNICODE = 6143;
+    public static final int HANGUL_BEGIN_UNICODE = 44032; // 가
+    public static final int HANGUL_END_UNICODE = 55203; // 힣
+    public static final int HANGUL_BASE_UNIT = 588;
+    public static final int unicodeA = 65;
+    public static final int unicodeZ = 90;
+
+    public static final int[] INITIAL_SOUND_UNICODE = {12593, 12594, 12596,
+            12599, 12600, 12601, 12609, 12610, 12611, 12613, 12614, 12615,
+            12616, 12617, 12618, 12619, 12620, 12621, 12622};
+
+    public static final char[] INITIAL_SOUND = {'ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ',
+            'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅃ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'};
 
     public static boolean getNetworkStatus(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -50,6 +66,25 @@ public class Utils {
 
         boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
         return isConnected;
+    }
+
+    public static String encodeBase64String(String data) {
+        byte[] bytes = data.getBytes(StandardCharsets.UTF_8);
+        return Base64.encodeToString(bytes, Base64.NO_WRAP);
+    }
+
+    public static String encodeBase64String(byte[] bytes) {
+        return Base64.encodeToString(bytes, Base64.NO_WRAP);
+    }
+
+    public static ArrayList distinct(List dataList) {
+        ArrayList resultList = new ArrayList<>();
+        for (int i = 0; i < dataList.size(); i++) {
+            if (!resultList.contains(dataList.get(i))) {
+                resultList.add(dataList.get(i));
+            }
+        }
+        return resultList;
     }
 
     public static void setDownloadListener(Activity activity, WebView webView) {
@@ -237,6 +272,64 @@ public class Utils {
         }
 
         return packageInfo.versionName;
+    }
+
+    public static String getHangulInitialSound(String value) {
+
+        StringBuffer resultBuffer = new StringBuffer();
+
+        int unicode = convertStringToUnicode(value);
+
+        if (HANGUL_BEGIN_UNICODE <= unicode
+                && unicode <= HANGUL_END_UNICODE) {
+            int tmp = (unicode - HANGUL_BEGIN_UNICODE);
+            int index = tmp / HANGUL_BASE_UNIT;
+            resultBuffer.append(INITIAL_SOUND[index]);
+        } else {
+            resultBuffer.append(convertUnicodeToChar(unicode));
+        }
+
+        String result = resultBuffer.toString().toUpperCase();
+
+        int unicodeInitial = Utils.convertStringToUnicode(resultBuffer.toString().toUpperCase());
+        if ((unicodeInitial >= unicodeA && unicodeInitial <= unicodeZ) || (unicodeInitial >= KHMER_BEGIN_UNICODE && unicodeInitial <= KHMER_END_UNICODE)) {
+            result = "#";
+        }
+
+        return result;
+    }
+
+    public static char convertUnicodeToChar(int unicode) {
+        if (unicode < 65) {
+            return '#';
+        } else {
+            return convertUnicodeToChar(toHexString(unicode));
+        }
+    }
+
+    public static char convertUnicodeToChar(String hexUnicode) {
+        return (char) Integer.parseInt(hexUnicode, 16);
+    }
+
+    private static String toHexString(int decimal) {
+        Long intDec = Long.valueOf(decimal);
+        return Long.toHexString(intDec);
+    }
+
+    public static int convertStringToUnicode(String str) {
+
+        int unicodeList = 0;
+
+        if ((str != null) && (str.length() > 0)) {
+            str.toUpperCase();
+            unicodeList = convertCharToUnicode(str.charAt(0));
+        }
+
+        return unicodeList;
+    }
+
+    public static int convertCharToUnicode(char ch) {
+        return (int) ch;
     }
 
     //앱버전 체크 (같은 버전 : 0, 최신버전 : 1, 구버전 : -1 값 반환)

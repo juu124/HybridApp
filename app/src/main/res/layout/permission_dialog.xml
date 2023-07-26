@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/border_line"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:fontFamily="@font/notosans_bold"
+        android:gravity="center_horizontal"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="0dp"
+        android:text="접근권한"
+        android:textColor="@color/black"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/tv_dialog_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="24dp"
+        android:fontFamily="@font/notosans_regular"
+        android:gravity="center_horizontal"
+        android:includeFontPadding="false"
+        android:lineSpacingExtra="0dp"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
+        android:text="고객님의 편리한 서비스 이용을 위해\n아래 접근권한의 허용이 필요합니다."
+        android:textColor="#666666"
+        android:textSize="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="14.5dp"
+        android:layout_marginRight="24dp"
+        android:background="#e2dddd" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="14.5dp"
+        android:layout_marginRight="24dp">
+
+        <ImageView
+            android:id="@+id/iv_mobile"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/tv_mobile_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13dp"
+            android:layout_toRightOf="@+id/iv_mobile"
+            android:fontFamily="@font/notosans_medium"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:text="ID (전화)"
+            android:textColor="#000000"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_mobile_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_mobile_title"
+            android:layout_marginLeft="13dp"
+            android:layout_toRightOf="@+id/iv_mobile"
+            android:fontFamily="@font/notosans_medium"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:text="휴대폰 상태 및 ID 확인"
+            android:textColor="#707070"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="14.5dp"
+        android:layout_marginRight="24dp">
+
+        <ImageView
+            android:id="@+id/iv_storage"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/tv_storage_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13dp"
+            android:layout_toRightOf="@+id/iv_storage"
+            android:fontFamily="@font/notosans_medium"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:text="읽기 권한"
+            android:textColor="#000000"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_storage_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_storage_title"
+            android:layout_marginLeft="13dp"
+            android:layout_toRightOf="@+id/iv_storage"
+            android:fontFamily="@font/notosans_medium"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:text="주소록 읽기"
+            android:textColor="#707070"
+            android:textSize="16dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="14.5dp"
+        android:layout_marginRight="24dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_camera"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true" />
+
+        <TextView
+            android:id="@+id/tv_camera_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="13dp"
+            android:layout_toRightOf="@+id/iv_camera"
+            android:fontFamily="@font/notosans_medium"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:text="카메라"
+            android:textColor="#000000"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/tv_camera_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_camera_title"
+            android:layout_marginLeft="13dp"
+            android:layout_toRightOf="@+id/iv_camera"
+            android:fontFamily="@font/notosans_medium"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:text="QR코드 인식 시 사용"
+            android:textColor="#707070"
+            android:textSize="16dp" />
+
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/notosans_regular"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:text="아니오"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:visibility="gone"
+            app:layout_constraintHorizontal_weight="1"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/btn_confirm"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_confirm"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/btn_blue"
+            android:fontFamily="@font/notosans_regular"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="0dp"
+            android:text="확인"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            app:layout_constraintHorizontal_weight="1.7"
+            app:layout_constraintLeft_toRightOf="@id/btn_cancel"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginLeft="24dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>

@@ -9,18 +9,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.bridge.AndroidBridge;
@@ -74,10 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     // 전화
                     if (url.startsWith("tel:")) {
-                        if ((checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)) {
-                            GLog.d("CALL_PHONE PERMISSION_DENIED 입니다.");
-                            requestPermissions(new String[]{Manifest.permission.CALL_PHONE}, Constants.CALL_PHONE_REQUEST_CODE);
-                        } else {
+                        if ((checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)) {
                             mAction = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
                             startActivity(mAction);
                         }
@@ -150,35 +143,36 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // 핸드폰 권한 확인 (전화)
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
-
-        if (requestCode == Constants.CALL_PHONE_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "권한 수락", Toast.LENGTH_SHORT).show();
-            } else {
-                if (sharedPreferences.getBoolean("FIRST_REQUEST", true)) {
-                    GLog.d("첫 권한 요청 권한 미수락");
-                    Toast.makeText(this, "권한 미수락", Toast.LENGTH_SHORT).show();
-                    sharedPreferences.edit().putBoolean("FIRST_REQUEST", false).apply();
-                } else {
-                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
-                        Toast.makeText(this, "권한 미수락", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "앱 설정 창에서 전화 권한을 허용해주세요.", Toast.LENGTH_SHORT).show();
-                        mAction = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        try {
-                            mAction.setData(Uri.parse("package:" + getPackageName()));
-                        } catch (Exception e) {
-                            GLog.d("usri parse 불가 == " + e);
-                            return;
-                        }
-                        startActivity(mAction);
-                    }
-                }
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        GLog.d("권한==================================");
+//        sharedPreferences = getSharedPreferences(getPackageName(), Context.MODE_PRIVATE);
+//
+//        if (requestCode == Constants.CALL_PHONE_REQUEST_CODE) {
+//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                Toast.makeText(this, "권한 수락", Toast.LENGTH_SHORT).show();
+//            } else {
+//                if (sharedPreferences.getBoolean("FIRST_REQUEST", true)) {
+//                    GLog.d("첫 권한 요청 권한 미수락");
+//                    Toast.makeText(this, "권한 미수락", Toast.LENGTH_SHORT).show();
+//                    sharedPreferences.edit().putBoolean("FIRST_REQUEST", false).apply();
+//                } else {
+//                    if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CALL_PHONE)) {
+//                        Toast.makeText(this, "권한 미수락", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(this, "앱 설정 창에서 전화 권한을 허용해주세요.", Toast.LENGTH_SHORT).show();
+//                        mAction = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+//                        try {
+//                            mAction.setData(Uri.parse("package:" + getPackageName()));
+//                        } catch (Exception e) {
+//                            GLog.d("usri parse 불가 == " + e);
+//                            return;
+//                        }
+//                        startActivity(mAction);
+//                    }
+//                }
+//            }
+//        }
+//    }
 }

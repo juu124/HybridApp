@@ -3,35 +3,43 @@ package com.dki.hybridapptest.bridge;
 import static com.dream.magic.fido.authenticator.common.asm.authinfo.ASMInstallAuth.byteArrayToHex;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.JavascriptInterface;
+import android.webkit.ValueCallback;
 import android.webkit.WebView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 
 import com.dki.hybridapptest.BuildConfig;
-import com.dki.hybridapptest.Interface.InputDialogClickListener;
+import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.activities.HelloWorldActivity;
 import com.dki.hybridapptest.activities.HybridModeActivity;
 import com.dki.hybridapptest.activities.MoveWebViewActivity;
 import com.dki.hybridapptest.activities.UserCertificationActivity;
 import com.dki.hybridapptest.activities.UserListActivity;
+import com.dki.hybridapptest.dialog.CustomYesNoDialog;
 import com.dki.hybridapptest.dialog.InputDialog;
 import com.dki.hybridapptest.encryption.EncryptionActivity;
 import com.dki.hybridapptest.kfido.FIDOAuthentication;
 import com.dki.hybridapptest.kfido.FIDODeRegistration;
 import com.dki.hybridapptest.kfido.FIDORegistration;
+import com.dki.hybridapptest.model.ContactInfo;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.DeviceInfo;
 import com.dki.hybridapptest.utils.GLog;
@@ -39,6 +47,8 @@ import com.dki.hybridapptest.utils.HybridResult;
 import com.dki.hybridapptest.utils.MagicVKeyPadSettings;
 import com.dki.hybridapptest.utils.PreferenceManager;
 import com.dki.hybridapptest.utils.ProcessCertificate;
+import com.dki.hybridapptest.utils.Utils;
+import com.dki.hybridapptest.utils.WorkThread;
 import com.dream.magic.fido.rpsdk.client.LOCAL_AUTH_TYPE;
 import com.dream.magic.fido.rpsdk.client.MagicFIDOUtil;
 import com.dream.magic.fido.rpsdk.util.KFidoUtil;
@@ -108,6 +118,9 @@ public class AndroidBridge {
     // 웹뷰 move
     private String url;
     private boolean fullMode = true;
+
+    // 주소록 권한
+    final int REQUEST_READ_CONTACTS = 1;
 
     public AndroidBridge() {
     }
@@ -207,6 +220,122 @@ public class AndroidBridge {
         }
     }
 
+    // 연락처 조회
+    @JavascriptInterface
+    public void searchPhoneAddress() {
+        {
+            WorkThread.execute(() -> {
+                try {
+
+                    GLog.d("2");
+                    final String[] INITIAL_SOUND = {"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "#",
+                            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};//,
+//                        "ក" ,"ខ" ,"គ" ,"ឃ" ,"ង" ,"ច" ,"ឆ" ,"ជ" ,"ឈ" ,"ញ" ,"ដ" ,"ឋ" ,"ឌ" ,"ឍ" ,"ណ" ,"ត" ,"ថ" ,"ទ" ,"ធ" ,"ន" ,"ប" ,"ផ" ,"ព" ,"ភ" ,"ម" ,"យ" ,"រ" ,"ល" ,"វ" ,"ស" ,"ហ" ,"ឡ" ,"អ"};
+
+                    GLog.d("3");
+                    JSONObject jsonObject = new JSONObject();
+                    GLog.d("4");
+                    ArrayList<ContactInfo> contactInfos = getContactList();
+                    GLog.d("contactInfos === " + contactInfos.get(0));
+                    GLog.d("5");
+                    JSONObject initialJson = new JSONObject();
+                    GLog.d("6");
+                    int idx = 1;
+                    for (int i = 0; i < INITIAL_SOUND.length; i++) {
+                        JSONArray jsonArray = new JSONArray();
+                        for (ContactInfo contactInfo : contactInfos) {
+                            if (INITIAL_SOUND[i].equals(contactInfo.initial)) {
+                                JSONObject contact = new JSONObject();
+                                contact.put("contactSn", idx++);
+                                contact.put("name", Utils.encodeBase64String(contactInfo.displayName));
+                                String phoneNumber = contactInfo.phoneNumber;
+                                phoneNumber = phoneNumber.replaceAll("-", "");
+                                contact.put("phone", Utils.encodeBase64String(phoneNumber));
+                                jsonArray.put(contact);
+                            }
+                        }
+                        if (jsonArray.length() > 0) {
+                            if ("#".equals(INITIAL_SOUND[i])) {
+                                initialJson.put("others", jsonArray);
+                            } else {
+                                initialJson.put(INITIAL_SOUND[i], jsonArray);
+                            }
+                        }
+                    }
+
+                    jsonObject.put("contact", initialJson);
+
+                    String resultValue = jsonObject.toString();
+                    GLog.d("resultValue : " + resultValue);
+                    evaluate("callbackSearchContact('" + resultValue + "')", null);
+                } catch (Exception ex) {
+                    GLog.e("에러 === " + ex);
+                }
+            });
+        }
+    }
+
+    // 연락처 얻기
+    ArrayList<ContactInfo> getContactList() {
+        GLog.d();
+        ArrayList<ContactInfo> dataList = new ArrayList<>();
+
+        ContentResolver contentResolver = mActivity.getContentResolver();
+
+
+        GLog.d("dataList ===== " + dataList);
+        Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+        GLog.d("uri ===== " + uri);
+        String[] projection = new String[]{
+                ContactsContract.Contacts._ID,
+                ContactsContract.Contacts.PHOTO_ID,
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Phone.NUMBER,
+        };
+
+        GLog.d("projection id ===== " + ContactsContract.Contacts._ID + "\n PHOTO_ID  === " +
+                ContactsContract.Contacts.PHOTO_ID + "\n Phone.DISPLAY_NAME == " + ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " \n Phone.NUMBER ==== " + ContactsContract.CommonDataKinds.Phone.NUMBER);
+
+        String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
+        GLog.d(" sortOrder ==== " + sortOrder);
+
+        // 권한 검사 해야할 것 같다.
+
+        Cursor cursor = mActivity.getContentResolver().query(uri, projection, null, null, sortOrder);
+
+        if (cursor.moveToFirst()) {
+            GLog.d();
+            do {
+                String displayName = cursor.getString(2);
+                String phoneNumber = cursor.getString(3);
+                ContactInfo info = new ContactInfo(
+                        cursor.getLong(0),
+                        cursor.getLong(1),
+                        displayName,
+                        phoneNumber
+                );
+                GLog.d("moveToFirst == 1");
+                dataList.add(info);
+
+            } while (cursor.moveToNext());
+            GLog.d("moveToFirst == 2");
+        }
+        GLog.d();
+        return Utils.distinct(dataList);
+    }
+
+    private void evaluate(String javascript, @Nullable ValueCallback<String> resultCallback) {
+        mWebView.post(() -> {
+                    mWebView.evaluateJavascript("javascript:" + javascript, s -> {
+                        if (resultCallback != null) {
+                            resultCallback.onReceiveValue(s);
+                        }
+                    });
+                    GLog.d("브릿지::: " + javascript);
+                }
+        );
+    }
+
     // 앱 스토어 이동하기
     @JavascriptInterface
     public void showFunctionTest() {
@@ -227,6 +356,40 @@ public class AndroidBridge {
 //            mIntent.setData(Uri.parse("market://details?id=" + getPackageName()));   // 앱이 등록이 되어있는 상태라면 정상적인 화면이 나올것.
         }
         mActivity.startActivity(mIntent);
+    }
+
+    @JavascriptInterface
+    public void closeApp() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                // 작업 처리
+                CustomYesNoDialog customDialog = new CustomYesNoDialog(mActivity, new CustomDialogClickListener() {
+                    @Override
+                    public void onPositiveClick(String text) {
+                        ActivityCompat.finishAffinity(mActivity);
+                    }
+
+                    @Override
+                    public void onNegativeClick() {
+
+                    }
+                }, "안내", mActivity.getResources().getString(R.string.close_app_message), true);
+                customDialog.setCancelable(false);
+                customDialog.show();
+
+//                Display display = mActivity.getWindowManager().getDefaultDisplay();
+//                Point size = new Point();
+//                display.getSize(size);
+//
+//                Window window = customDialog.getWindow();
+//
+//                int x = (int) (size.x * 0.9f);
+//                int y = (int) (size.y * 0.2f);
+//
+//                window.setLayout(x, y);
+            }
+        });
     }
 
     // SW 정보 표시
@@ -409,9 +572,9 @@ public class AndroidBridge {
     // show Dialog 버튼 이벤트
     @JavascriptInterface
     public void showDialog() {
-        inputDialog = new InputDialog(mActivity, new InputDialogClickListener() {
+        inputDialog = new InputDialog(mActivity, new CustomDialogClickListener() {
             @Override
-            public void onInputPositiveClick(String text) {
+            public void onPositiveClick(String text) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
@@ -421,7 +584,7 @@ public class AndroidBridge {
             }
 
             @Override
-            public void onInputNegativeClick() {
+            public void onNegativeClick() {
             }
         });
         inputDialog.show();
