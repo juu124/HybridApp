@@ -220,59 +220,114 @@ public class AndroidBridge {
         }
     }
 
-    // 연락처 조회
-    @JavascriptInterface
-    public void searchPhoneAddress() {
-        {
-            WorkThread.execute(() -> {
-                try {
 
-                    GLog.d("2");
-                    final String[] INITIAL_SOUND = {"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "#",
-                            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};//,
+    // 연락처 조회
+//    @JavascriptInterface
+//    public void searchPhoneAddress() {
+//        {
+//            WorkThread.execute(() -> {
+//                try {
+//                    final String[] INITIAL_SOUND = {"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "#",
+//                            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};//,
+////                        "ក" ,"ខ" ,"គ" ,"ឃ" ,"ង" ,"ច" ,"ឆ" ,"ជ" ,"ឈ" ,"ញ" ,"ដ" ,"ឋ" ,"ឌ" ,"ឍ" ,"ណ" ,"ត" ,"ថ" ,"ទ" ,"ធ" ,"ន" ,"ប" ,"ផ" ,"ព" ,"ភ" ,"ម" ,"យ" ,"រ" ,"ល" ,"វ" ,"ស" ,"ហ" ,"ឡ" ,"អ"};
+//
+//                    JSONObject jsonObject = new JSONObject();
+//                    ArrayList<ContactInfo> contactInfos = getContactList();
+//                    GLog.d("contactInfos === " + contactInfos.get(0));
+//                    JSONObject initialJson = new JSONObject();
+//                    int idx = 1;
+//                    for (int i = 0; i < INITIAL_SOUND.length; i++) {
+//                        JSONArray jsonArray = new JSONArray();
+//                        for (ContactInfo contactInfo : contactInfos) {
+//                            if (INITIAL_SOUND[i].equals(contactInfo.initial)) {
+//                                JSONObject contact = new JSONObject();
+//                                contact.put("contactSn", idx++);
+//                                contact.put("name", Utils.encodeBase64String(contactInfo.displayName));
+//                                String phoneNumber = contactInfo.phoneNumber;
+//                                phoneNumber = phoneNumber.replaceAll("-", "");
+//                                contact.put("phone", Utils.encodeBase64String(phoneNumber));
+//                                jsonArray.put(contact);
+//                            }
+//                        }
+//                        if (jsonArray.length() > 0) {
+//                            if ("#".equals(INITIAL_SOUND[i])) {
+//                                initialJson.put("others", jsonArray);
+//                            } else {
+//                                initialJson.put(INITIAL_SOUND[i], jsonArray);
+//                            }
+//                        }
+//                    }
+//                    jsonObject.put("contact", initialJson);
+//
+//                    String resultValue = jsonObject.toString();
+//                    GLog.d("resultValue : " + resultValue);
+//                    evaluate("callbackSearchContact('" + resultValue + "')", null);
+//                } catch (Exception ex) {
+//                    GLog.e("에러 === " + ex);
+//                }
+//            });
+//        }
+//    }
+
+    @JavascriptInterface
+    public void searchPhoneAddress(String strJsonObject) {
+        String callback = "";
+        JSONObject jsonObj = null;
+        try {
+            if (!strJsonObject.equals("")) {
+                jsonObj = new JSONObject(strJsonObject);
+                if (!jsonObj.isNull("callback")) {
+                    callback = jsonObj.getString("callback");
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String finalCallback = callback;
+        WorkThread.execute(() -> {
+            try {
+                final String[] INITIAL_SOUND = {"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "#",
+                        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};//,
 //                        "ក" ,"ខ" ,"គ" ,"ឃ" ,"ង" ,"ច" ,"ឆ" ,"ជ" ,"ឈ" ,"ញ" ,"ដ" ,"ឋ" ,"ឌ" ,"ឍ" ,"ណ" ,"ត" ,"ថ" ,"ទ" ,"ធ" ,"ន" ,"ប" ,"ផ" ,"ព" ,"ភ" ,"ម" ,"យ" ,"រ" ,"ល" ,"វ" ,"ស" ,"ហ" ,"ឡ" ,"អ"};
 
-                    GLog.d("3");
-                    JSONObject jsonObject = new JSONObject();
-                    GLog.d("4");
-                    ArrayList<ContactInfo> contactInfos = getContactList();
-                    GLog.d("contactInfos === " + contactInfos.get(0));
-                    GLog.d("5");
-                    JSONObject initialJson = new JSONObject();
-                    GLog.d("6");
-                    int idx = 1;
-                    for (int i = 0; i < INITIAL_SOUND.length; i++) {
-                        JSONArray jsonArray = new JSONArray();
-                        for (ContactInfo contactInfo : contactInfos) {
-                            if (INITIAL_SOUND[i].equals(contactInfo.initial)) {
-                                JSONObject contact = new JSONObject();
-                                contact.put("contactSn", idx++);
-                                contact.put("name", Utils.encodeBase64String(contactInfo.displayName));
-                                String phoneNumber = contactInfo.phoneNumber;
-                                phoneNumber = phoneNumber.replaceAll("-", "");
-                                contact.put("phone", Utils.encodeBase64String(phoneNumber));
-                                jsonArray.put(contact);
-                            }
-                        }
-                        if (jsonArray.length() > 0) {
-                            if ("#".equals(INITIAL_SOUND[i])) {
-                                initialJson.put("others", jsonArray);
-                            } else {
-                                initialJson.put(INITIAL_SOUND[i], jsonArray);
-                            }
+                JSONObject jsonObject = new JSONObject();
+                ArrayList<ContactInfo> contactInfos = getContactList();
+                GLog.d("contactInfos === " + contactInfos.get(0));
+                JSONObject initialJson = new JSONObject();
+                int idx = 1;
+                for (int i = 0; i < INITIAL_SOUND.length; i++) {
+                    JSONArray jsonArray = new JSONArray();
+                    for (ContactInfo contactInfo : contactInfos) {
+                        if (INITIAL_SOUND[i].equals(contactInfo.initial)) {
+                            JSONObject contact = new JSONObject();
+                            contact.put("contactSn", idx++);
+                            contact.put("name", Utils.encodeBase64String(contactInfo.displayName));
+                            String phoneNumber = contactInfo.phoneNumber;
+                            phoneNumber = phoneNumber.replaceAll("-", "");
+                            contact.put("phone", Utils.encodeBase64String(phoneNumber));
+                            jsonArray.put(contact);
                         }
                     }
-
-                    jsonObject.put("contact", initialJson);
-
-                    String resultValue = jsonObject.toString();
-                    GLog.d("resultValue : " + resultValue);
-                    evaluate("callbackSearchContact('" + resultValue + "')", null);
-                } catch (Exception ex) {
-                    GLog.e("에러 === " + ex);
+                    if (jsonArray.length() > 0) {
+                        if ("#".equals(INITIAL_SOUND[i])) {
+                            initialJson.put("others", jsonArray);
+                        } else {
+                            initialJson.put(INITIAL_SOUND[i], jsonArray);
+                        }
+                    }
                 }
-            });
-        }
+
+                jsonObject.put("contact", initialJson);
+
+                String resultValue = jsonObject.toString();
+                GLog.d("resultValue : " + resultValue);
+                callbackFunction(finalCallback, resultValue);
+                evaluate("callbackSearchContact('" + resultValue + "')", null);
+            } catch (Exception ex) {
+                GLog.e("에러 === " + ex);
+            }
+        });
     }
 
     // 연락처 얻기
@@ -282,10 +337,7 @@ public class AndroidBridge {
 
         ContentResolver contentResolver = mActivity.getContentResolver();
 
-
-        GLog.d("dataList ===== " + dataList);
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-        GLog.d("uri ===== " + uri);
         String[] projection = new String[]{
                 ContactsContract.Contacts._ID,
                 ContactsContract.Contacts.PHOTO_ID,
@@ -293,13 +345,8 @@ public class AndroidBridge {
                 ContactsContract.CommonDataKinds.Phone.NUMBER,
         };
 
-        GLog.d("projection id ===== " + ContactsContract.Contacts._ID + "\n PHOTO_ID  === " +
-                ContactsContract.Contacts.PHOTO_ID + "\n Phone.DISPLAY_NAME == " + ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " \n Phone.NUMBER ==== " + ContactsContract.CommonDataKinds.Phone.NUMBER);
-
         String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
         GLog.d(" sortOrder ==== " + sortOrder);
-
-        // 권한 검사 해야할 것 같다.
 
         Cursor cursor = mActivity.getContentResolver().query(uri, projection, null, null, sortOrder);
 

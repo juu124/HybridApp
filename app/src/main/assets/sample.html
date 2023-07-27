@@ -31,7 +31,7 @@
 &nbsp
 <input type="button" value="function test" onClick="showFunctionTest()"/>
 &nbsp
-<input type="button" value="search phone adresss" onclick="searchPhoneAddress()"/>
+<input type="button" value="search phone addresses" onclick="searchPhoneAddress()"/>
 <br><br>
 <script type="text/javascript" language="javascript">
 
@@ -87,15 +87,18 @@
         DKITec.showFunctionTest();
     }
 
+     function callbackSearchContact(value) {
+        console.log("callbackSearchContact : " + value);
+    }
+
      function searchPhoneAddress() {
-        DKITec.searchPhoneAddress();
+<!--        DKITec.searchPhoneAddress();-->
+        DKITec.searchPhoneAddress('{"callback":"callbackSearchContact"}');
     }
 
     function closeApp() {
         DKITec.closeApp();
     }
-
-
 
 </script>
 <input type="button" value="End App" onclick="closeApp()"/>
