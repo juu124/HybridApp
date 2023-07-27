@@ -33,6 +33,12 @@
 &nbsp
 <input type="button" value="search phone addresses" onclick="searchPhoneAddress()"/>
 <br><br>
+<input type="button" value="Login" onClick="moveLoginPage()">
+<br><br>
+<input type="button" value="Auto Login Off" onClick="autoLoginOff()">
+<br><br>
+<input type="button" value="End App" onclick="closeApp()"/>
+<script type="text/javascript" src="./autologin.html"></script>
 <script type="text/javascript" language="javascript">
 
     function showAndroidToast(toast) {
@@ -91,17 +97,28 @@
         console.log("callbackSearchContact : " + value);
     }
 
+    <!-- 주소록 조회 -->
      function searchPhoneAddress() {
 <!--        DKITec.searchPhoneAddress();-->
         DKITec.searchPhoneAddress('{"callback":"callbackSearchContact"}');
     }
 
+    <!-- 앱 종료 -->
     function closeApp() {
         DKITec.closeApp();
     }
 
+    <!-- 로그인 화면으로 이동 -->
+    function moveLoginPage() {
+        DKITec.moveLoginPage();
+	}
+
+	 <!-- 자동 로그인 해제 -->
+    function autoLoginOff() {
+        DKITec.autoLoginOff();
+	}
+
 </script>
-<input type="button" value="End App" onclick="closeApp()"/>
 <br><br>
 <a href="tel:01012345678">Call 010-1234-5678</a>
 <br><br>

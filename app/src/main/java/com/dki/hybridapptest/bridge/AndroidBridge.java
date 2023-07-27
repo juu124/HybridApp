@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.dki.hybridapptest.BuildConfig;
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
+import com.dki.hybridapptest.Interface.ProgressBarListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.activities.HelloWorldActivity;
 import com.dki.hybridapptest.activities.HybridModeActivity;
@@ -41,6 +42,7 @@ import com.dki.hybridapptest.kfido.FIDODeRegistration;
 import com.dki.hybridapptest.kfido.FIDORegistration;
 import com.dki.hybridapptest.model.ContactInfo;
 import com.dki.hybridapptest.utils.Constant;
+import com.dki.hybridapptest.utils.Constants;
 import com.dki.hybridapptest.utils.DeviceInfo;
 import com.dki.hybridapptest.utils.GLog;
 import com.dki.hybridapptest.utils.HybridResult;
@@ -122,6 +124,11 @@ public class AndroidBridge {
     // 주소록 권한
     final int REQUEST_READ_CONTACTS = 1;
 
+    // 자동 로그인
+    private final String ID = "1234";
+    private boolean autoLoginCheck = false;
+    private ProgressBarListener progressBarListener;
+
     public AndroidBridge() {
     }
 
@@ -129,6 +136,22 @@ public class AndroidBridge {
     public AndroidBridge(WebView webView, Activity activity) {
         this.mWebView = webView;
         this.mActivity = activity;
+
+        //인증서 관련 처리
+        processCertificate = new ProcessCertificate(mActivity);
+        pki = new MagicXSign();
+
+        kCertificate = new KCertificate();
+        MagicFIDOUtil.setSSLEnable(false);
+
+        magicFIDOUtil = new MagicFIDOUtil(mActivity);
+        patternOption = new Hashtable<String, Object>();
+    }
+
+    public AndroidBridge(WebView webView, Activity activity, ProgressBarListener progressBarListener) {
+        this.mWebView = webView;
+        this.mActivity = activity;
+        this.progressBarListener = progressBarListener;
 
         //인증서 관련 처리
         processCertificate = new ProcessCertificate(mActivity);
@@ -220,55 +243,54 @@ public class AndroidBridge {
         }
     }
 
+    // 자동 로그인 해제
+    @JavascriptInterface
+    public void autoLoginOff() {
+        GLog.d();
+        Toast.makeText(mActivity, "자동 로그인 해제", Toast.LENGTH_SHORT).show();
+        Constants.LOGIN_CHECK = false;
+    }
+
+    // 로그인 페이지 접속
+    @JavascriptInterface
+    public void moveLoginPage() {
+        GLog.d();
+        if (Constants.LOGIN_CHECK) { //
+            GLog.d("체크 되어 있음");
+            Toast.makeText(mActivity, "자동로그인", Toast.LENGTH_SHORT).show();
+        } else {
+            mWebView.post(new Runnable() {
+                @Override
+                public void run() {
+                    mWebView.loadUrl(Constants.WEB_VIEW_LOGIN_URL);
+                }
+            });
+        }
+    }
+
+    // 로그인
+    @JavascriptInterface
+    public void login(String id, String pw, String check) {
+        GLog.d("로그인");
+        GLog.d("name === " + id + "\n hash ==== " + pw + " \n check ====== " + check);
+        if (TextUtils.equals(id, Constants.LOGIN_ID)) { // id : 1234
+            if (TextUtils.equals(pw, Constants.LOGIN_PW)) { // pw : 1234
+                progressBarListener.showProgressBar();
+                Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
+                // todo :: 프로그래스 바 가져와
+                Constants.LOGIN_CHECK = Boolean.parseBoolean(check);
+                mWebView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mWebView.loadUrl(Constants.WEB_VIEW_MAIN_URL);
+                        progressBarListener.unShownProgressBar();
+                    }
+                });
+            }
+        }
+    }
 
     // 연락처 조회
-//    @JavascriptInterface
-//    public void searchPhoneAddress() {
-//        {
-//            WorkThread.execute(() -> {
-//                try {
-//                    final String[] INITIAL_SOUND = {"ㄱ", "ㄴ", "ㄷ", "ㄹ", "ㅁ", "ㅂ", "ㅅ", "ㅇ", "ㅈ", "ㅊ", "ㅋ", "ㅌ", "ㅍ", "ㅎ", "#",
-//                            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};//,
-////                        "ក" ,"ខ" ,"គ" ,"ឃ" ,"ង" ,"ច" ,"ឆ" ,"ជ" ,"ឈ" ,"ញ" ,"ដ" ,"ឋ" ,"ឌ" ,"ឍ" ,"ណ" ,"ត" ,"ថ" ,"ទ" ,"ធ" ,"ន" ,"ប" ,"ផ" ,"ព" ,"ភ" ,"ម" ,"យ" ,"រ" ,"ល" ,"វ" ,"ស" ,"ហ" ,"ឡ" ,"អ"};
-//
-//                    JSONObject jsonObject = new JSONObject();
-//                    ArrayList<ContactInfo> contactInfos = getContactList();
-//                    GLog.d("contactInfos === " + contactInfos.get(0));
-//                    JSONObject initialJson = new JSONObject();
-//                    int idx = 1;
-//                    for (int i = 0; i < INITIAL_SOUND.length; i++) {
-//                        JSONArray jsonArray = new JSONArray();
-//                        for (ContactInfo contactInfo : contactInfos) {
-//                            if (INITIAL_SOUND[i].equals(contactInfo.initial)) {
-//                                JSONObject contact = new JSONObject();
-//                                contact.put("contactSn", idx++);
-//                                contact.put("name", Utils.encodeBase64String(contactInfo.displayName));
-//                                String phoneNumber = contactInfo.phoneNumber;
-//                                phoneNumber = phoneNumber.replaceAll("-", "");
-//                                contact.put("phone", Utils.encodeBase64String(phoneNumber));
-//                                jsonArray.put(contact);
-//                            }
-//                        }
-//                        if (jsonArray.length() > 0) {
-//                            if ("#".equals(INITIAL_SOUND[i])) {
-//                                initialJson.put("others", jsonArray);
-//                            } else {
-//                                initialJson.put(INITIAL_SOUND[i], jsonArray);
-//                            }
-//                        }
-//                    }
-//                    jsonObject.put("contact", initialJson);
-//
-//                    String resultValue = jsonObject.toString();
-//                    GLog.d("resultValue : " + resultValue);
-//                    evaluate("callbackSearchContact('" + resultValue + "')", null);
-//                } catch (Exception ex) {
-//                    GLog.e("에러 === " + ex);
-//                }
-//            });
-//        }
-//    }
-
     @JavascriptInterface
     public void searchPhoneAddress(String strJsonObject) {
         String callback = "";

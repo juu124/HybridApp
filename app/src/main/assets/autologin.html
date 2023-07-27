@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      max-width: 400px;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 95%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+    input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    </style>
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/sha256.js"></script>
+<script type="text/javascript" language="javascript">
+	function login() {
+		console.log("login()");
+		var username = document.getElementById('username').value;
+		var password = document.getElementById('password').value;
+<!--		var autocheck = document.getElementById('auto-login').value;-->
+		const autocheck = document.getElementById('auto-login');
+
+		const is_checked = autocheck.checked;
+
+		const passhash = CryptoJS.SHA256(password).toString()
+		console.log("login() username : ", username);
+		console.log("login() password : ", password);
+		console.log("login() passhash : ", passhash);
+		console.log("login() autocheck : ", is_checked);
+
+		if (username === '' || password === '') {
+			alert('Please fill in all fields.');
+			return;
+		}
+		
+		DKITec.login(username, passhash, is_checked);
+	}
+
+</script>
+<body>
+<div class="container">
+    <h2>Login</h2>
+
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div class="form-group">
+        <input type="checkbox" id="auto-login" name="auto-login">
+        <label for="auto-login">Remember me for automatic login</label>
+    </div>
+    <input type="submit" value="Login" onClick="login()">
+
+</div>
+</body>
+</html>
