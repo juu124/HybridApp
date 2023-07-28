@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,7 +38,7 @@ public class UserListActivity extends AppCompatActivity {
     private int totalPages;
 
     // 프로그래스 바
-    private ProgressBar mProgressBar;
+    private RelativeLayout mProgressBar;
 
     // add 입력
     private Button btnUserListAdd;
@@ -52,11 +52,10 @@ public class UserListActivity extends AppCompatActivity {
         userRecyclerView = findViewById(R.id.rv_user_list);
         btnUserListMore = findViewById(R.id.btn_user_list_more);
         btnUserListAdd = findViewById(R.id.btn_user_list_add);
-        mProgressBar = findViewById(R.id.indeterminate_progressbar);
+        mProgressBar = findViewById(R.id.dialog_user_info_progressbar);
 
         btnUserListMore.setVisibility(View.GONE);
         btnUserListAdd.setVisibility(View.GONE);
-        mProgressBar.setVisibility(View.VISIBLE);
 
         // Divider 리스트 아이템 구별
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(getApplicationContext(), new LinearLayoutManager(this).getOrientation());

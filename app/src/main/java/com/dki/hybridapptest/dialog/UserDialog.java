@@ -5,7 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +33,7 @@ public class UserDialog extends Dialog {
     private RemoveUserListener mRemoveUserListener;
 
     // 프로그래스 바
-    private ProgressBar mProgressBar;
+    private RelativeLayout mProgressBar;
 
     public UserDialog(@NonNull Context context, UserResponse userResponse, RemoveUserListener removeUserListener) {
         super(context);
@@ -54,9 +54,8 @@ public class UserDialog extends Dialog {
 
         dialogYesBtn = findViewById(R.id.dialog_user_info_yes_button);
         dialogRemoveBtn = findViewById(R.id.dialog_user_info_remove_button);
-        mProgressBar = findViewById(R.id.indeterminate_progressbar);
+        mProgressBar = findViewById(R.id.dialog_user_info_progressbar);
 
-        mProgressBar.setIndeterminate(true);
         mProgressBar.setVisibility(View.VISIBLE);
         dialogYesBtn.setEnabled(false);
         dialogRemoveBtn.setEnabled(false);
