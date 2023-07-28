@@ -52,4 +52,13 @@ public class Constant {
     /********************* 프리퍼런스 키값 끝 ************************/
 
     public static int PDF_ENC_VIEWER_REQUEST_CODE = 10001;
+
+    // 로그인
+    public static final String WEB_VIEW_LOGIN_URL = "file:///android_asset/autologin.html";
+
+    // sample.html 주소
+    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
+
+    // user List 주소
+    public static final String USERS_INFO_URL = "https://reqres.in/api/";
 }
