@@ -3,8 +3,10 @@ package com.dki.hybridapptest.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +28,30 @@ public class IntroActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        boolean permissionGranted = true;
+        if (requestCode == permissionReqCode) {
+            if (permissions != null) {
+                for (int i = 0; i < permissions.length; i++) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) { // 권한 부여 실패
+                        permissionGranted = false;
+                        break;
+                    }
+                }
+            }
+
+            GLog.d("permissionGranted : " + permissionGranted);
+
+            if (permissionGranted) {// 외부 터치 무시
+                moveToMainActivity();
+            } else {
+                moveToPermissionSetting();
+            }
+        }
+    }
+
     public void moveToMainActivity() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -33,26 +59,16 @@ public class IntroActivity extends AppCompatActivity {
         finish();
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        boolean permissionDenied = true;
-        if (requestCode == permissionReqCode) {
-            if (permissions != null) {
-                for (int i = 0; i < permissions.length; i++) {
-                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                        permissionDenied = false;
-                        break;
-                    }
-                }
-            }
-
-            GLog.d("permisisonDenied : " + permissionDenied);
-
-            if (permissionDenied) {
-                moveToMainActivity();
-            }
+    public void moveToPermissionSetting() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        try {
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            finish();
+        } catch (Exception e) {
+            GLog.d("usri parse 불가 == " + e);
+            return;
         }
+        startActivity(intent);
+        finish();
     }
 }
