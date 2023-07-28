@@ -37,18 +37,16 @@ import com.dki.hybridapptest.activities.UserListActivity;
 import com.dki.hybridapptest.dialog.CustomYesNoDialog;
 import com.dki.hybridapptest.dialog.InputDialog;
 import com.dki.hybridapptest.encryption.EncryptionActivity;
-import com.dki.hybridapptest.kfido.FIDOAuthentication;
-import com.dki.hybridapptest.kfido.FIDODeRegistration;
 import com.dki.hybridapptest.kfido.FIDORegistration;
 import com.dki.hybridapptest.model.ContactInfo;
 import com.dki.hybridapptest.utils.Constant;
-import com.dki.hybridapptest.utils.Constants;
 import com.dki.hybridapptest.utils.DeviceInfo;
 import com.dki.hybridapptest.utils.GLog;
 import com.dki.hybridapptest.utils.HybridResult;
 import com.dki.hybridapptest.utils.MagicVKeyPadSettings;
 import com.dki.hybridapptest.utils.PreferenceManager;
 import com.dki.hybridapptest.utils.ProcessCertificate;
+import com.dki.hybridapptest.utils.SharedPreferencesAPI;
 import com.dki.hybridapptest.utils.Utils;
 import com.dki.hybridapptest.utils.WorkThread;
 import com.dream.magic.fido.rpsdk.client.LOCAL_AUTH_TYPE;
@@ -84,15 +82,12 @@ public class AndroidBridge {
     private String mUcpidData = ""; //UCPID 원문
 
     // FIDO 인증
-    private String color = "";
-    private FIDOAuthentication mAuth = null;
     private FIDORegistration reg = null;
-    private FIDODeRegistration mDeregist = null;
+//    private String color = "";
+//    private FIDOAuthentication mAuth = null;
+//    private FIDODeRegistration mDeregist = null;
 
     private final byte[] tobeData1 = "Hello".getBytes();
-    private int failCnt;
-    private String mCertType;
-    public final int ALERT_REQUEST = 0xA3;
 
     // 패턴 선 숨기기
     private boolean mIsInvisible;
@@ -101,9 +96,9 @@ public class AndroidBridge {
     // 인증서
     private KCertificate kCertificate = null;
     private MagicFIDOUtil magicFIDOUtil = null;
-    private ProcessCertificate processCertificate = null;
     private MagicXSign pki;
-    private JSONArray arrSignText;
+    private ProcessCertificate processCertificate = null;
+//    private JSONArray arrSignText;
 
     // show Dialog 버튼 이벤트
     private InputDialog inputDialog;
@@ -121,12 +116,7 @@ public class AndroidBridge {
     private String url;
     private boolean fullMode = true;
 
-    // 주소록 권한
-    final int REQUEST_READ_CONTACTS = 1;
-
     // 자동 로그인
-    private final String ID = "1234";
-    private boolean autoLoginCheck = false;
     private ProgressBarListener progressBarListener;
 
     public AndroidBridge() {
@@ -134,8 +124,16 @@ public class AndroidBridge {
 
     // AndroidBride 기본 생성자
     public AndroidBridge(WebView webView, Activity activity) {
-        this.mWebView = webView;
-        this.mActivity = activity;
+        if (webView != null) {
+            this.mWebView = webView;
+            if (activity != null) {
+                this.mActivity = activity;
+            } else {
+                GLog.d("activity null");
+            }
+        } else {
+            GLog.d("webView null");
+        }
 
         //인증서 관련 처리
         processCertificate = new ProcessCertificate(mActivity);
@@ -148,10 +146,24 @@ public class AndroidBridge {
         patternOption = new Hashtable<String, Object>();
     }
 
+    // 생성자 (프로그래스 바 리스너)
     public AndroidBridge(WebView webView, Activity activity, ProgressBarListener progressBarListener) {
-        this.mWebView = webView;
-        this.mActivity = activity;
-        this.progressBarListener = progressBarListener;
+        if (webView != null) {
+            this.mWebView = webView;
+            if (activity != null) {
+                this.mActivity = activity;
+            } else {
+                GLog.d("activity null");
+            }
+        } else {
+            GLog.d("webView null");
+        }
+        GLog.d("progressBarListener ==== " + progressBarListener);
+        if (progressBarListener != null) {
+            this.progressBarListener = progressBarListener;
+        } else {
+            GLog.d("progressBarListener null");
+        }
 
         //인증서 관련 처리
         processCertificate = new ProcessCertificate(mActivity);
@@ -246,23 +258,22 @@ public class AndroidBridge {
     // 자동 로그인 해제
     @JavascriptInterface
     public void autoLoginOff() {
-        GLog.d();
         Toast.makeText(mActivity, "자동 로그인 해제", Toast.LENGTH_SHORT).show();
-        Constants.LOGIN_CHECK = false;
+        SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(false);
     }
 
     // 로그인 페이지 접속
     @JavascriptInterface
     public void moveLoginPage() {
-        GLog.d();
-        if (Constants.LOGIN_CHECK) { //
-            GLog.d("체크 되어 있음");
+        GLog.d("SharedPreferencesAPI.getInstance(mActivity).getAutoLogin() == " + SharedPreferencesAPI.getInstance(mActivity).getAutoLogin());
+        if (SharedPreferencesAPI.getInstance(mActivity).getAutoLogin()) {
+            GLog.d("체크 : true");
             Toast.makeText(mActivity, "자동로그인", Toast.LENGTH_SHORT).show();
         } else {
             mWebView.post(new Runnable() {
                 @Override
                 public void run() {
-                    mWebView.loadUrl(Constants.WEB_VIEW_LOGIN_URL);
+                    mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
                 }
             });
         }
@@ -271,22 +282,30 @@ public class AndroidBridge {
     // 로그인
     @JavascriptInterface
     public void login(String id, String pw, String check) {
-        GLog.d("로그인");
+        // 자동 로그인 체크 저장
+        if (!TextUtils.isEmpty(check)) {
+            SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(Boolean.parseBoolean(check));
+        }
+
+        progressBarListener.showProgressBar();   // 프로그래스 바 노출
+
         GLog.d("name === " + id + "\n hash ==== " + pw + " \n check ====== " + check);
-        if (TextUtils.equals(id, Constants.LOGIN_ID)) { // id : 1234
-            if (TextUtils.equals(pw, Constants.LOGIN_PW)) { // pw : 1234
-                progressBarListener.showProgressBar();
-                Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
-                // todo :: 프로그래스 바 가져와
-                Constants.LOGIN_CHECK = Boolean.parseBoolean(check);
-                mWebView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mWebView.loadUrl(Constants.WEB_VIEW_MAIN_URL);
-                        progressBarListener.unShownProgressBar();
-                    }
-                });
-            }
+
+        if (TextUtils.equals(id, SharedPreferencesAPI.getInstance(mActivity).getLoginId()) &&
+                TextUtils.equals(pw, SharedPreferencesAPI.getInstance(mActivity).getLoginPw())) {
+            // id, pw 둘다 맞았을 때
+            Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
+            mWebView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progressBarListener.unShownProgressBar();  // 프로그래스 바 비노출
+                    mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
+                }
+            }, 500);
+        } else {
+            // 로그인 실패
+            progressBarListener.unShownProgressBar();
+            Toast.makeText(mActivity, "없는 계정 입니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -296,7 +315,7 @@ public class AndroidBridge {
         String callback = "";
         JSONObject jsonObj = null;
         try {
-            if (!strJsonObject.equals("")) {
+            if (!TextUtils.isEmpty(strJsonObject)) {
                 jsonObj = new JSONObject(strJsonObject);
                 if (!jsonObj.isNull("callback")) {
                     callback = jsonObj.getString("callback");
@@ -354,9 +373,7 @@ public class AndroidBridge {
 
     // 연락처 얻기
     ArrayList<ContactInfo> getContactList() {
-        GLog.d();
         ArrayList<ContactInfo> dataList = new ArrayList<>();
-
         ContentResolver contentResolver = mActivity.getContentResolver();
 
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
@@ -370,7 +387,7 @@ public class AndroidBridge {
         String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
         GLog.d(" sortOrder ==== " + sortOrder);
 
-        Cursor cursor = mActivity.getContentResolver().query(uri, projection, null, null, sortOrder);
+        Cursor cursor = contentResolver.query(uri, projection, null, null, sortOrder);
 
         if (cursor.moveToFirst()) {
             GLog.d();
@@ -383,11 +400,9 @@ public class AndroidBridge {
                         displayName,
                         phoneNumber
                 );
-                GLog.d("moveToFirst == 1");
                 dataList.add(info);
 
             } while (cursor.moveToNext());
-            GLog.d("moveToFirst == 2");
         }
         GLog.d();
         return Utils.distinct(dataList);
@@ -407,7 +422,7 @@ public class AndroidBridge {
 
     // 앱 스토어 이동하기
     @JavascriptInterface
-    public void showFunctionTest() {
+    public void moveAppStore() {
         mIntent = new Intent(Intent.ACTION_VIEW);
         String packageName = "kr.or.mydatacenter.pds";
         PackageManager packageManager = mActivity.getPackageManager();
@@ -471,7 +486,7 @@ public class AndroidBridge {
         JSONObject jsonObject = null;
         String callback = "";
         try {
-            if (!strJsonObject.equals("")) {
+            if (!TextUtils.isEmpty(strJsonObject)) {
                 jsonObject = new JSONObject(strJsonObject);
                 if (!jsonObject.isNull("callback")) {
                     callback = jsonObject.getString("callback");
@@ -583,6 +598,7 @@ public class AndroidBridge {
         }
         // 콜백 함수
         callbackFunction(callback, obj.toString());
+        Toast.makeText(mActivity, "sw 정보 표시됨", Toast.LENGTH_SHORT).show();
     }
 
     // 웹뷰 페이지 이동
@@ -593,7 +609,7 @@ public class AndroidBridge {
     }
 
 
-    // 구간 암호화
+    // 앱 위변조 인듯 (주석 잘 못 표기)
     @JavascriptInterface
     public void showEncryption() {
         mIntent = new Intent(mActivity, EncryptionActivity.class);
@@ -679,7 +695,7 @@ public class AndroidBridge {
         JSONObject jsonObject = null;
         String mUrl;
         try {
-            if (!strJsonObject.equals("")) {
+            if (!TextUtils.isEmpty(strJsonObject)) {
                 jsonObject = new JSONObject(strJsonObject);
                 mUrl = jsonObject.getString("url");
 
@@ -702,7 +718,7 @@ public class AndroidBridge {
         String setValue = "";
 
         try {
-            if (!strJsonObject.equals("")) {
+            if (!TextUtils.isEmpty(strJsonObject)) {
                 jsonObject = new JSONObject(strJsonObject);
 
                 if (!jsonObject.isNull("setType")) {
@@ -726,7 +742,7 @@ public class AndroidBridge {
 
             if (setType.equals("font")) {
 
-                if (!setValue.equals("")) {
+                if (!TextUtils.isEmpty(setValue)) {
                     PreferenceManager.setString(mActivity, Constant.FONT_SIZE, setValue);
                 }
 
@@ -1668,7 +1684,7 @@ public class AndroidBridge {
             }
 
             // 풀모드(CHAR, NUM) - 현재 라이브러리 문제로 작동 되지 않음
-            if (viewMode.equals("FULL_TYPE")) {
+            if (TextUtils.equals(viewMode, "FULL_TYPE")) {
                 GLog.d("풀모드");
                 if (keypadType.equals("CHAR_TYPE")) { // 풀모드 - 문자키패드
 
@@ -1747,8 +1763,8 @@ public class AndroidBridge {
                 }
 
                 // 하프모드
-            } else if (viewMode.equals("HALF_TYPE")) {
-                if (keypadType.equals("CHAR_TYPE")) { // 하프모드 - 문자키패드
+            } else if (TextUtils.equals(viewMode, "HALF_TYPE")) {
+                if (TextUtils.equals(keypadType, "CHAR_TYPE")) {  // 하프모드 - 문자키패드
                     if (magicVKeypad.isKeyboardOpen()) {
                         magicVKeypad.closeKeypad();
                     }

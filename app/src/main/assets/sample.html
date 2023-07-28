@@ -29,7 +29,7 @@
 <br><br>
 <input type="button" value="SW Info" onClick="showSWInfo()"/>
 &nbsp
-<input type="button" value="function test" onClick="showFunctionTest()"/>
+<input type="button" value="move App Store" onClick="moveAppStore()"/>
 &nbsp
 <input type="button" value="search phone addresses" onclick="searchPhoneAddress()"/>
 <br><br>
@@ -41,6 +41,7 @@
 <script type="text/javascript" src="./autologin.html"></script>
 <script type="text/javascript" language="javascript">
 
+    <!-- 토스트, 다이얼로그, 화면 전환 이벤트-->
     function showAndroidToast(toast) {
         DKITec.onClickButton(toast);
     }
@@ -53,14 +54,17 @@
         console.log("Native to Web : " + msg);
     }
 
+    <!-- 입력 다이얼로그 노출-->
     function showDialog() {
         DKITec.showDialog();
     }
 
+    <!-- 유저 리스트 -->
     function showUserList() {
         DKITec.showUserList();
     }
 
+    <!-- 인증서 -->
     function showCertificationList() {
         DKITec.showCertificationList();
     }
@@ -69,14 +73,17 @@
         DKITec.showKeyPad();
     }
 
+    <!-- 보안 키보드 -->
     function showKeyboard() {
         DKITec.showKeyboard();
     }
 
+    <!-- 앱 위변조 -->
     function showEncryption() {
         DKITec.showEncryption();
     }
 
+    <!-- url 입력 후 웹뷰 화면 이동 -->
     function moveWebView() {
         DKITec.moveWebView();
     }
@@ -85,12 +92,14 @@
         console.log("SW INfo : " + value);
     }
 
+    <!--SW 정보 표시-->
     function showSWInfo() {
         DKITec.showSWInfo('{"callback":"swInfo"}');
     }
 
-    function showFunctionTest() {
-        DKITec.showFunctionTest();
+    <!-- 앱 스토어 이동 및 앱 실행-->
+    function moveAppStore() {
+        DKITec.moveAppStore();
     }
 
      function callbackSearchContact(value) {
@@ -99,7 +108,6 @@
 
     <!-- 주소록 조회 -->
      function searchPhoneAddress() {
-<!--        DKITec.searchPhoneAddress();-->
         DKITec.searchPhoneAddress('{"callback":"callbackSearchContact"}');
     }
 

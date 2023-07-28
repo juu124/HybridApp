@@ -3,12 +3,13 @@ package com.dki.hybridapptest.activities;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
@@ -16,7 +17,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -25,7 +26,7 @@ import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.bridge.AndroidBridge;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
-import com.dki.hybridapptest.utils.Constants;
+import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
 import com.dreamsecurity.magicxsign.MagicXSign;
 import com.dreamsecurity.magicxsign.MagicXSign_Type;
@@ -37,36 +38,54 @@ public class MainActivity extends AppCompatActivity {
     private WebView mWebView;
     private WebSettings mWebSettings;
     private Intent mAction;
-    private SharedPreferences sharedPreferences;
     private AndroidBridge androidBridge = null;
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     // 프로그래스 바
-    private ProgressBar mProgressBar;
-    private ProgressBarListener progressBarListener;
+    private RelativeLayout mProgressBar;
+
+    // 웹 뷰에서 뒤로 가기
+    @Override
+    public void onBackPressed() {
+        if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mWebView = findViewById(R.id.webview);
-        mProgressBar = findViewById(R.id.indeterminate_progressbar);
+        mProgressBar = findViewById(R.id.dialog_user_info_progressbar);
         mWebSettings = mWebView.getSettings();
-        mProgressBar.setVisibility(View.GONE);
         mWebSettings.setJavaScriptEnabled(true);
 
         androidBridge = new AndroidBridge(mWebView, MainActivity.this, new ProgressBarListener() {
             @Override
             public void showProgressBar() {
-                mProgressBar.setVisibility(View.VISIBLE);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBar.setVisibility(View.VISIBLE);
+                    }
+                });
             }
 
             @Override
             public void unShownProgressBar() {
-                mProgressBar.setVisibility(View.GONE);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mProgressBar.setVisibility(View.GONE);
+                    }
+                });
             }
         });
         mWebView.addJavascriptInterface(androidBridge, "DKITec");
-        mWebView.loadUrl(Constants.WEB_VIEW_MAIN_URL);
+        mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
         webPlugin_Init(MainActivity.this);
 
 

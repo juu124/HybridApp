@@ -4,7 +4,7 @@ import com.dki.hybridapptest.dto.UserCreate;
 import com.dki.hybridapptest.dto.UserCreateResponse;
 import com.dki.hybridapptest.dto.UserDataSupport;
 import com.dki.hybridapptest.dto.UsersList;
-import com.dki.hybridapptest.utils.Constants;
+import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -49,7 +49,7 @@ public class RetrofitApiManager {
 
         return new Retrofit.Builder()
                 .client(getUnsafeOkHttpClient().build()) //OkHttp 사용해서 로그 보기
-                .baseUrl(Constants.USERS_INFO_URL)
+                .baseUrl(Constant.USERS_INFO_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
     }
