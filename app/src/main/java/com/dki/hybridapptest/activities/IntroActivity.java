@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.widget.Toast;
 
@@ -25,6 +27,7 @@ public class IntroActivity extends AppCompatActivity {
     private int permissionReqCode = 1000;
     private Intent intent;
     private ActivityResultLauncher<Intent> appSettingsLauncher;
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +43,20 @@ public class IntroActivity extends AppCompatActivity {
             GLog.d("설정에서 다시 돌아와서 권한 확인하기 checkSomePermission == " + checkSomePermission());
             if (checkSomePermission()) {  // 권한이 허용되었을 경우에 대한 처리를 진행
                 GLog.d("권한 허용");
-                moveToMainActivity();
+                // 설정화면으로 이동
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        moveToMainActivity();
+                    }
+                }, 500);
+
             } else {
                 GLog.d("권한 비허용");
                 Toast.makeText(this, "필수 권한을 설정해주세요.", Toast.LENGTH_SHORT).show();
                 CustomYesNoDialog customDialog = new CustomYesNoDialog(this, new CustomDialogClickListener() {
                     @Override
                     public void onPositiveClick(String text) {
-                        // 설정화면으로 이동
                         moveToPermissionSetting();
                     }
 
@@ -82,7 +91,12 @@ public class IntroActivity extends AppCompatActivity {
 
             if (permissionGranted) {
                 GLog.d("권한 허용");
-                moveToMainActivity();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        moveToMainActivity();
+                    }
+                }, 700);
             } else {
                 GLog.d("권한 비허용");
                 moveToPermissionSetting();

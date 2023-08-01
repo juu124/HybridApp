@@ -44,7 +44,6 @@ import com.dki.hybridapptest.utils.DeviceInfo;
 import com.dki.hybridapptest.utils.GLog;
 import com.dki.hybridapptest.utils.HybridResult;
 import com.dki.hybridapptest.utils.MagicVKeyPadSettings;
-import com.dki.hybridapptest.utils.PreferenceManager;
 import com.dki.hybridapptest.utils.ProcessCertificate;
 import com.dki.hybridapptest.utils.SharedPreferencesAPI;
 import com.dki.hybridapptest.utils.Utils;
@@ -266,47 +265,82 @@ public class AndroidBridge {
     @JavascriptInterface
     public void moveLoginPage() {
         GLog.d("SharedPreferencesAPI.getInstance(mActivity).getAutoLogin() == " + SharedPreferencesAPI.getInstance(mActivity).getAutoLogin());
-        if (SharedPreferencesAPI.getInstance(mActivity).getAutoLogin()) {
-            GLog.d("체크 : true");
-            Toast.makeText(mActivity, "자동로그인", Toast.LENGTH_SHORT).show();
-        } else {
-            mWebView.post(new Runnable() {
-                @Override
-                public void run() {
-                    mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
-                }
-            });
-        }
-    }
+        // 로그인 화면으로 이동
+        mWebView.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
+            }
+        });
 
-    // 로그인
-    @JavascriptInterface
-    public void login(String id, String pw, String check) {
-        // 자동 로그인 체크 저장
-        if (!TextUtils.isEmpty(check)) {
-            SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(Boolean.parseBoolean(check));
-        }
+        progressBarListener.showProgressBar();  // 프로그래스 바 노출
 
-        progressBarListener.showProgressBar();   // 프로그래스 바 노출
-
-        GLog.d("name === " + id + "\n hash ==== " + pw + " \n check ====== " + check);
-
-        if (TextUtils.equals(id, SharedPreferencesAPI.getInstance(mActivity).getLoginId()) &&
-                TextUtils.equals(pw, SharedPreferencesAPI.getInstance(mActivity).getLoginPw())) {
-            // id, pw 둘다 맞았을 때
-            Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
+        if (SharedPreferencesAPI.getInstance(mActivity).getAutoLogin() &&
+                TextUtils.equals(Constant.LOGIN_ID, SharedPreferencesAPI.getInstance(mActivity).getLoginId()) &&
+                TextUtils.equals(Constant.LOGIN_PW, SharedPreferencesAPI.getInstance(mActivity).getLoginPw())) {
             mWebView.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     progressBarListener.unShownProgressBar();  // 프로그래스 바 비노출
                     mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
                 }
-            }, 500);
+            }, 700);
+            Toast.makeText(mActivity, "자동로그인", Toast.LENGTH_SHORT).show();
         } else {
-            // 로그인 실패
             progressBarListener.unShownProgressBar();
-            Toast.makeText(mActivity, "없는 계정 입니다.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // 로그인
+    @JavascriptInterface
+    public void login(String id, String pw, String check) {
+        GLog.d();
+        // 자동 로그인 체크 저장
+        if (!TextUtils.isEmpty(check)) {
+            SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(Boolean.parseBoolean(check));
+        }
+        // id/pw SharedPreferencesAPI에 저장
+        if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(pw)) {
+            SharedPreferencesAPI.getInstance(mActivity).setLoginId(id);
+            SharedPreferencesAPI.getInstance(mActivity).setLoginPw(pw);
+        }
+
+        progressBarListener.showProgressBar();   // 프로그래스 바 노출
+        GLog.d("name === " + id + "\n hash ==== " + pw + " \n check ====== " + check);
+
+        // id가 맞지 않을 때
+        if (!TextUtils.equals(Constant.LOGIN_ID, SharedPreferencesAPI.getInstance(mActivity).getLoginId())) { //
+            Toast.makeText(mActivity, "id를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+            // id가 입력되어 있고 pw가 null 이거나 틀렸을 때
+            if (TextUtils.isEmpty(SharedPreferencesAPI.getInstance(mActivity).getLoginId())) {
+                Toast.makeText(mActivity, "비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+            }
+        } else if (TextUtils.equals(Constant.LOGIN_ID, SharedPreferencesAPI.getInstance(mActivity).getLoginId())) {
+            if (TextUtils.equals(Constant.LOGIN_PW, SharedPreferencesAPI.getInstance(mActivity).getLoginPw())) {
+                Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
+                mWebView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBarListener.unShownProgressBar();  // 프로그래스 바 비노출
+                        mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
+                    }
+                }, 500);
+            } else {
+                Toast.makeText(mActivity, "비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            if (TextUtils.isEmpty(pw) || !TextUtils.equals(pw, SharedPreferencesAPI.getInstance(mActivity).getLoginPw())) {
+                Toast.makeText(mActivity, "비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mActivity, "아이디/비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+            }
+        }
+        mWebView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressBarListener.unShownProgressBar();  // 프로그래스 바 비노출
+            }
+        }, 500);
     }
 
     // 연락처 조회
@@ -501,7 +535,7 @@ public class AndroidBridge {
         JSONObject obj = new JSONObject();
         JSONObject data = new JSONObject();
 
-        SharedPreferences prefs = mActivity.getSharedPreferences(PreferenceManager.PREFERENCES_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = mActivity.getSharedPreferences(SharedPreferencesAPI.SP_NAME, Context.MODE_PRIVATE);
         boolean isInvisiblePattern = prefs.getBoolean(Constant.PATTERN_INVISIBLE, false);  // 패턴
         boolean isFirstLaunch = prefs.getBoolean(Constant.FIRST_LAUNCH, true);  // 최초 실행 여부
 
@@ -708,90 +742,90 @@ public class AndroidBridge {
     }
 
     //설정 페이지 호출
-    @JavascriptInterface
-    public void callSettings(String strJsonObject) {
-        GLog.d("callSettings - strJsonObject : " + strJsonObject);
+//    @JavascriptInterface
+//    public void callSettings(String strJsonObject) {
+//        GLog.d("callSettings - strJsonObject : " + strJsonObject);
+//
+//        JSONObject jsonObject = null;
+//        String setType = "";
+//        String callback = "";
+//        String setValue = "";
+//
+//        try {
+//            if (!TextUtils.isEmpty(strJsonObject)) {
+//                jsonObject = new JSONObject(strJsonObject);
+//
+//                if (!jsonObject.isNull("setType")) {
+//                    setType = jsonObject.getString("setType");
+//                }
+//
+//                if (!jsonObject.isNull("setValue")) {
+//                    setValue = jsonObject.getString("setValue");
+//                }
+//
+//                if (!jsonObject.isNull("callback")) {
+//                    callback = jsonObject.getString("callback");
+//                }
+//
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        if (!setType.equals("null") || setType != null) {
+//
+//            if (setType.equals("font")) {
+//
+//                if (!TextUtils.isEmpty(setValue)) {
+//                    PreferenceManager.setString(mActivity, Constant.FONT_SIZE, setValue);
+//                }
+//
+//                //폰트 설정 화면으로 이동
+////                Intent intent = new Intent(mActivity, FontSizeActivity.class);
+////                intent.putExtra("callback", callback);
+////                mActivity.startActivity(intent);
+//
+//            } else {
+//
+//                PreferenceManager.setString(mActivity, Constant.CERT_TYPE, setValue);
+//
+//                //인증타입 화면으로 이동
+////                Intent intent = new Intent(mActivity, CertTypeActivity.class);
+////                intent.putExtra("callback", callback);
+////                mActivity.startActivity(intent);
+//
+//            }
+//        }
+//    }
 
-        JSONObject jsonObject = null;
-        String setType = "";
-        String callback = "";
-        String setValue = "";
 
-        try {
-            if (!TextUtils.isEmpty(strJsonObject)) {
-                jsonObject = new JSONObject(strJsonObject);
-
-                if (!jsonObject.isNull("setType")) {
-                    setType = jsonObject.getString("setType");
-                }
-
-                if (!jsonObject.isNull("setValue")) {
-                    setValue = jsonObject.getString("setValue");
-                }
-
-                if (!jsonObject.isNull("callback")) {
-                    callback = jsonObject.getString("callback");
-                }
-
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        if (!setType.equals("null") || setType != null) {
-
-            if (setType.equals("font")) {
-
-                if (!TextUtils.isEmpty(setValue)) {
-                    PreferenceManager.setString(mActivity, Constant.FONT_SIZE, setValue);
-                }
-
-                //폰트 설정 화면으로 이동
-//                Intent intent = new Intent(mActivity, FontSizeActivity.class);
-//                intent.putExtra("callback", callback);
-//                mActivity.startActivity(intent);
-
-            } else {
-
-                PreferenceManager.setString(mActivity, Constant.CERT_TYPE, setValue);
-
-                //인증타입 화면으로 이동
-//                Intent intent = new Intent(mActivity, CertTypeActivity.class);
-//                intent.putExtra("callback", callback);
-//                mActivity.startActivity(intent);
-
-            }
-        }
-    }
-
-
-    //패턴 선 숨기기 설정
-    public void setPattenLine() {
-        mIsInvisible = PreferenceManager.getPattenLineBoolean(mActivity, Constant.PATTERN_INVISIBLE);
-        GLog.d("mIsInvisible : " + mIsInvisible);
-
-        if (magicFIDOUtil == null) {
-            magicFIDOUtil = new MagicFIDOUtil(mActivity);
-        }
-
-        if (patternOption == null) {
-            patternOption = new Hashtable<String, Object>();
-        }
-
-        //패턴 선 굵기
-        patternOption.put(MagicFIDOUtil.KEY_LINE_WIDTH, 4.2f);
-
-        //true : 선숨기기 ON, false: 선숨기기 OFF
-        if (mIsInvisible) {
-            patternOption.put(MagicFIDOUtil.KEY_LINE_COLOR, "#00000000");
-            patternOption.put(MagicFIDOUtil.KEY_MISMATCH_LINE_COLOR, "#00000000");
-            magicFIDOUtil.setAuthenticatorOptions(LOCAL_AUTH_TYPE.LOCAL_PATTERN_TYPE, patternOption);
-        } else {
-            patternOption.put(MagicFIDOUtil.KEY_LINE_COLOR, "#64b3ff");
-            patternOption.put(MagicFIDOUtil.KEY_MISMATCH_LINE_COLOR, "#ff0000");
-            magicFIDOUtil.setAuthenticatorOptions(LOCAL_AUTH_TYPE.LOCAL_PATTERN_TYPE, patternOption);
-        }
-    }
+//    //패턴 선 숨기기 설정
+//    public void setPattenLine() {
+//        mIsInvisible = PreferenceManager.getPattenLineBoolean(mActivity, Constant.PATTERN_INVISIBLE);
+//        GLog.d("mIsInvisible : " + mIsInvisible);
+//
+//        if (magicFIDOUtil == null) {
+//            magicFIDOUtil = new MagicFIDOUtil(mActivity);
+//        }
+//
+//        if (patternOption == null) {
+//            patternOption = new Hashtable<String, Object>();
+//        }
+//
+//        //패턴 선 굵기
+//        patternOption.put(MagicFIDOUtil.KEY_LINE_WIDTH, 4.2f);
+//
+//        //true : 선숨기기 ON, false: 선숨기기 OFF
+//        if (mIsInvisible) {
+//            patternOption.put(MagicFIDOUtil.KEY_LINE_COLOR, "#00000000");
+//            patternOption.put(MagicFIDOUtil.KEY_MISMATCH_LINE_COLOR, "#00000000");
+//            magicFIDOUtil.setAuthenticatorOptions(LOCAL_AUTH_TYPE.LOCAL_PATTERN_TYPE, patternOption);
+//        } else {
+//            patternOption.put(MagicFIDOUtil.KEY_LINE_COLOR, "#64b3ff");
+//            patternOption.put(MagicFIDOUtil.KEY_MISMATCH_LINE_COLOR, "#ff0000");
+//            magicFIDOUtil.setAuthenticatorOptions(LOCAL_AUTH_TYPE.LOCAL_PATTERN_TYPE, patternOption);
+//        }
+//    }
 
     //간편인증서(FaceID, 지문, 패턴)모둘 호출(단건)
     //인증요청

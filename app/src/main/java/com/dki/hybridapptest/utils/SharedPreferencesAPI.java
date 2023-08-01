@@ -16,7 +16,7 @@ public class SharedPreferencesAPI {
     private SharedPreferences.Editor mEditor;
 
     // SharedPreferences Name
-    private static final String SP_NAME = "TEST";       // Preference Name 수정필요
+    public static final String SP_NAME = "HybridAppTestSharedPrefs";       // Preference Name 수정필요
 
     public SharedPreferencesAPI(Context mContext) {
         mPref = mContext.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);
@@ -51,11 +51,11 @@ public class SharedPreferencesAPI {
     }
 
     public String getLoginId() {
-        return "1234";
+        return getString(PREF_KEY_LOGIN_ID);
     }
 
     public String getLoginPw() {
-        return "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
+        return getString(PREF_KEY_LOGIN_PW);
     }
 
     public boolean getAutoLogin() {
@@ -184,4 +184,6 @@ public class SharedPreferencesAPI {
     public void releaseOnSharedPreferenceChangeListener(SharedPreferences.OnSharedPreferenceChangeListener l) {
         mPref.unregisterOnSharedPreferenceChangeListener(l);
     }
+
+
 }
