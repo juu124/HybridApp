@@ -458,7 +458,7 @@ public class AndroidBridge {
                     public void onNegativeClick() {
 
                     }
-                }, "안내", mActivity.getResources().getString(R.string.close_app_message), true);
+                }, "안내", mActivity.getResources().getString(R.string.close_app_message), true, "종료", "취소");
                 customDialog.setCancelable(false);
                 customDialog.show();
 

@@ -35,4 +35,6 @@
     <string name="move">move</string>
     <!--  앱 종료  -->
     <string name="close_app_message" translatable="false">앱을 종료하시겠습니까?</string>
+    <!-- 인트로 권한 알림 -->
+    <string name="permission_app_message" translatable="false">앱 권한을 설정해주세요. (설정으로 이동)</string>
 </resources>
