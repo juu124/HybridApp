@@ -239,7 +239,7 @@ public class AndroidBridge {
     }
 
     // 프로그래스바 리스너 show/unshown
-    private void setProgressBarListener(boolean isShown) {
+    private void showProgressBarListener(boolean isShown) {
         if (progressBarListener == null) {
             return;
         }
@@ -255,41 +255,24 @@ public class AndroidBridge {
     @JavascriptInterface
     public void moveLoginPage() {
         GLog.d("SharedPreferencesAPI.getInstance(mActivity).getAutoLogin() == " + SharedPreferencesAPI.getInstance(mActivity).getAutoLogin());
-        // 로그인 화면으로 이동
-        mWebView.post(new Runnable() {
-            @Override
-            public void run() {
-                mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
-            }
-        });
 
-        setProgressBarListener(true);  // 프로그래스 바 노출
+        // 로그인 화면으로 이동
+        loadWebView(true, Constant.WEB_VIEW_LOGIN_URL, 0);
 
         if (SharedPreferencesAPI.getInstance(mActivity).getAutoLogin() &&
                 TextUtils.equals(Constant.LOGIN_ID, SharedPreferencesAPI.getInstance(mActivity).getLoginId()) &&
                 TextUtils.equals(Constant.LOGIN_PW, SharedPreferencesAPI.getInstance(mActivity).getLoginPw())) {
-            mWebView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    progressBarListener.unShownProgressBar();  // 프로그래스 바 비노출
-                    mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
-                }
-            }, 700);
+            loadWebView(false, Constant.WEB_VIEW_MAIN_URL, 500); // 메인 화면 이동 및 프로그래스 바 노출
             Toast.makeText(mActivity, "자동로그인", Toast.LENGTH_SHORT).show();
         } else {
-            setProgressBarListener(false); // 프로그래스 바 비노출
+            loadWebView(false, "", 500); // 프로그래스 바 비노출
         }
     }
 
     // 로그인
     @JavascriptInterface
     public void login(String id, String pw, String check) {
-        GLog.d();
-        // 자동 로그인 체크 저장
-        if (!TextUtils.isEmpty(check)) {
-            SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(Boolean.parseBoolean(check));
-        }
-        setProgressBarListener(true);  // 프로그래스 바 노출
+        loadWebView(true, "", 0); // 프로그래스 바 노출
         GLog.d("name === " + id + "\n hash ==== " + pw + " \n check ====== " + check);
 
         // id가 null 일 때
@@ -312,21 +295,28 @@ public class AndroidBridge {
             SharedPreferencesAPI.getInstance(mActivity).setLoginId(id);
             SharedPreferencesAPI.getInstance(mActivity).setLoginPw(pw);
             Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
-            mWebView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    setProgressBarListener(false);  // 프로그래스 바 비노출
-                    mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
-                }
-            }, 500);
-        }
 
+            // 자동 로그인 체크 저장
+            if (!TextUtils.isEmpty(check)) {
+                SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(Boolean.parseBoolean(check));
+            }
+
+            loadWebView(false, Constant.WEB_VIEW_MAIN_URL, 500); // 메인 화면 이동 및 프로그래스 바 노출
+        }
+        loadWebView(false, "", 500); // 프로그래스 바 비노출
+    }
+
+    // webView 이동 및 프로그래스 바 노출여부
+    private void loadWebView(boolean showProgressBarListener, String url, int delayTime) {
         mWebView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                setProgressBarListener(false); // 프로그래스 바 비노출
+                showProgressBarListener(showProgressBarListener);  // 프로그래스 바 비노출
+                if (!TextUtils.isEmpty(url)) {
+                    mWebView.loadUrl(url);
+                }
             }
-        }, 500);
+        }, delayTime);
     }
 
     // 연락처 조회

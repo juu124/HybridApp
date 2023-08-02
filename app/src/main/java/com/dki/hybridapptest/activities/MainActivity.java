@@ -1,9 +1,7 @@
 package com.dki.hybridapptest.activities;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         } else if (mWebView.canGoBack()) {
             mWebView.goBack();
+        } else {
+            super.onBackPressed();
         }
     }
 
@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
         mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
         webPlugin_Init(MainActivity.this);
 
-
         RetrofitApiManager.getInstance().requestPostUser(new RetrofitInterface() {
             @Override
             public void onResponse(Response response) {
@@ -109,10 +108,8 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     // 전화
                     if (url.startsWith("tel:")) {
-                        if ((checkSelfPermission(Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)) {
-                            mAction = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
-                            startActivity(mAction);
-                        }
+                        mAction = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                        startActivity(mAction);
                     }
                     // 이메일
                     else if (url.startsWith("mailto:")) {
