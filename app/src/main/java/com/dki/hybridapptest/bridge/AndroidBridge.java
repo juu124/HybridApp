@@ -123,48 +123,23 @@ public class AndroidBridge {
 
     // AndroidBride 기본 생성자
     public AndroidBridge(WebView webView, Activity activity) {
-        if (webView != null) {
-            this.mWebView = webView;
-            if (activity != null) {
-                this.mActivity = activity;
-            } else {
-                GLog.d("activity null");
-            }
-        } else {
-            GLog.d("webView null");
-        }
+        this.mWebView = webView;
+        this.mActivity = activity;
 
-        //인증서 관련 처리
-        processCertificate = new ProcessCertificate(mActivity);
-        pki = new MagicXSign();
-
-        kCertificate = new KCertificate();
-        MagicFIDOUtil.setSSLEnable(false);
-
-        magicFIDOUtil = new MagicFIDOUtil(mActivity);
-        patternOption = new Hashtable<String, Object>();
+        init();  // 인증서 관련 처리
     }
 
     // 생성자 (프로그래스 바 리스너)
     public AndroidBridge(WebView webView, Activity activity, ProgressBarListener progressBarListener) {
-        if (webView != null) {
-            this.mWebView = webView;
-            if (activity != null) {
-                this.mActivity = activity;
-            } else {
-                GLog.d("activity null");
-            }
-        } else {
-            GLog.d("webView null");
-        }
-        GLog.d("progressBarListener ==== " + progressBarListener);
-        if (progressBarListener != null) {
-            this.progressBarListener = progressBarListener;
-        } else {
-            GLog.d("progressBarListener null");
-        }
+        this.mWebView = webView;
+        this.mActivity = activity;
+        this.progressBarListener = progressBarListener;
 
-        //인증서 관련 처리
+        init();  // 인증서 관련 처리
+    }
+
+    // 인증서 관련 처리
+    private void init() {
         processCertificate = new ProcessCertificate(mActivity);
         pki = new MagicXSign();
 
@@ -259,6 +234,21 @@ public class AndroidBridge {
     public void autoLoginOff() {
         Toast.makeText(mActivity, "자동 로그인 해제", Toast.LENGTH_SHORT).show();
         SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(false);
+        SharedPreferencesAPI.getInstance(mActivity).setLoginId("");
+        SharedPreferencesAPI.getInstance(mActivity).setLoginPw("");
+    }
+
+    // 프로그래스바 리스너 show/unshown
+    private void setProgressBarListener(boolean isShown) {
+        if (progressBarListener == null) {
+            return;
+        }
+
+        if (isShown) {
+            progressBarListener.showProgressBar();
+        } else {
+            progressBarListener.unShownProgressBar();
+        }
     }
 
     // 로그인 페이지 접속
@@ -273,7 +263,7 @@ public class AndroidBridge {
             }
         });
 
-        progressBarListener.showProgressBar();  // 프로그래스 바 노출
+        setProgressBarListener(true);  // 프로그래스 바 노출
 
         if (SharedPreferencesAPI.getInstance(mActivity).getAutoLogin() &&
                 TextUtils.equals(Constant.LOGIN_ID, SharedPreferencesAPI.getInstance(mActivity).getLoginId()) &&
@@ -287,7 +277,7 @@ public class AndroidBridge {
             }, 700);
             Toast.makeText(mActivity, "자동로그인", Toast.LENGTH_SHORT).show();
         } else {
-            progressBarListener.unShownProgressBar();
+            setProgressBarListener(false); // 프로그래스 바 비노출
         }
     }
 
@@ -299,43 +289,42 @@ public class AndroidBridge {
         if (!TextUtils.isEmpty(check)) {
             SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(Boolean.parseBoolean(check));
         }
-        progressBarListener.showProgressBar();   // 프로그래스 바 노출
+        setProgressBarListener(true);  // 프로그래스 바 노출
         GLog.d("name === " + id + "\n hash ==== " + pw + " \n check ====== " + check);
 
-        // id가 맞지 않을 때
-        if (!TextUtils.equals(Constant.LOGIN_ID, id)) { //
-            Toast.makeText(mActivity, "id를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
-            // id가 입력되어 있고 pw가 null 이거나 틀렸을 때
-            if (TextUtils.isEmpty(id)) {
-                Toast.makeText(mActivity, "비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
-            }
-        } else if (TextUtils.equals(Constant.LOGIN_ID, id)) {
-            if (TextUtils.equals(Constant.LOGIN_PW, pw)) {
-                // 입력한 id, pw 일치 했을 시 SharedPreferences에 저장
-                SharedPreferencesAPI.getInstance(mActivity).setLoginId(id);
-                SharedPreferencesAPI.getInstance(mActivity).setLoginPw(pw);
-                Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
-                mWebView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBarListener.unShownProgressBar();  // 프로그래스 바 비노출
-                        mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
-                    }
-                }, 500);
-            } else {
-                Toast.makeText(mActivity, "비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            if (TextUtils.isEmpty(pw) || !TextUtils.equals(Constant.LOGIN_PW, pw)) {
-                Toast.makeText(mActivity, "비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(mActivity, "아이디/비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
-            }
+        // id가 null 일 때
+        if (TextUtils.isEmpty(id)) {
+            Toast.makeText(mActivity, "Username을 입력하세요.", Toast.LENGTH_SHORT).show();
         }
+        // pw가 null 일 때
+        else if (TextUtils.isEmpty(pw)) {
+            Toast.makeText(mActivity, "Password를 입력하세요.", Toast.LENGTH_SHORT).show();
+        }
+        // id가 똑같지 않을 때
+        else if (!TextUtils.equals(Constant.LOGIN_ID, id)) {
+            Toast.makeText(mActivity, "Username을 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+        }
+        // PW가 똑같지 않을 때 때
+        else if (!TextUtils.equals(Constant.LOGIN_PW, pw)) {
+            Toast.makeText(mActivity, "Password를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
+        } else {
+            // 입력한 id, pw 일치 했을 시 SharedPreferences에 저장
+            SharedPreferencesAPI.getInstance(mActivity).setLoginId(id);
+            SharedPreferencesAPI.getInstance(mActivity).setLoginPw(pw);
+            Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
+            mWebView.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    setProgressBarListener(false);  // 프로그래스 바 비노출
+                    mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
+                }
+            }, 500);
+        }
+
         mWebView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                progressBarListener.unShownProgressBar();  // 프로그래스 바 비노출
+                setProgressBarListener(false); // 프로그래스 바 비노출
             }
         }, 500);
     }

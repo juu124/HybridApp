@@ -47,10 +47,10 @@ public class MainActivity extends AppCompatActivity {
     // 웹 뷰에서 뒤로 가기
     @Override
     public void onBackPressed() {
-        if (mWebView.canGoBack()) {
-            mWebView.goBack();
-        } else {
+        if (TextUtils.equals(mWebView.getUrl(), Constant.WEB_VIEW_MAIN_URL)) {
             super.onBackPressed();
+        } else if (mWebView.canGoBack()) {
+            mWebView.goBack();
         }
     }
 
