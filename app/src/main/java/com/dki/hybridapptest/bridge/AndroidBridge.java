@@ -299,24 +299,21 @@ public class AndroidBridge {
         if (!TextUtils.isEmpty(check)) {
             SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(Boolean.parseBoolean(check));
         }
-        // id/pw SharedPreferencesAPI에 저장
-        if (!TextUtils.isEmpty(id) && !TextUtils.isEmpty(pw)) {
-            SharedPreferencesAPI.getInstance(mActivity).setLoginId(id);
-            SharedPreferencesAPI.getInstance(mActivity).setLoginPw(pw);
-        }
-
         progressBarListener.showProgressBar();   // 프로그래스 바 노출
         GLog.d("name === " + id + "\n hash ==== " + pw + " \n check ====== " + check);
 
         // id가 맞지 않을 때
-        if (!TextUtils.equals(Constant.LOGIN_ID, SharedPreferencesAPI.getInstance(mActivity).getLoginId())) { //
+        if (!TextUtils.equals(Constant.LOGIN_ID, id)) { //
             Toast.makeText(mActivity, "id를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
             // id가 입력되어 있고 pw가 null 이거나 틀렸을 때
-            if (TextUtils.isEmpty(SharedPreferencesAPI.getInstance(mActivity).getLoginId())) {
+            if (TextUtils.isEmpty(id)) {
                 Toast.makeText(mActivity, "비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
             }
-        } else if (TextUtils.equals(Constant.LOGIN_ID, SharedPreferencesAPI.getInstance(mActivity).getLoginId())) {
-            if (TextUtils.equals(Constant.LOGIN_PW, SharedPreferencesAPI.getInstance(mActivity).getLoginPw())) {
+        } else if (TextUtils.equals(Constant.LOGIN_ID, id)) {
+            if (TextUtils.equals(Constant.LOGIN_PW, pw)) {
+                // 입력한 id, pw 일치 했을 시 SharedPreferences에 저장
+                SharedPreferencesAPI.getInstance(mActivity).setLoginId(id);
+                SharedPreferencesAPI.getInstance(mActivity).setLoginPw(pw);
                 Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
                 mWebView.postDelayed(new Runnable() {
                     @Override
@@ -329,7 +326,7 @@ public class AndroidBridge {
                 Toast.makeText(mActivity, "비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
             }
         } else {
-            if (TextUtils.isEmpty(pw) || !TextUtils.equals(pw, SharedPreferencesAPI.getInstance(mActivity).getLoginPw())) {
+            if (TextUtils.isEmpty(pw) || !TextUtils.equals(Constant.LOGIN_PW, pw)) {
                 Toast.makeText(mActivity, "비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(mActivity, "아이디/비밀번호를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
