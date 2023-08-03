@@ -1,7 +1,9 @@
 package com.dki.hybridapptest.activities;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,8 +18,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.dki.hybridapptest.Interface.ProgressBarListener;
 import com.dki.hybridapptest.R;
@@ -30,6 +34,14 @@ import com.dreamsecurity.magicxsign.MagicXSign;
 import com.dreamsecurity.magicxsign.MagicXSign_Type;
 import com.dreamsecurity.xsignweb.XSignWebPlugin;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import m.client.push.library.PushHandler;
+import m.client.push.library.common.Logger;
+import m.client.push.library.common.PushConstants;
+import m.client.push.library.common.PushConstantsEx;
+import m.client.push.library.utils.PushUtils;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private Intent mAction;
     private AndroidBridge androidBridge = null;
     private Handler handler = new Handler(Looper.getMainLooper());
+
+    // push
+    private BroadcastReceiver mMainBroadcastReceiver;
 
     // 프로그래스 바
     private RelativeLayout mProgressBar;
@@ -63,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
 
+
+        // 로그인 화면 프로그래스 바
         androidBridge = new AndroidBridge(mWebView, MainActivity.this, new ProgressBarListener() {
             @Override
             public void showProgressBar() {
@@ -125,6 +142,116 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver();
+    }
+
+    public void registerReceiver() {
+        if (mMainBroadcastReceiver != null) {
+            return;
+        }
+
+        GLog.d("registerReceiver ===== ");
+
+        // 화면에서 서비스 등록 결과를 받기 위한 리시버 등록 - 패키지명.ACTION_COMPLETED
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MainActivity.this.getPackageName() + PushConstantsEx.ACTION_COMPLETED);
+
+        mMainBroadcastReceiver = new BroadcastReceiver() {
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                // 수신된 인텐트(결과값 응답) 의 정상 데이터 여부 체크 (푸시 타입/액션 타입) - 반드시 구현
+                if (!PushUtils.checkValidationOfCompleted(intent, context)) {
+                    return;
+                }
+
+                //push 타입 판단
+                JSONObject result_obj = null; // 수신된 오브젝트
+                String result_code = ""; // 결과 코드
+                String result_msg = ""; // 결과 메세지
+                try {
+                    result_obj = new JSONObject(intent.getExtras().getString(PushConstants.KEY_RESULT));
+                    result_code = result_obj.getString(PushConstants.KEY_RESULT_CODE);
+                    result_msg = result_obj.getString(PushConstants.KEY_RESULT_MSG);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                // 액션 타입
+                String bundle = intent.getStringExtra(PushConstantsEx.KEY_BUNDLE);
+
+                //액션에 따라 분기 (이미 서비스 등록이 완료된 상태인 경우 다음 process 이동)
+                if (bundle.equals(PushConstantsEx.COMPLETE_BUNDLE.IS_REGISTERED_SERVICE)) {
+                    //mProgressDialog.dismiss();
+                    Logger.e(result_code);
+                    String resultPushType = intent.getExtras().getString(PushConstants.KEY_PUSH_TYPE);
+                    if (resultPushType.equals(PushHandler.getInstance().getPushConfigInfo(getApplicationContext()).getPushType())) {
+                        if (result_code.equals(PushConstants.RESULTCODE_OK)) {
+                            mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
+//                            Intent pageIntent = new Intent(this, LoginActivity.class);
+//                            startActivity(pageIntent);
+//                            finish();
+                        }
+                    } else {
+                        Toast.makeText(MainActivity.this, result_msg, Toast.LENGTH_LONG).show();
+                    }
+
+                    // 최초 서비스 등록이 완료된 경우 다음 process 이동
+                } else if (bundle.equals(PushConstantsEx.COMPLETE_BUNDLE.REG_PUSHSERVICE)) {
+
+                    // 등록 성공
+                    if (result_code.equals(PushConstants.RESULTCODE_OK)) {
+                        Toast.makeText(context, "등록 성공!", Toast.LENGTH_SHORT).show();
+                        mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
+//                        Intent pageIntent = new Intent(this, LoginActivity.class);
+//                        startActivity(pageIntent);
+//                        finish();
+                    }
+                    // 통신 에러
+                    else if (result_code.equals(PushConstants.RESULTCODE_HTTP_ERR)) {
+                        Toast.makeText(context, "[MainActivity] error code: " + result_code + " msg: " + result_msg, Toast.LENGTH_SHORT).show();
+                    }
+                    // 인증키 오류
+                    else if (result_code.equals(PushConstants.RESULTCODE_AUTHKEY_ERR)) {
+                        Toast.makeText(context, "[MainActivity] error code: " + result_code + " msg: " + result_msg, Toast.LENGTH_SHORT).show();
+                    }
+                    // 서버 응답 에러
+                    else if (result_code.equals(PushConstants.RESULTCODE_RESPONSE_ERR)) {
+                        Toast.makeText(context, "[MainActivity] error code: " + result_code + " msg: " + result_msg, Toast.LENGTH_SHORT).show();
+                    }
+                    // 라이브러리 에러 - 파싱 에러
+                    else if (result_code.equals(PushConstants.RESULTCODE_INTERNAL_ERR)) {
+                        Toast.makeText(context, "[MainActivity] error code: " + result_code + " msg: " + result_msg, Toast.LENGTH_SHORT).show();
+                    }
+                    // 기타
+                    else {
+                        Toast.makeText(context, "[MainActivity] error code: " + result_code + " msg: " + result_msg, Toast.LENGTH_SHORT).show();
+                        //System.exit(0);
+                    }
+                }
+            }
+        };
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMainBroadcastReceiver, intentFilter);
+    }
+
+    public void unregisterReceiver() {
+        GLog.d("unregisterReceiver ===== ");
+        if (mMainBroadcastReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(mMainBroadcastReceiver);
+            mMainBroadcastReceiver = null;
+        }
     }
 
     // web 플러그 인 초기화

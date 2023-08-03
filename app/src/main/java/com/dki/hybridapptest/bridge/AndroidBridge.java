@@ -3,6 +3,7 @@ package com.dki.hybridapptest.bridge;
 import static com.dream.magic.fido.authenticator.common.asm.authinfo.ASMInstallAuth.byteArrayToHex;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -66,6 +67,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import m.client.push.library.PushManager;
+import m.client.push.library.common.PushConstants;
+import m.client.push.library.common.PushLog;
+import m.client.push.library.utils.PushUtils;
+
 public class AndroidBridge {
     private WebView mWebView;
     private Activity mActivity;
@@ -117,6 +123,9 @@ public class AndroidBridge {
 
     // 자동 로그인
     private ProgressBarListener progressBarListener;
+
+    // push
+    private BroadcastReceiver mMainBroadcastReceiver;
 
     public AndroidBridge() {
     }
@@ -301,6 +310,8 @@ public class AndroidBridge {
                 SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(Boolean.parseBoolean(check));
             }
 
+            // todo :: 사용자 등록하기
+            initPush(id, pw);
             loadWebView(false, Constant.WEB_VIEW_MAIN_URL, 500); // 메인 화면 이동 및 프로그래스 바 노출
         }
         loadWebView(false, "", 500); // 프로그래스 바 비노출
@@ -317,6 +328,52 @@ public class AndroidBridge {
                 }
             }
         }, delayTime);
+    }
+
+    private void initPush(String id, String pw) {
+        GLog.d();
+        final JSONObject params = new JSONObject();
+        try {
+            params.put(PushConstants.KEY_CUID, id);
+            params.put(PushConstants.KEY_CNAME, pw);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        if (PushUtils.checkNetwork(mActivity)) {
+            GLog.d();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    // TODO Auto-generated method stub
+                    GLog.d("push checkNetWork true");
+                    PushManager.getInstance().registerServiceAndUser(mActivity, params);
+//                    GLog.d("push checkNetWork true ==== " + PushManager.getInstance().getPushJsonData());
+                }
+            });
+        } else {
+            PushLog.e("MainActivity", "network is not connected.");
+            Toast.makeText(mActivity, "[MainActivity] network is not connected.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // 푸시 서비스 등록 해제
+    @JavascriptInterface
+    public void loginPushOff() {
+        if (PushUtils.checkNetwork(mActivity)) {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    GLog.d("푸시 서비스 등록 해제 메서드 들어옴");
+                    // TODO Auto-generated method stub
+                    // 푸시 서비스 등록 해제 - 서비스 및 사용자가 해제
+                    PushManager.getInstance().unregisterPushService(mActivity);
+                }
+            });
+        } else {
+            PushLog.e("MainActivity", "network is not connected.");
+            Toast.makeText(mActivity, "[MainActivity] network is not connected.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // 연락처 조회
@@ -454,7 +511,7 @@ public class AndroidBridge {
 
     @JavascriptInterface
     public void closeApp() {
-        new Handler().post(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 // 작업 처리

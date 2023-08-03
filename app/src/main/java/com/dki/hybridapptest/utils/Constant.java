@@ -63,4 +63,8 @@ public class Constant {
 
     // user List 주소
     public static final String USERS_INFO_URL = "https://reqres.in/api/";
+
+    // Push Key 값
+    public static final String KEY_CUID = "CUID";
+    public static final String KEY_CNAME = "CNAME";
 }

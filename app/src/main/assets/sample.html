@@ -24,7 +24,7 @@
 <input type="button" value="show keyboard" onClick="showKeyboard()"/>
 <br><br>
 <input type="button" value="show segment encryption" onClick="showEncryption()"/>
-<br><br>
+&nbsp
 <input type="button" value="move web view" onClick="moveWebView()"/>
 <br><br>
 <input type="button" value="SW Info" onClick="showSWInfo()"/>
@@ -36,6 +36,8 @@
 <input type="button" value="Login" onClick="moveLoginPage()">
 &nbsp
 <input type="button" value="Auto Login Off" onClick="autoLoginOff()">
+&nbsp
+<input type="button" value="Login Push Off" onClick="loginPushOff()">
 <br><br>
 <input type="button" value="End App" onclick="closeApp()"/>
 <script type="text/javascript" src="./autologin.html"></script>
@@ -119,6 +121,11 @@
     <!-- 로그인 화면으로 이동 -->
     function moveLoginPage() {
         DKITec.moveLoginPage();
+	}
+
+	<!-- 푸시 해제 버튼 -->
+    function loginPushOff() {
+        DKITec.loginPushOff();
 	}
 
 	 <!-- 자동 로그인 해제 -->

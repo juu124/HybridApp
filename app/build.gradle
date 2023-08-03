@@ -1,6 +1,7 @@
-plugins {
-    id 'com.android.application'
-}
+//plugins {
+//    id 'com.android.application'
+//}
+apply plugin: 'com.android.application'
 
 android {
     namespace 'com.dki.hybridapptest'
@@ -36,9 +37,11 @@ android {
 }
 
 dependencies {
+    implementation fileTree(dir: 'libs', include: '*.jar')
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     // 모듈 라이브러리
     implementation project(path: ':Lib_Magic_FIDO')
@@ -46,6 +49,7 @@ dependencies {
     implementation project(path: ':magicvkeypad')
     implementation project(path: ':magic_mvaccine')
 
+    // 라이브러리
     implementation files('libs/MagicMRS.jar')
     implementation files('libs/MagicSE2.jar')
     implementation files('libs/MagicXSign_1.0.9.2.jar')
@@ -53,11 +57,15 @@ dependencies {
     implementation files('libs/commons-lang-2.5.jar')
     implementation files('libs/rimeCoreAndroid3.0.2.9.jar')
     implementation files('libs/TrustAppAAB5.0.0.6.jar')
+    implementation files('libs/universal-image-loader-1.9.3.jar')
+    implementation files('libs/netty-common-4.0.19.Final.jar')
+    implementation files('libs/mqtt-android-push_1.0.0.15.jar')
+    implementation files('libs/morpheus_push_library_5.2.0.6.aar')
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    implementation 'com.google.code.gson:gson:2.10'
+    implementation 'com.google.code.gson:gson:2.10.1'
 
     // retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -66,4 +74,12 @@ dependencies {
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.15.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
+
+    // firebase
+    implementation 'com.google.firebase:firebase-messaging:23.2.0'
+    implementation 'com.google.firebase:firebase-iid:21.1.0'
+    implementation 'androidx.work:work-runtime:2.8.1'
 }
+
+// 반드시, script 맨 하단에 작성 [위치 옮기지 말것 ]
+//apply plugin: 'com.google.gms.google-services'

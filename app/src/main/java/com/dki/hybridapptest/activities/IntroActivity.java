@@ -22,8 +22,16 @@ import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.CustomYesNoDialog;
 import com.dki.hybridapptest.utils.GLog;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import m.client.push.library.PushManager;
+import m.client.push.library.common.PushConstants;
+import m.client.push.library.common.PushLog;
+import m.client.push.library.utils.PushUtils;
+
 public class IntroActivity extends AppCompatActivity {
-    private static final String[] permissionName = {Manifest.permission.CALL_PHONE, Manifest.permission.READ_CONTACTS};
+    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS};
     private int permissionReqCode = 1000;
     private Intent intent;
     private ActivityResultLauncher<Intent> appSettingsLauncher;
@@ -35,8 +43,14 @@ public class IntroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_intro);
         GLog.d();
         if (Build.VERSION.SDK_INT >= 23) {
+            initPush();
             requestPermissions(permissionName, permissionReqCode);
         }
+
+        // push 초기화 (앱 실행시마다 호출)
+        // Manifest.xml 설정 파일에서 라이브러리를 초기화하기 위한 정보를 가져온다.
+        // Parameters: context (Context) – 현재 Context
+        PushManager.getInstance().initPushServer(this);
 
         // 설정에서 돌아온 후 권한 확인
         appSettingsLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -52,7 +66,6 @@ public class IntroActivity extends AppCompatActivity {
                 }, 500);
 
             } else {
-                GLog.d("권한 비허용");
                 Toast.makeText(this, "필수 권한을 설정해주세요.", Toast.LENGTH_SHORT).show();
                 CustomYesNoDialog customDialog = new CustomYesNoDialog(this, new CustomDialogClickListener() {
                     @Override
@@ -90,7 +103,6 @@ public class IntroActivity extends AppCompatActivity {
             GLog.d("permissionGranted : " + permissionGranted);
 
             if (permissionGranted) {
-                GLog.d("권한 허용");
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -110,6 +122,25 @@ public class IntroActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
+    }
+
+    // push 권한 체크
+    private void initPush() {
+        Toast.makeText(this, "푸시 권한", Toast.LENGTH_SHORT).show();
+        final JSONObject params = new JSONObject();
+        try {
+            params.put(PushConstants.KEY_CUID, "");
+            params.put(PushConstants.KEY_CNAME, "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        if (PushUtils.checkNetwork(this)) {
+            GLog.d("push 권한 설정");
+            PushManager.getInstance().registerServiceAndUser(this, params);
+        } else {
+            PushLog.e("MainActivity", "network is not connected.");
+            Toast.makeText(this, "[MainActivity] network is not connected.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     // 권한 설정으로 이동

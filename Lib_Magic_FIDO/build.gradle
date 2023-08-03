@@ -33,7 +33,7 @@ dependencies {
     api files('libs/Auth_lib_Magic_FingerAuth_v1.0.27.jar')
     implementation files('libs/Auth_lib_Magic_AuthWrapper_v1.2.0.jar')
     implementation files('libs/org.apache.http.legacy.jar')
-    implementation files('libs/jcaos-client-1.4.9.1.jar')
-    implementation 'com.google.code.gson:gson:2.10'
+//    implementation files('libs/jcaos-client-1.4.9.1.jar')
+    implementation 'com.google.code.gson:gson:2.10.1'
 
 }

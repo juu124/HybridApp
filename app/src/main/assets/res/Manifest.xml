@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+    <push>
+        <option>
+            <storage-encrypt>n</storage-encrypt>
+        </option>
+        <receiver>
+            <log>y</log>
+
+            <!-- <security-indexes>0x292 0x354 0x416 0x1c9 0x408 0x22f 0x156 0x508 0x280 0x561 0x10e 0x595 0x125 0x68 0xcb 0x1e9</security-indexes> -->
+            <security-indexes>0x35b 0x6a3 0x759 0x77d 0x301 0x10a 0x644 0x78d 0x374 0x2f6 0x1b5 0x22
+                0x310 0x138 0x595 0x547
+            </security-indexes>
+
+            <!-- 서버 버전 3.6/3.7/4.0-->
+            <version>5.0</version>
+
+            <!-- receiver server url(필수 설정) -->
+            <server>http://52.79.96.155:8080</server>
+            <timeout>20000</timeout>
+
+            <!-- GCM설정 / FCM -->
+            <!-- GCM / FCM sender-id (push-type이 GCM / FCM 일경우 필수설정) -->
+            <fcm-sender-id>117770874199</fcm-sender-id>
+
+            <!-- 푸쉬타입(필수설정)
+             GCM / FCM:구글GCM / FCM(Public Push)
+             UPNS:유라클UPNS(Private Push)
+            -->
+            <android-push-type>ALL</android-push-type>
+            <data-encryption>n</data-encryption>
+
+            <!-- 서비스 정책 ,
+                         user : one user multidevice,
+                         device : one user one device,
+                         default : user -->
+            <policy>device</policy>
+
+            <!-- stb(셋탑)/mobile(모바일)/mobile_old(디바이스 아이디 이전 버전) -->
+            <device-type>mobile</device-type>
+
+            <!-- 브로드캐스트 리시버에서 퍼미션 사용 여부를 설정 (Y/N) -->
+            <use-permission>Y</use-permission>
+        </receiver>
+
+        <upns>
+            <!-- agent, inapp -->
+            <agent-service-type>inapp</agent-service-type>
+
+            <!-- UPNS RESTART ALARM INTERVAL (초단위) -->
+            <agent-restart-interval>300</agent-restart-interval>
+
+            <!-- auto/manual -->
+            <agent-receive-confirm>auto</agent-receive-confirm>
+        </upns>
+    </push>
+</settings>
