@@ -20,6 +20,7 @@ import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -33,6 +34,10 @@ import com.dki.hybridapptest.utils.GLog;
 import com.dreamsecurity.magicxsign.MagicXSign;
 import com.dreamsecurity.magicxsign.MagicXSign_Type;
 import com.dreamsecurity.xsignweb.XSignWebPlugin;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     // push
     private BroadcastReceiver mMainBroadcastReceiver;
+    String token = null;
 
     // 프로그래스 바
     private RelativeLayout mProgressBar;
@@ -69,15 +75,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // push 토큰 확인
+    private String getFCMToken() {
+        GLog.d();
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    GLog.w("Fetching FCM registration token failed ==== " + task.getException());
+                    return;
+                }
+                token = task.getResult();
+                GLog.d("FCM token is ==== " + token);
+            }
+        });
+        return token;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Firebase 사용전 초기화
+        FirebaseApp.initializeApp(this);
+
         mWebView = findViewById(R.id.webview);
         mProgressBar = findViewById(R.id.dialog_user_info_progressbar);
         mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
 
+        // push 토큰 확인
+        getFCMToken();
 
         // 로그인 화면 프로그래스 바
         androidBridge = new AndroidBridge(mWebView, MainActivity.this, new ProgressBarListener() {
@@ -156,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver();
     }
 
+    // 리시버 등록
     public void registerReceiver() {
         if (mMainBroadcastReceiver != null) {
             return;
@@ -199,9 +229,6 @@ public class MainActivity extends AppCompatActivity {
                     if (resultPushType.equals(PushHandler.getInstance().getPushConfigInfo(getApplicationContext()).getPushType())) {
                         if (result_code.equals(PushConstants.RESULTCODE_OK)) {
                             mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
-//                            Intent pageIntent = new Intent(this, LoginActivity.class);
-//                            startActivity(pageIntent);
-//                            finish();
                         }
                     } else {
                         Toast.makeText(MainActivity.this, result_msg, Toast.LENGTH_LONG).show();
@@ -214,9 +241,6 @@ public class MainActivity extends AppCompatActivity {
                     if (result_code.equals(PushConstants.RESULTCODE_OK)) {
                         Toast.makeText(context, "등록 성공!", Toast.LENGTH_SHORT).show();
                         mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
-//                        Intent pageIntent = new Intent(this, LoginActivity.class);
-//                        startActivity(pageIntent);
-//                        finish();
                     }
                     // 통신 에러
                     else if (result_code.equals(PushConstants.RESULTCODE_HTTP_ERR)) {
@@ -246,8 +270,8 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).registerReceiver(mMainBroadcastReceiver, intentFilter);
     }
 
+    // 리시버 해제
     public void unregisterReceiver() {
-        GLog.d("unregisterReceiver ===== ");
         if (mMainBroadcastReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mMainBroadcastReceiver);
             mMainBroadcastReceiver = null;

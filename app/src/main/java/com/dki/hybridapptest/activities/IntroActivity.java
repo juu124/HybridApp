@@ -43,7 +43,7 @@ public class IntroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_intro);
         GLog.d();
         if (Build.VERSION.SDK_INT >= 23) {
-            initPush();
+            initPush(); // push 알림 권한
             requestPermissions(permissionName, permissionReqCode);
         }
 
@@ -52,7 +52,7 @@ public class IntroActivity extends AppCompatActivity {
         // Parameters: context (Context) – 현재 Context
         PushManager.getInstance().initPushServer(this);
 
-        // 설정에서 돌아온 후 권한 확인
+        // 설정에서 돌아온 후 권한 확인 (읽기 권한)
         appSettingsLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             GLog.d("설정에서 다시 돌아와서 권한 확인하기 checkSomePermission == " + checkSomePermission());
             if (checkSomePermission()) {  // 권한이 허용되었을 경우에 대한 처리를 진행
@@ -124,9 +124,9 @@ public class IntroActivity extends AppCompatActivity {
         finish();
     }
 
-    // push 권한 체크
+    // push 알림 권한 체크
     private void initPush() {
-        Toast.makeText(this, "푸시 권한", Toast.LENGTH_SHORT).show();
+        GLog.d("push 알림 권한");
         final JSONObject params = new JSONObject();
         try {
             params.put(PushConstants.KEY_CUID, "");

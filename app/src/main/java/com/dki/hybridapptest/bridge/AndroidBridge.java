@@ -3,7 +3,6 @@ package com.dki.hybridapptest.bridge;
 import static com.dream.magic.fido.authenticator.common.asm.authinfo.ASMInstallAuth.byteArrayToHex;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -123,9 +122,6 @@ public class AndroidBridge {
 
     // 자동 로그인
     private ProgressBarListener progressBarListener;
-
-    // push
-    private BroadcastReceiver mMainBroadcastReceiver;
 
     public AndroidBridge() {
     }
@@ -310,9 +306,11 @@ public class AndroidBridge {
                 SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(Boolean.parseBoolean(check));
             }
 
-            // todo :: 사용자 등록하기
+            // push 사용자 등록
             initPush(id, pw);
-            loadWebView(false, Constant.WEB_VIEW_MAIN_URL, 500); // 메인 화면 이동 및 프로그래스 바 노출
+
+            // 메인 화면 이동 및 프로그래스 바 노출
+            loadWebView(false, Constant.WEB_VIEW_MAIN_URL, 500);
         }
         loadWebView(false, "", 500); // 프로그래스 바 비노출
     }
@@ -330,6 +328,7 @@ public class AndroidBridge {
         }, delayTime);
     }
 
+    // Push - id와 pw로 User 등록
     private void initPush(String id, String pw) {
         GLog.d();
         final JSONObject params = new JSONObject();
@@ -357,7 +356,7 @@ public class AndroidBridge {
         }
     }
 
-    // 푸시 서비스 등록 해제
+    // Push - 서비스 등록 해제
     @JavascriptInterface
     public void loginPushOff() {
         if (PushUtils.checkNetwork(mActivity)) {
@@ -365,8 +364,7 @@ public class AndroidBridge {
                 @Override
                 public void run() {
                     GLog.d("푸시 서비스 등록 해제 메서드 들어옴");
-                    // TODO Auto-generated method stub
-                    // 푸시 서비스 등록 해제 - 서비스 및 사용자가 해제
+                    // 푸시 서비스 등록 해제 - 서비스 및 사용자 해제
                     PushManager.getInstance().unregisterPushService(mActivity);
                 }
             });

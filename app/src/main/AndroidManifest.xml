@@ -11,7 +11,6 @@
     <!--    <permission android:name="${com.dki.hybridapptest}.permission.MPUSH_PERMISSION" android:protectionLevel="signature" />-->
     <!--    <uses-permission android:name="${com.dki.hybridapptest}.permission.MPUSH_PERMISSION" />-->
 
-
     <queries>
         <package android:name="kr.or.mydatacenter.pds" /> <!-- 외부 앱 사용 -->
     </queries>
@@ -25,6 +24,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HybridAppTest"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher_foreground" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/white" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
         <service
             android:name=".utils.FirebaseMessagingService"
             android:exported="true">
@@ -112,5 +121,6 @@
             android:configChanges="orientation|screenSize"
             android:exported="false" />
     </application>
+
 
 </manifest>
