@@ -105,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
         mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
 
+        mWebView.clearCache(true);
+        mWebView.clearHistory();
+
         // push 토큰 확인
         getFCMToken();
 
