@@ -87,6 +87,7 @@ public class Utils {
         return resultList;
     }
 
+    // 파일 다운로드 리스너
     public static void setDownloadListener(Activity activity, WebView webView) {
         webView.setDownloadListener(new DownloadListener() {
             @Override

@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.bridge;
+package com.dki.hybridapptest.ui.activity.bridge;
 
 import static com.dream.magic.fido.authenticator.common.asm.authinfo.ASMInstallAuth.byteArrayToHex;
 
@@ -29,16 +29,16 @@ import com.dki.hybridapptest.BuildConfig;
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.Interface.ProgressBarListener;
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.activities.HelloWorldActivity;
-import com.dki.hybridapptest.activities.HybridModeActivity;
-import com.dki.hybridapptest.activities.MoveWebViewActivity;
-import com.dki.hybridapptest.activities.UserCertificationActivity;
-import com.dki.hybridapptest.activities.UserListActivity;
 import com.dki.hybridapptest.dialog.CustomYesNoDialog;
 import com.dki.hybridapptest.dialog.InputDialog;
 import com.dki.hybridapptest.encryption.EncryptionActivity;
 import com.dki.hybridapptest.kfido.FIDORegistration;
 import com.dki.hybridapptest.model.ContactInfo;
+import com.dki.hybridapptest.ui.activity.HelloWorldActivity;
+import com.dki.hybridapptest.ui.activity.HybridModeActivity;
+import com.dki.hybridapptest.ui.activity.MoveWebViewActivity;
+import com.dki.hybridapptest.ui.activity.UserCertificationActivity;
+import com.dki.hybridapptest.ui.activity.UserListActivity;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.DeviceInfo;
 import com.dki.hybridapptest.utils.GLog;
@@ -232,6 +232,19 @@ public class AndroidBridge {
         } catch (NullPointerException ne) {
             ne.printStackTrace();
         }
+    }
+
+    // 파일 다운로드
+    @JavascriptInterface
+    public void fileDownload() {
+        GLog.d("fileDownload======");
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.loadUrl(Constant.FILE_DOWNLOAD_URL);
+                Utils.setDownloadListener(mActivity, mWebView);
+            }
+        });
     }
 
     // 자동 로그인 해제

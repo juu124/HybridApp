@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- 생체 인증 권한 요청 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- 읽기 권한 요청 -->
+
+    <!-- 파일 다운로드 : 저장소 파일 접근 권한   -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <!-- 안드로이드 8.0이상 필수  라이브러리 버전 4.1.0.7 이상부터 추가된 리시버 등록 시 권한 등록위해 선언 (없으면 앱 디폴트 권한) -->
     <!--    <permission android:name="${com.dki.hybridapptest}.permission.MPUSH_PERMISSION" android:protectionLevel="signature" />-->
     <!--    <uses-permission android:name="${com.dki.hybridapptest}.permission.MPUSH_PERMISSION" />-->
@@ -35,14 +40,14 @@
         <!--            android:value="@string/default_notification_channel_id" />-->
 
         <service
-            android:name=".utils.FirebaseMessagingService"
+            android:name=".fcm.FirebaseMessagingService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <activity
-            android:name=".activities.IntroActivity"
+            android:name=".ui.activity.IntroActivity"
             android:configChanges="orientation|screenSize"
             android:exported="true">
             <intent-filter>
@@ -55,11 +60,11 @@
         <!-- android:name=".activities.SWInfoActivity" -->
         <!-- android:exported="false" /> -->
         <activity
-            android:name=".activities.WebViewSizeChangeActivity"
+            android:name=".ui.activity.WebViewSizeChangeActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.MoveWebViewActivity"
+            android:name=".ui.activity.MoveWebViewActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
@@ -67,11 +72,11 @@
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.HelloWorldActivity"
+            android:name=".ui.activity.HelloWorldActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <!--            <intent-filter>-->
@@ -81,43 +86,43 @@
         <!--            </intent-filter>-->
         <!--        </activity>-->
         <activity
-            android:name=".activities.UserCertificationActivity"
+            android:name=".ui.activity.UserCertificationActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.UserListActivity"
+            android:name=".ui.activity.UserListActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.XSignBaseActivity"
+            android:name=".ui.activity.XSignBaseActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.XSignCertDetailActivity"
+            android:name=".ui.activity.XSignCertDetailActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.XSignCertListActivity"
+            android:name=".ui.activity.XSignCertListActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.XSignProcessResultActivity"
+            android:name=".ui.activity.XSignProcessResultActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.XSignSettingActivity"
+            android:name=".ui.activity.XSignSettingActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.XSignUcpidActivity"
+            android:name=".ui.activity.XSignUcpidActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.XSignXMLActivity"
+            android:name=".ui.activity.XSignXMLActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".activities.HybridModeActivity"
+            android:name=".ui.activity.HybridModeActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
     </application>
