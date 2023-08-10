@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.activities;
+package com.dki.hybridapptest.ui.activity;
 
 import android.app.AlertDialog;
 import android.content.Context;

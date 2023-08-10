@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.activities;
+package com.dki.hybridapptest.ui.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,9 +26,9 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.dki.hybridapptest.Interface.ProgressBarListener;
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.bridge.AndroidBridge;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
+import com.dki.hybridapptest.ui.activity.bridge.AndroidBridge;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
 import com.dreamsecurity.magicxsign.MagicXSign;

@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.activities;
+package com.dki.hybridapptest.ui.activity;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,12 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dki.hybridapptest.Interface.InputUserInfoListener;
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.adapters.RvUserListAdapter;
 import com.dki.hybridapptest.dialog.InputUserDialog;
 import com.dki.hybridapptest.dto.UserResponse;
 import com.dki.hybridapptest.dto.UsersList;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
+import com.dki.hybridapptest.ui.adapter.RvUserListAdapter;
 import com.dki.hybridapptest.utils.GLog;
 
 import java.util.ArrayList;

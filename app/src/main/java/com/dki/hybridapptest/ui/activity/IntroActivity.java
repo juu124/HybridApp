@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.activities;
+package com.dki.hybridapptest.ui.activity;
 
 import android.Manifest;
 import android.content.Intent;
@@ -31,7 +31,7 @@ import m.client.push.library.common.PushLog;
 import m.client.push.library.utils.PushUtils;
 
 public class IntroActivity extends AppCompatActivity {
-    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS};
+    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private int permissionReqCode = 1000;
     private Intent intent;
     private ActivityResultLauncher<Intent> appSettingsLauncher;

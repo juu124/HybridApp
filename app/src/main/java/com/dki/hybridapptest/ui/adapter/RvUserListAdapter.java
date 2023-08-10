@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.adapters;
+package com.dki.hybridapptest.ui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;

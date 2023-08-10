@@ -1,7 +1,8 @@
-package com.dki.hybridapptest.utils;
+package com.dki.hybridapptest.fcm;
 
 import androidx.annotation.NonNull;
 
+import com.dki.hybridapptest.utils.GLog;
 import com.google.firebase.messaging.RemoteMessage;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {

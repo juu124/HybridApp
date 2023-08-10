@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.activities;
+package com.dki.hybridapptest.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.bridge.AndroidBridge;
+import com.dki.hybridapptest.ui.activity.bridge.AndroidBridge;
 import com.dki.hybridapptest.utils.GLog;
 import com.dki.hybridapptest.utils.HybridResult;
 import com.dki.hybridapptest.utils.MagicVKeyPadSettings;
