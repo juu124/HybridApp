@@ -29,7 +29,7 @@ import com.dki.hybridapptest.BuildConfig;
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.Interface.ProgressBarListener;
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.dialog.CustomYesNoDialog;
+import com.dki.hybridapptest.dialog.CustomDialog;
 import com.dki.hybridapptest.dialog.InputDialog;
 import com.dki.hybridapptest.encryption.EncryptionActivity;
 import com.dki.hybridapptest.kfido.FIDORegistration;
@@ -526,7 +526,7 @@ public class AndroidBridge {
             @Override
             public void run() {
                 // 작업 처리
-                CustomYesNoDialog customDialog = new CustomYesNoDialog(mActivity, new CustomDialogClickListener() {
+                CustomDialog customDialog = new CustomDialog(mActivity, new CustomDialogClickListener() {
                     @Override
                     public void onPositiveClick(String text) {
                         ActivityCompat.finishAffinity(mActivity);
@@ -536,7 +536,8 @@ public class AndroidBridge {
                     public void onNegativeClick() {
 
                     }
-                }, "안내", mActivity.getResources().getString(R.string.close_app_message), true, "종료", "취소");
+                }, "안내", mActivity.getResources().getString(R.string.close_app_message), Constant.TWO_BUTTON, true);
+                customDialog.setTwoButtonText("종료", "취소");
                 customDialog.setCancelable(false);
                 customDialog.show();
 

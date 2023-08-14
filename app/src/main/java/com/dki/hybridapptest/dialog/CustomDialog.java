@@ -11,30 +11,30 @@ import androidx.annotation.NonNull;
 
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
 
-public class CustomYesNoDialog extends Dialog {
+public class CustomDialog extends Dialog {
     private Context mContext;
-    private Button dialogNoBtn;
-    private Button dialogYesBtn;
+    private Button btnCancle;
+    private Button btnConfirm;
     private TextView tvDialogTitle;
     private TextView tvDialogContent;
     private CustomDialogClickListener mCustomDialogClickListener;
     private String title;
     private String message;
-    private String positiveBtn;
-    private String negativeBtn;
     private boolean isAutoDissmiss;
+    private String buttonType;
 
-    public CustomYesNoDialog(@NonNull Context context, CustomDialogClickListener customDialogClickListener, String title, String message, boolean isAutoDismiss, String positiveBtn, String negativeBtn) {
+
+    public CustomDialog(@NonNull Context context, CustomDialogClickListener customDialogClickListener, String title, String message, String buttonType, boolean isAutoDismiss) {
         super(context);
         mContext = context;
         mCustomDialogClickListener = customDialogClickListener;
         this.title = title;
         this.message = message;
+        this.buttonType = buttonType;
         this.isAutoDissmiss = isAutoDismiss;
-        this.positiveBtn = positiveBtn;
-        this.negativeBtn = negativeBtn;
     }
 
     @Override
@@ -42,18 +42,15 @@ public class CustomYesNoDialog extends Dialog {
         super.onCreate(savedInstanceState);
         GLog.d();
         setContentView(R.layout.dialog_yes_no);
-        dialogNoBtn = findViewById(R.id.dialog_user_info_no_button);
-        dialogYesBtn = findViewById(R.id.dialog_user_info_yes_button);
+        btnCancle = findViewById(R.id.dialog_user_info_no_button);
+        btnConfirm = findViewById(R.id.dialog_user_info_yes_button);
         tvDialogTitle = findViewById(R.id.tv_dialog_title);
         tvDialogContent = findViewById(R.id.tv_dialog_content);
-
-        dialogYesBtn.setText(positiveBtn);
-        dialogNoBtn.setText(negativeBtn);
 
         tvDialogTitle.setText(title);
         tvDialogContent.setText(message);
 
-        dialogYesBtn.setOnClickListener(new View.OnClickListener() {
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mCustomDialogClickListener != null) {
@@ -65,7 +62,7 @@ public class CustomYesNoDialog extends Dialog {
             }
         });
 
-        dialogNoBtn.setOnClickListener(new View.OnClickListener() {
+        btnCancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mCustomDialogClickListener != null) {
@@ -76,5 +73,25 @@ public class CustomYesNoDialog extends Dialog {
                 }
             }
         });
+
+        if (buttonType.equals(Constant.ONE_BUTTON)) {
+            btnCancle.setVisibility(View.GONE);
+            btnConfirm.setText("확인");
+        } else {
+            btnCancle.setVisibility(View.VISIBLE);
+            btnConfirm.setText("예");
+            btnCancle.setText("아니오");
+        }
+    }
+
+    // 버튼 1개
+    public void setOneButtonText(String text) {
+        btnConfirm.setText(text);
+    }
+
+    // 버튼 2개
+    public void setTwoButtonText(String negativeText, String positiveText) {
+        btnCancle.setText(negativeText);
+        btnConfirm.setText(positiveText);
     }
 }

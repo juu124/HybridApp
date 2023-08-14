@@ -74,4 +74,8 @@ public class Constant {
     // 파일 다운로드 url
     public static final String FILE_DOWNLOAD_URL = "https://filesamples.com/samples/document/ppt/sample2.ppt";
 
+    // 다이얼로그
+    public static String TWO_BUTTON = "TWO_BUTTON";
+    public static String ONE_BUTTON = "ONE_BUTTON";
+
 }
