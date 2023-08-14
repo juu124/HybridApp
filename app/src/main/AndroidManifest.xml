@@ -4,13 +4,21 @@
     package="com.dki.hybridapptest">
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 인터넷 권한 요청 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- 생체 인증 권한 요청 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- 읽기 권한 요청 -->
 
-    <!-- 파일 다운로드 : 저장소 파일 접근 권한   -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 백신 권한 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!--휴대폰 단말기 고유 정보를 읽을 때 요구되는 권한-->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!--악성 앱 진단 즉시 사용자에게 알리기 위해 요구되는 권한 (Android 10 이상)-->
+
+    <!-- 파일 다운로드 : 저장소 파일 접근 권한 (Android 12 이하,  Build.VERSION_CODES.R)  -->
+    <!--        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
+
+    <!-- 파일 다운로드 : 저장소 파일 접근 권한 (Android 13 이상) - 버전에 따른 분할 처리 아직 안했음  -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!--Android 13 에서 READ_EXTERNAL_STORAGE권한이 아래 3개의 항목으로 세분화되었다.-->
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- SD Card 영역 권한-->
 
     <!-- 안드로이드 8.0이상 필수  라이브러리 버전 4.1.0.7 이상부터 추가된 리시버 등록 시 권한 등록위해 선언 (없으면 앱 디폴트 권한) -->
     <!--    <permission android:name="${com.dki.hybridapptest}.permission.MPUSH_PERMISSION" android:protectionLevel="signature" />-->

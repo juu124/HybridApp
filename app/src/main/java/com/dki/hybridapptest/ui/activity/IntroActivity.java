@@ -1,9 +1,12 @@
 package com.dki.hybridapptest.ui.activity;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,13 +17,17 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.dialog.CustomYesNoDialog;
+import com.dki.hybridapptest.dialog.CustomDialog;
+import com.dki.hybridapptest.trustapp.TrustAppManager;
+import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
+import com.dki.hybridapptest.vaccine.VaccineManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,19 +37,41 @@ import m.client.push.library.common.PushConstants;
 import m.client.push.library.common.PushLog;
 import m.client.push.library.utils.PushUtils;
 
+@RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
 public class IntroActivity extends AppCompatActivity {
-    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    private int permissionReqCode = 1000;
+    public static Context mContext;
+//    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};  // 권한 리스트
+
+    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_AUDIO};  // 권한 리스트
+    private final int permissionReqCode = 1000;
     private Intent intent;
-    private ActivityResultLauncher<Intent> appSettingsLauncher;
+    private ActivityResultLauncher<Intent> appSettingsLauncher;  // 앱 설정 화면
     private Handler handler = new Handler(Looper.getMainLooper());
+    public static boolean isRealTimeScanRunning = false;
+    private VaccineManager vaccineManager;
+    private TrustAppManager trustApp;
+    private AnimationDrawable animation;
+
+    private static boolean isSuccess = true;
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (vaccineManager != null) {
+            vaccineManager.stopVaccine();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
         GLog.d();
+
+        trustApp = new TrustAppManager(IntroActivity.this);
+
         if (Build.VERSION.SDK_INT >= 23) {
+//            TrustAppManager.handler.sendEmptyMessage(0); //위변조 검사 시작
             initPush(); // push 알림 권한
             requestPermissions(permissionName, permissionReqCode);
         }
@@ -61,13 +90,13 @@ public class IntroActivity extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        moveToMainActivity();
+                        startCheck();
                     }
                 }, 500);
 
             } else {
                 Toast.makeText(this, "필수 권한을 설정해주세요.", Toast.LENGTH_SHORT).show();
-                CustomYesNoDialog customDialog = new CustomYesNoDialog(this, new CustomDialogClickListener() {
+                CustomDialog customDialog = new CustomDialog(this, new CustomDialogClickListener() {
                     @Override
                     public void onPositiveClick(String text) {
                         moveToPermissionSetting();
@@ -78,11 +107,127 @@ public class IntroActivity extends AppCompatActivity {
                         // 권한 설정 거부
                         finish();
                     }
-                }, "권한 알림", this.getResources().getString(R.string.permission_app_message), true, "설정", "닫기");
+                }, "권한 알림", this.getResources().getString(R.string.permission_app_message), Constant.TWO_BUTTON, true);
+                customDialog.setTwoButtonText("닫기", "설정");
                 customDialog.setCancelable(false);
                 customDialog.show();
             }
         });
+    }
+
+    // 백신 콜백 성공 후 메인 화면 이동
+    public void vaccineResult(boolean isSuccess) {
+        if (isSuccess) {
+            moveToMainActivity();
+        }
+    }
+
+    // 앱 위변조
+    public void trustAppResult(boolean isSuccess) {
+        GLog.d("trustAppresult : " + isSuccess);
+        if (!isSuccess) {
+//            Toast.makeText(IntroActivity.this, "APP위변조 검증결과 오류", Toast.LENGTH_SHORT).show();
+            if (!IntroActivity.this.isFinishing()) {
+                CustomDialog customDialog = new CustomDialog(IntroActivity.this, new CustomDialogClickListener() {
+                    @Override
+                    public void onPositiveClick(String text) {
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                    }
+
+                    @Override
+                    public void onNegativeClick() {
+
+                    }
+                }, "안내", getResources().getString(R.string.trust_app_error_message), Constant.ONE_BUTTON, true);
+                customDialog.setCancelable(false);
+                customDialog.show();
+                customDialog.setOneButtonText("앱 종료");
+            }
+        } else {
+            GLog.d("백신 작동");
+            VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
+            vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+//            vaccineTimer.schedule(vaccineTask, 0, 1000);
+        }
+    }
+
+    public void setRealTimeScanRunning(boolean realTimeScanRunning) {
+        isRealTimeScanRunning = realTimeScanRunning;
+        GLog.d("setRealTimeScanRunning : isRealTimeScanRunning : " + isRealTimeScanRunning);
+        if (!isRealTimeScanRunning) {
+            handler.sendEmptyMessage(2000);
+        }
+    }
+
+    public void startCheck() {
+        if (Constant.IS_DEBUG) {
+            GLog.d("IS_DEBUG");
+            VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
+            vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }
+
+        //디버그 모드일때는 위변조 검사 하지 않음
+//        if(Constant.IS_DEBUG){
+//            GLog.d("IS_DEBUG");
+//            VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
+//            vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            moveToMainActivity();
+//        }else {
+//            GLog.d("IS_NOT_DEBUG");
+//            TrustAppAsyncTask trustAppAsyncTask = new TrustAppAsyncTask();
+//            trustAppAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//        }
+    }
+
+    // 위변조 앱 비동기 처리
+    public class TrustAppAsyncTask extends AsyncTask<String, Integer, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            trustApp.startTrustApp(); //위변조 검사 시작
+            return true;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
+    }
+
+    //백신 비동기 처리
+    public class VaccineAsyncTask extends AsyncTask<String, Integer, Boolean> {
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            GLog.d("백신 비동기 처리");
+            vaccineManager = new VaccineManager(IntroActivity.this); // 백신검사 시작
+            return true;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+        }
+
+        @Override
+        protected void onCancelled() {
+            super.onCancelled();
+        }
     }
 
     // 권한 확인
@@ -93,6 +238,7 @@ public class IntroActivity extends AppCompatActivity {
         if (requestCode == permissionReqCode) {
             if (permissions != null) {
                 for (int i = 0; i < permissions.length; i++) {
+                    GLog.d("permission ===== " + permissions[i] + " == " + grantResults[i]);
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) { // 권한 부여 실패
                         permissionGranted = false;
                         break;
@@ -106,7 +252,8 @@ public class IntroActivity extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        moveToMainActivity();
+                        startCheck();
+//                        moveToMainActivity();
                     }
                 }, 700);
             } else {

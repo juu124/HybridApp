@@ -18,7 +18,10 @@ android {
 //        applicationId "com.example.trustappandroid"
 
         // 헬스케어 FireBase 패키지
-        applicationId "kr.go.seoul.healthcare"
+//        applicationId "kr.go.seoul.healthcare"
+
+        // 백신
+        applicationId "com.dreamsecurity.mAntiVirus.test"
 
         minSdk 24
         targetSdk 33
@@ -86,4 +89,4 @@ dependencies {
 }
 
 // 반드시, script 맨 하단에 작성 [위치 옮기지 말것 ]
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'

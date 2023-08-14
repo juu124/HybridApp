@@ -108,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
         mWebView.clearCache(true);
         mWebView.clearHistory();
 
-        // push 토큰 확인
-        getFCMToken();
+        // push 토큰 확인 (push 사용할 때 주석 풀기 (토큰 확인용))
+//        getFCMToken();
 
         // 로그인 화면 프로그래스 바
         androidBridge = new AndroidBridge(mWebView, MainActivity.this, new ProgressBarListener() {

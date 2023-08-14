@@ -39,7 +39,7 @@
 &nbsp
 <input type="button" value="Login Push Off" onClick="loginPushOff()">
 <br><br>
-<input type="button" id="fileDownLoad" value="File Download" onClick="fileDownload()">
+<input type="button" value="File Download" onClick="fileDownload()">
 <br><br>
 <input type="button" value="End App" onclick="closeApp()"/>
 <script type="text/javascript" src="./autologin.html"></script>
@@ -133,6 +133,11 @@
 	 <!-- 파일 다운로드 -->
     function fileDownload() {
         DKITec.fileDownload();
+	}
+
+	 <!-- 파일 업로드 -->
+    function fileUpload() {
+        DKITec.fileUpload();
 	}
 
 	 <!-- 자동 로그인 해제 -->
