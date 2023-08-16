@@ -50,37 +50,47 @@ public class CustomDialog extends Dialog {
         tvDialogTitle.setText(title);
         tvDialogContent.setText(message);
 
-        btnConfirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCustomDialogClickListener != null) {
-                    mCustomDialogClickListener.onPositiveClick("");
-                    if (isAutoDissmiss) {
-                        dismiss();
-                    }
-                }
-            }
-        });
-
-        btnCancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mCustomDialogClickListener != null) {
-                    mCustomDialogClickListener.onNegativeClick();
-                    if (isAutoDissmiss) {
-                        dismiss();
-                    }
-                }
-            }
-        });
-
         if (buttonType.equals(Constant.ONE_BUTTON)) {
+            btnConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mCustomDialogClickListener != null) {
+                        mCustomDialogClickListener.onPositiveClick("");
+                        if (isAutoDissmiss) {
+                            dismiss();
+                        }
+                    }
+                }
+            });
+            btnConfirm.setVisibility(View.VISIBLE);
             btnCancle.setVisibility(View.GONE);
-            btnConfirm.setText("확인");
         } else {
+            GLog.d();
+            btnConfirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mCustomDialogClickListener != null) {
+                        mCustomDialogClickListener.onPositiveClick("");
+                        if (isAutoDissmiss) {
+                            dismiss();
+                        }
+                    }
+                }
+            });
+
+            btnCancle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mCustomDialogClickListener != null) {
+                        mCustomDialogClickListener.onNegativeClick();
+                        if (isAutoDissmiss) {
+                            dismiss();
+                        }
+                    }
+                }
+            });
+            btnConfirm.setVisibility(View.VISIBLE);
             btnCancle.setVisibility(View.VISIBLE);
-            btnConfirm.setText("예");
-            btnCancle.setText("아니오");
         }
     }
 

@@ -21,8 +21,13 @@ android {
 //        applicationId "kr.go.seoul.healthcare"
 
         // 백신
-        applicationId "com.dreamsecurity.mAntiVirus.test"
+//        applicationId "com.dreamsecurity.mAntiVirus.test"
 
+        // 앱 위변조
+//        applicationId "kr.or.mydatacenter.pds"
+
+        // 테스트를 위한 신정원 id 빌려쓰기
+        applicationId "kr.or.mydatacenter.pds"
         minSdk 24
         targetSdk 33
         versionCode 1

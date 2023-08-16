@@ -68,10 +68,10 @@ public class IntroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_intro);
         GLog.d();
 
+        mContext = this;
         trustApp = new TrustAppManager(IntroActivity.this);
 
         if (Build.VERSION.SDK_INT >= 23) {
-//            TrustAppManager.handler.sendEmptyMessage(0); //위변조 검사 시작
             initPush(); // push 알림 권한
             requestPermissions(permissionName, permissionReqCode);
         }
@@ -161,10 +161,15 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     public void startCheck() {
+        // 앱 위변조와 백신 테스트를 위해 디버그 모드일 때도 위변조 검사 실시
         if (Constant.IS_DEBUG) {
             GLog.d("IS_DEBUG");
-            VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
-            vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            // 앱 위변조 검사 완료 후 백신 검사 실시함
+            TrustAppAsyncTask trustAppAsyncTask = new TrustAppAsyncTask();
+            trustAppAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
+//            vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            moveToMainActivity();
         }
 
         //디버그 모드일때는 위변조 검사 하지 않음

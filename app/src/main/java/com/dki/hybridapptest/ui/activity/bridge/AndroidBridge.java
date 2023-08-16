@@ -534,12 +534,12 @@ public class AndroidBridge {
 
                     @Override
                     public void onNegativeClick() {
-
+                        Toast.makeText(mActivity, "취소", Toast.LENGTH_SHORT).show();
                     }
                 }, "안내", mActivity.getResources().getString(R.string.close_app_message), Constant.TWO_BUTTON, true);
-                customDialog.setTwoButtonText("종료", "취소");
                 customDialog.setCancelable(false);
                 customDialog.show();
+                customDialog.setTwoButtonText("취소", "종료");
 
 //                Display display = mActivity.getWindowManager().getDefaultDisplay();
 //                Point size = new Point();

@@ -1,12 +1,9 @@
 package com.dki.hybridapptest.trustapp;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.view.Display;
-import android.view.Window;
 
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.dialog.CustomDialog;
@@ -69,6 +66,19 @@ public class TrustAppManager {
     private String TAG = "TrustAppManager";
 
     private static boolean isSuccess = false;
+
+//    public static Handler handler = new Handler(Looper.getMainLooper()) {
+//        public void handleMessage(Message msg) {
+//            GLog.d("isSuccess : " + isSuccess);
+//            if (msg.what == 0) {
+//                GLog.d("txtData : " + txtData);
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                    if (IntroActivity.mContext != null)
+//                        ((IntroActivity) IntroActivity.mContext).trustAppResult(isSuccess);
+//                }
+//            }
+//        }
+//    };
 
     public static Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -159,18 +169,18 @@ public class TrustAppManager {
                 public void onNegativeClick() {
                 }
             }, "안내", "네트워크에 연결되지 않았습니다. \n네트워크 연결 상태를 확인 후 진행해 주세요.", Constant.ONE_BUTTON, true);
-            customDialog.setOneButtonText("확인");
             customDialog.setCancelable(false);
             customDialog.show();
-            Display display = ((IntroActivity) ctx).getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-
-            Window window = customDialog.getWindow();
-            int x = (int) (size.x * 0.9f);
-            int y = (int) (size.y * 0.7f);
-
-            window.setLayout(x, y);
+            customDialog.setOneButtonText("확인");
+//            Display display = ((IntroActivity) ctx).getWindowManager().getDefaultDisplay();
+//            Point size = new Point();
+//            display.getSize(size);
+//
+//            Window window = customDialog.getWindow();
+//            int x = (int) (size.x * 0.9f);
+//            int y = (int) (size.y * 0.7f);
+//
+//            window.setLayout(x, y);
         } else {
             CustomDialog customDialog = new CustomDialog(ctx, new CustomDialogClickListener() {
                 @Override
@@ -183,19 +193,19 @@ public class TrustAppManager {
                 }
             }, "안내", value, Constant.ONE_BUTTON, true);
 
-            customDialog.setOneButtonText("확인");
             customDialog.setCancelable(false);
             customDialog.show();
+            customDialog.setOneButtonText("확인");
 
-            Display display = ((IntroActivity) ctx).getWindowManager().getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-
-            Window window = customDialog.getWindow();
-            int x = (int) (size.x * 0.9f);
-            int y = (int) (size.y * 0.7f);
-
-            window.setLayout(x, y);
+//            Display display = ((IntroActivity) ctx).getWindowManager().getDefaultDisplay();
+//            Point size = new Point();
+//            display.getSize(size);
+//
+//            Window window = customDialog.getWindow();
+//            int x = (int) (size.x * 0.9f);
+//            int y = (int) (size.y * 0.7f);
+//
+//            window.setLayout(x, y);
             return;
         }
     }

@@ -2,12 +2,9 @@ package com.dki.hybridapptest.vaccine;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.Display;
-import android.view.Window;
 import android.widget.Toast;
 
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
@@ -36,6 +33,7 @@ public class VaccineManager {
 
     private String TAG = "VaccineManager";
     private Activity mActivity;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public VaccineManager(Activity activity) {
         this.mActivity = activity;
@@ -45,7 +43,7 @@ public class VaccineManager {
 
             GLog.e("error : " + e.getMessage());
 
-            Handler mHandler = new Handler(Looper.getMainLooper());
+//            Handler mHandler = new Handler(Looper.getMainLooper());
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -61,19 +59,20 @@ public class VaccineManager {
 
                         }
                     }, "안내", "네트워크에 연결되지 않았습니다. \n네트워크 연결 상태를 확인 후 진행해 주세요.", Constant.ONE_BUTTON, true);
+                    customDialog.setOneButtonText("확인");
                     customDialog.setCancelable(false);
                     customDialog.show();
 
-                    Display display = mActivity.getWindowManager().getDefaultDisplay();
-                    Point size = new Point();
-                    display.getSize(size);
-
-                    Window window = customDialog.getWindow();
-
-                    int x = (int) (size.x * 0.9f);
-                    int y = (int) (size.y * 0.7f);
-
-                    window.setLayout(x, y);
+//                    Display display = mActivity.getWindowManager().getDefaultDisplay();
+//                    Point size = new Point();
+//                    display.getSize(size);
+//
+//                    Window window = customDialog.getWindow();
+//
+//                    int x = (int) (size.x * 0.9f);
+//                    int y = (int) (size.y * 0.7f);
+//
+//                    window.setLayout(x, y);
                 }
             }, 0);
         }
@@ -159,43 +158,111 @@ public class VaccineManager {
         } catch (MagicNullPointerException e) {
             // Context 가 null
             e.printStackTrace();
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    GLog.d("error == " + e.getMessage());
+                }
+            });
         } catch (MagicIOException e) {
             // 앱 내에 탑재된 엔진이 정상적인 엔진파일이 아님
             e.printStackTrace();
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    GLog.d("error == " + e.getMessage());
+                }
+            });
+
         } catch (MagicTimeoutException e) {
             // 엔진파일의 무결성 체크과정이 일정시간(5초)이상으로 지연
             e.printStackTrace();
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    GLog.d("error == " + e.getMessage());
+                }
+            });
         } catch (MagicEssentialPermissionException e) {
             // READ_PHONE_STATE 권한 허용되지 않음
             e.printStackTrace();
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    GLog.d("error == " + e.getMessage());
+                }
+            });
+
         } catch (MagicConnectivityException e) {
             // 네트워크 연결 실패
             e.printStackTrace();
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    GLog.d("error == " + e.getMessage());
+                }
+            });
+
         } catch (MagicIntegrityCheckException e) {
             // 엔진파일 무결성 검사 실패
             e.printStackTrace();
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    GLog.d("error == " + e.getMessage());
+                }
+            });
+
         } catch (MagicLicenseExpireException e) {
             // 라이선스 기간 만료
             e.printStackTrace();
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    GLog.d("error == " + e.getMessage());
+                }
+            });
+
         } catch (MagicLicenseOverException e) {
             // 라이선스 당 사용 갯수를 초과
             e.printStackTrace();
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    GLog.d("error == " + e.getMessage());
+                }
+            });
+
         } catch (MagicLicenseInvalidException e) {
             // 라이선스 검증 실패
             e.printStackTrace();
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    GLog.d("error == " + e.getMessage());
+                }
+            });
+
         } catch (MagicLicenseKeyNotFoundException e) {
             // 라이선스 파일 누락
             e.printStackTrace();
-            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    GLog.d("error == " + e.getMessage());
+                }
+            });
+
         }
     }
 
