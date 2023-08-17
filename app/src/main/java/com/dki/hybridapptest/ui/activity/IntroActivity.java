@@ -163,13 +163,13 @@ public class IntroActivity extends AppCompatActivity {
     public void startCheck() {
         // 앱 위변조와 백신 테스트를 위해 디버그 모드일 때도 위변조 검사 실시
         if (Constant.IS_DEBUG) {
-            GLog.d("IS_DEBUG");
-            // 앱 위변조 검사 완료 후 백신 검사 실시함
-            TrustAppAsyncTask trustAppAsyncTask = new TrustAppAsyncTask();
-            trustAppAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            GLog.d("IS_DEBUG");
+//            // 앱 위변조 검사 완료 후 백신 검사 실시함
+//            TrustAppAsyncTask trustAppAsyncTask = new TrustAppAsyncTask();
+//            trustAppAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 //            VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
 //            vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//            moveToMainActivity();
+            moveToMainActivity();
         }
 
         //디버그 모드일때는 위변조 검사 하지 않음

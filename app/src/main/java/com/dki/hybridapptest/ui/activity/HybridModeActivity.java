@@ -54,18 +54,16 @@ public class HybridModeActivity extends Activity {
         backButton = findViewById(R.id.back_btn);
 
         mWebview = (WebView) findViewById(R.id.webview);
+        // 보안 키보드 셋팅
+        settingKeypad(magicVKeypad);
+        mAndroidBridge = new AndroidBridge(mWebview, HybridModeActivity.this);
+        mAndroidBridge.licenseAuth(magicVKeypad);
 
         // 웹뷰 셋팅
         mWebview.getSettings().setJavaScriptEnabled(true);
         mWebview.addJavascriptInterface(mAndroidBridge, "MagicVKeypad");
         mWebview.setAccessibilityDelegate(new View.AccessibilityDelegate());
         mWebview.getSettings().setDomStorageEnabled(true);
-
-        // 보안 키보드 셋팅
-        settingKeypad(magicVKeypad);
-
-        mAndroidBridge = new AndroidBridge(mWebview, HybridModeActivity.this);
-        mAndroidBridge.licenseAuth(magicVKeypad);
 
         JSONObject postData = new JSONObject();
 
@@ -201,15 +199,8 @@ public class HybridModeActivity extends Activity {
         if (magicVKeypad != null) {
             this.magicVKeypad = magicVKeypad;
         } else {
+            GLog.d("키보드 생성");
             this.magicVKeypad = new MagicVKeypad();
-        }
-    }
-
-    private void setPublickeyForE2E() {
-        try {
-            magicVKeypad.setPublickeyForE2E(MagicVKeyPadSettings.publicKey, true);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }

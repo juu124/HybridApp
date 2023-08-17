@@ -95,6 +95,11 @@ function inputData(fieldName, data) {
 }
 
 function callMagicVKeypadAndroid(fieldName, viewMode, keypadType, option) {
+     console.log("잘들어옴");
+        console.log("fieldName  " + fieldName + "\n" +
+                "viewMode  " + viewMode.value + "\n" +
+                "keypadType  " + keypadType.value + "\n" +
+                "option  " + option);
     window.MagicVKeypad.callMagicVKeypadAndroid(fieldName, viewMode.value, keypadType.value, option);
 
     alert(option);
@@ -111,7 +116,6 @@ function callMagicVKeypadIOS(fieldName, viewMode, keypadType, option) {
 
 // 키패드를 호출한다.
 function callMagicVKeypad(inputFieldName, viewMode, keypadType, option) {
-    
     var fieldName = document.getElementById(inputFieldName.getAttribute('id')).getAttribute('id');
     if (/Android/i.test(navigator.userAgent)) {
         callMagicVKeypadAndroid(fieldName, viewMode, keypadType, option);
