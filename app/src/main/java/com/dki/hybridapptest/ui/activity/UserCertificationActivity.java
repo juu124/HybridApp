@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.tester.XSignCertPolicy;
 import com.dki.hybridapptest.tester.XSignTester;
+import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
 import com.dki.hybridapptest.utils.XSignDialog;
 import com.dreamsecurity.dstoolkit.util.Base64;
@@ -153,24 +154,26 @@ public class UserCertificationActivity extends XSignBaseActivity {
     public void selectBottomBtn(View btn) {
         Intent intent = null;
 
-        switch (btn.getId()) {
-            case R.id.btn_cert_list:
-                GLog.d("인증서 목록 버튼 누름");
-                intent = new Intent(baseContext, XSignCertListActivity.class);
-                setFunctionMode(FUNC_MODE_CERT_LIST);
-                baseContext.startActivity(intent);
-                break;
+        if (Constant.USE_XSIGN_DREAM) {
+            switch (btn.getId()) {
+                case R.id.btn_cert_list:
+                    GLog.d("인증서 목록 버튼 누름");
+                    intent = new Intent(baseContext, XSignCertListActivity.class);
+                    setFunctionMode(FUNC_MODE_CERT_LIST);
+                    baseContext.startActivity(intent);
+                    break;
 
-            case R.id.btn_xsign_setting:
-                GLog.d("디버그 설정 버튼 누름");
-                intent = new Intent(baseContext, XSignSettingActivity.class);
-                baseContext.startActivity(intent);
-                break;
+                case R.id.btn_xsign_setting:
+                    GLog.d("디버그 설정 버튼 누름");
+                    intent = new Intent(baseContext, XSignSettingActivity.class);
+                    baseContext.startActivity(intent);
+                    break;
 
-            case R.id.btn_exit:
-                GLog.d("종료 버튼 누름");
-                finish();
-                break;
+                case R.id.btn_exit:
+                    GLog.d("종료 버튼 누름");
+                    finish();
+                    break;
+            }
         }
     }
 
@@ -228,40 +231,42 @@ public class UserCertificationActivity extends XSignBaseActivity {
 
                 Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
 
-                try {
-                    MagicXSign Xsign = new MagicXSign();
-
-                    // 인증서 및 개인키
-                    // 비밀번호 : qwer1234
-                    byte[] binCert = getCertByteArray("signCert.der");
-                    byte[] binPri = getCertByteArray("signPri.key");
-
-
-                    // 암호화 여부.
-                    // MagicXSign_Type.XSIGN_PFXEXPORT_NOENC_OPT : 개인키 암호화를 하지 않는 경우. 결과는 복호화된 개인키
-                    // 또는 MagicXSign_Type.XSIGN_PFXEXPORT_ENC_OPT : 개인키 암호화를 한 경우. 결과는 암호화된 개인키
-                    int nFlag = MagicXSign_Type.XSIGN_PFXEXPORT_NOENC_OPT;
-
+                if (Constant.USE_XSIGN_DREAM) {
                     try {
-                        bRetPfx = Xsign.PFX_Export(binCert, binPri, password.getText().toString().getBytes(), nFlag);
+                        MagicXSign Xsign = new MagicXSign();
+
+                        // 인증서 및 개인키
+                        // 비밀번호 : qwer1234
+                        byte[] binCert = getCertByteArray("signCert.der");
+                        byte[] binPri = getCertByteArray("signPri.key");
+
+
+                        // 암호화 여부.
+                        // MagicXSign_Type.XSIGN_PFXEXPORT_NOENC_OPT : 개인키 암호화를 하지 않는 경우. 결과는 복호화된 개인키
+                        // 또는 MagicXSign_Type.XSIGN_PFXEXPORT_ENC_OPT : 개인키 암호화를 한 경우. 결과는 암호화된 개인키
+                        int nFlag = MagicXSign_Type.XSIGN_PFXEXPORT_NOENC_OPT;
+
+                        try {
+                            bRetPfx = Xsign.PFX_Export(binCert, binPri, password.getText().toString().getBytes(), nFlag);
+                        } catch (Exception e) {
+                        }
+
+                        if (bRetPfx != null) {
+                            Base64 base64 = new Base64();
+                            intent.putExtra("Cert", base64.encode(bRetPfx));
+                            intent.putExtra("Result", "PfxExport 성공");
+                        } else {
+                            intent.putExtra("Result", "PfxExport 실패");
+                        }
+                    } catch (MagicXSign_Exception e) {
+
+                        intent.putExtra("Result", e.getErrorMessage());
+
                     } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        baseContext.startActivity(intent);
                     }
-
-                    if (bRetPfx != null) {
-                        Base64 base64 = new Base64();
-                        intent.putExtra("Cert", base64.encode(bRetPfx));
-                        intent.putExtra("Result", "PfxExport 성공");
-                    } else {
-                        intent.putExtra("Result", "PfxExport 실패");
-                    }
-                } catch (MagicXSign_Exception e) {
-
-                    intent.putExtra("Result", e.getErrorMessage());
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    baseContext.startActivity(intent);
                 }
             }
         }).show();
@@ -280,47 +285,49 @@ public class UserCertificationActivity extends XSignBaseActivity {
                 EditText password = (EditText) ((android.app.AlertDialog) dialog).findViewById(R.id.edit_input1);
                 Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
 
-                try {
-                    MagicXSign Xsign = new MagicXSign();
+                if (Constant.USE_XSIGN_DREAM) {
+                    try {
+                        MagicXSign Xsign = new MagicXSign();
 
-                    // 아래 두 개의 pfx 인증서 모두 비밀번호 : qwer1234
-                    byte[] signCert = getCertByteArray("암호화된.pfx");
+                        // 아래 두 개의 pfx 인증서 모두 비밀번호 : qwer1234
+                        byte[] signCert = getCertByteArray("암호화된.pfx");
 //					byte[] signCert = getCertByteArray("암호화되지않은.pfx");
 
-                    String sRetCert = null;
-                    String sRetKey = null;
-                    int nFlag = 0;
-                    ArrayList<com.dreamsecurity.magicxsign.MagicXSign.CertPFX> certPFX = new ArrayList<>();
+                        String sRetCert = null;
+                        String sRetKey = null;
+                        int nFlag = 0;
+                        ArrayList<com.dreamsecurity.magicxsign.MagicXSign.CertPFX> certPFX = new ArrayList<>();
 
 
-                    try {
-                        Base64 base64 = new Base64();
+                        try {
+                            Base64 base64 = new Base64();
 
-                        certPFX = Xsign.PFX_Import(signCert, password.getText().toString().getBytes());
-                        for (int i = 0; i < certPFX.size(); i++) {
-                            sRetCert = base64.encode(certPFX.get(i).getCert());
-                            sRetKey = base64.encode(certPFX.get(i).getKey());
-                            nFlag = certPFX.get(i).getFlag();
+                            certPFX = Xsign.PFX_Import(signCert, password.getText().toString().getBytes());
+                            for (int i = 0; i < certPFX.size(); i++) {
+                                sRetCert = base64.encode(certPFX.get(i).getCert());
+                                sRetKey = base64.encode(certPFX.get(i).getKey());
+                                nFlag = certPFX.get(i).getFlag();
+                            }
+                        } catch (Exception e) {
                         }
+
+                        if (sRetCert != null) {
+                            intent.putExtra("Cert", sRetCert);
+                            intent.putExtra("PriKey", sRetKey);
+                            intent.putExtra("Flag", nFlag);
+                            intent.putExtra("Result", "PfxImport 성공");
+                        } else {
+                            intent.putExtra("Result", "PfxImport 실패");
+                        }
+                    } catch (MagicXSign_Exception e) {
+
+                        intent.putExtra("Result", e.getErrorMessage());
+
                     } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        baseContext.startActivity(intent);
                     }
-
-                    if (sRetCert != null) {
-                        intent.putExtra("Cert", sRetCert);
-                        intent.putExtra("PriKey", sRetKey);
-                        intent.putExtra("Flag", nFlag);
-                        intent.putExtra("Result", "PfxImport 성공");
-                    } else {
-                        intent.putExtra("Result", "PfxImport 실패");
-                    }
-                } catch (MagicXSign_Exception e) {
-
-                    intent.putExtra("Result", e.getErrorMessage());
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    baseContext.startActivity(intent);
                 }
             }
         }).show();
@@ -341,27 +348,29 @@ public class UserCertificationActivity extends XSignBaseActivity {
 
                 Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
 
-                try {
-                    MagicXSign Xsign = new MagicXSign();
-                    Base64 base64 = new Base64();
+                if (Constant.USE_XSIGN_DREAM) {
+                    try {
+                        MagicXSign Xsign = new MagicXSign();
+                        Base64 base64 = new Base64();
 
-                    // pfxImport 복호화된 개인키
-                    // 비밀번호 : qwer1234
-                    byte[] binPri = base64.decode("MIIE5QIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDQG5fBwbtEMxHmG2CkuxDfbTpW/Crn5Mv9dpnr0l0vTTk/ihqGNJleRJjEKggygmB+86iYhMzw7Ohl0atkmkW5xlgZqr7OKNG6sjkC6V9z7PRR5LcZkoX7f6/EXIdaQvzVZ8OZb79ioI0cNvDBCkfc4vkbUEmCCLwCxShFezxSFUb5I/Q4ZBxlMgZpWsCp+sIcmhqzDUcLCOstJtN8UbAqRIma1w8ZobP1owv2OEMGn17EGLaYPK3Tao5+BqbW9DC6F+l/cejOllpR49LmrjPMQp0YqlIybc6YDMvFAyQNALQHiYmPs4amRMbqVGQDfM0I5QoQpGlxcT9lxXLqiPZXAgMBAAECggEAaFTtCB5wHAjeeFZRZUTDeL/x95oEiK2T90Z2dFvKi+RTRx+dnJrSKQiK7g2Efo4Ogpb1d0Fc3YxoFmO/YXhWbISbtoJ7li+wtcCUBHmreRraghQAF7n1odip7e/Vi9L5nqOe1FXJxVBobjS9Dopw7LR93supjp+CYoElZ3AZFazdrAmc0vikkfe4aMHo9wkUHrkLoIb3JEO2NoTwxaxN0Zqf1FgKpH+oNoEbk0Ioik/NkNic8lKgQ4S5mzWInibapbgGPinbaQtzwOPww5B0TVIDTECDVQJcCCqeRPrXn1yc47XAusVbd4Z1Yi08CgIylNGOJ/UJ8gH2QWrxFzuSgQKBgQDj60m5zTx66+h5EAXFVXFD/YsuNjNSfPMYrf7OV4GXVoo8HWb2zGKdYpQiV+1nxxsrFYQ6sDNveJ2zaEVoGq3n/lzotXfe1dmiHBFmfjLMJf5/WNsEk/u3QfZjyXg+kINg2HFFkAI1xXZvGcr+984++ecF9i4N99F0ql4EvAcFCQKBgQDpv3GQprPCDar1oK9JzLLLalDadhlplynfwZQMSqvqt5y+8YCPAo3XAm+y6yqJ3oYyjg58cctjtNT7P8YTwnMYU90RciY4cvrz1CYvg1aBSReLKBAB92mLIW1PXUV8AJoG8txkSHMfKTi030oEL8lChOSvkY4XWl13zah8cFtYXwKBgFUaawoEt3uSkNh7ghwf/k4L4ydbN6iqXT8u4QD9Lbdrqewucl7fDEeGIpf8SvpAH0XkH96mIl6SJBh0a84mgB8rHFgMQnkjUsM0Rc8GekM+QJweepFoDEpuR+kUtmBuJ5BG4Wy/DAQ1+jYb5G916j4bpAbW2HWAvmYYo0iTSO+5AoGAHw71BAdiczJluOV05RVx3F1wCNcQYVtYkQajqU5ysWlcRnLIZjgsqJkGRnvA1zjeE/GUMyzbnY/1jLzYkN+Rc3YRNbQ5J97/QU67FC0bXWpc2nykQ96gA4CZiaYXCXb7AFlct2Z5BXbwtffFWfEPiOsnh7yLaMb1DGojLQWw3XkCgYBEor5WOiDxkwdPtxYas2co8rxiP+kcXA++gEuEoXXPPTNwp/7nxYXhlAcDaWJPyJdO4e+nNwqun5ggBxXtbrq8OzPqGYdOHD0aZXtSW+9XvKSgIZxhJ0nhEA5U1LXk+pvJKzhGvSVyermFA5dNc/AB4DXghBTD8HoZQ4vdQmab+6AnMCUGCiqDGoyaRAoBAQMxFwMVAAAAAAAAAAAAAAE8AJABPABIEMUA");
+                        // pfxImport 복호화된 개인키
+                        // 비밀번호 : qwer1234
+                        byte[] binPri = base64.decode("MIIE5QIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDQG5fBwbtEMxHmG2CkuxDfbTpW/Crn5Mv9dpnr0l0vTTk/ihqGNJleRJjEKggygmB+86iYhMzw7Ohl0atkmkW5xlgZqr7OKNG6sjkC6V9z7PRR5LcZkoX7f6/EXIdaQvzVZ8OZb79ioI0cNvDBCkfc4vkbUEmCCLwCxShFezxSFUb5I/Q4ZBxlMgZpWsCp+sIcmhqzDUcLCOstJtN8UbAqRIma1w8ZobP1owv2OEMGn17EGLaYPK3Tao5+BqbW9DC6F+l/cejOllpR49LmrjPMQp0YqlIybc6YDMvFAyQNALQHiYmPs4amRMbqVGQDfM0I5QoQpGlxcT9lxXLqiPZXAgMBAAECggEAaFTtCB5wHAjeeFZRZUTDeL/x95oEiK2T90Z2dFvKi+RTRx+dnJrSKQiK7g2Efo4Ogpb1d0Fc3YxoFmO/YXhWbISbtoJ7li+wtcCUBHmreRraghQAF7n1odip7e/Vi9L5nqOe1FXJxVBobjS9Dopw7LR93supjp+CYoElZ3AZFazdrAmc0vikkfe4aMHo9wkUHrkLoIb3JEO2NoTwxaxN0Zqf1FgKpH+oNoEbk0Ioik/NkNic8lKgQ4S5mzWInibapbgGPinbaQtzwOPww5B0TVIDTECDVQJcCCqeRPrXn1yc47XAusVbd4Z1Yi08CgIylNGOJ/UJ8gH2QWrxFzuSgQKBgQDj60m5zTx66+h5EAXFVXFD/YsuNjNSfPMYrf7OV4GXVoo8HWb2zGKdYpQiV+1nxxsrFYQ6sDNveJ2zaEVoGq3n/lzotXfe1dmiHBFmfjLMJf5/WNsEk/u3QfZjyXg+kINg2HFFkAI1xXZvGcr+984++ecF9i4N99F0ql4EvAcFCQKBgQDpv3GQprPCDar1oK9JzLLLalDadhlplynfwZQMSqvqt5y+8YCPAo3XAm+y6yqJ3oYyjg58cctjtNT7P8YTwnMYU90RciY4cvrz1CYvg1aBSReLKBAB92mLIW1PXUV8AJoG8txkSHMfKTi030oEL8lChOSvkY4XWl13zah8cFtYXwKBgFUaawoEt3uSkNh7ghwf/k4L4ydbN6iqXT8u4QD9Lbdrqewucl7fDEeGIpf8SvpAH0XkH96mIl6SJBh0a84mgB8rHFgMQnkjUsM0Rc8GekM+QJweepFoDEpuR+kUtmBuJ5BG4Wy/DAQ1+jYb5G916j4bpAbW2HWAvmYYo0iTSO+5AoGAHw71BAdiczJluOV05RVx3F1wCNcQYVtYkQajqU5ysWlcRnLIZjgsqJkGRnvA1zjeE/GUMyzbnY/1jLzYkN+Rc3YRNbQ5J97/QU67FC0bXWpc2nykQ96gA4CZiaYXCXb7AFlct2Z5BXbwtffFWfEPiOsnh7yLaMb1DGojLQWw3XkCgYBEor5WOiDxkwdPtxYas2co8rxiP+kcXA++gEuEoXXPPTNwp/7nxYXhlAcDaWJPyJdO4e+nNwqun5ggBxXtbrq8OzPqGYdOHD0aZXtSW+9XvKSgIZxhJ0nhEA5U1LXk+pvJKzhGvSVyermFA5dNc/AB4DXghBTD8HoZQ4vdQmab+6AnMCUGCiqDGoyaRAoBAQMxFwMVAAAAAAAAAAAAAAE8AJABPABIEMUA");
 
-                    bEncKey = Xsign.EncPrivateKey(binPri, password.getText().toString().getBytes());
-                    if (bEncKey != null) {
-                        intent.putExtra("EncPriKey", base64.encode(bEncKey));
-                        intent.putExtra("Result", "성공");
-                    } else {
-                        intent.putExtra("Result", "실패");
+                        bEncKey = Xsign.EncPrivateKey(binPri, password.getText().toString().getBytes());
+                        if (bEncKey != null) {
+                            intent.putExtra("EncPriKey", base64.encode(bEncKey));
+                            intent.putExtra("Result", "성공");
+                        } else {
+                            intent.putExtra("Result", "실패");
+                        }
+                    } catch (MagicXSign_Exception e) {
+                        intent.putExtra("Result", e.getErrorMessage());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        baseContext.startActivity(intent);
                     }
-                } catch (MagicXSign_Exception e) {
-                    intent.putExtra("Result", e.getErrorMessage());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    baseContext.startActivity(intent);
                 }
             }
         }).show();
@@ -381,21 +390,23 @@ public class UserCertificationActivity extends XSignBaseActivity {
 
                 Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
 
-                try {
-                    // 대칭키 암/복호 생성, SEED 알고리즘 이용
-                    if (mXSignTester.seedEncryptAndDecrypt(edit1.getText().toString(), encBuffer, decBuffer)) {
-                        intent.putExtra("EncData", encBuffer.toString());
-                        intent.putExtra("DecData", decBuffer.toString());
-                        intent.putExtra("Result", "암/복호 테스트 성공");
-                    } else {
-                        intent.putExtra("Result", "암/복호 실패");
+                if (Constant.USE_XSIGN_DREAM) {
+                    try {
+                        // 대칭키 암/복호 생성, SEED 알고리즘 이용
+                        if (mXSignTester.seedEncryptAndDecrypt(edit1.getText().toString(), encBuffer, decBuffer)) {
+                            intent.putExtra("EncData", encBuffer.toString());
+                            intent.putExtra("DecData", decBuffer.toString());
+                            intent.putExtra("Result", "암/복호 테스트 성공");
+                        } else {
+                            intent.putExtra("Result", "암/복호 실패");
+                        }
+                    } catch (MagicXSign_Exception e) {
+
+                        intent.putExtra("Result", e.getErrorMessage());
+
+                    } finally {
+                        baseContext.startActivity(intent);
                     }
-                } catch (MagicXSign_Exception e) {
-
-                    intent.putExtra("Result", e.getErrorMessage());
-
-                } finally {
-                    baseContext.startActivity(intent);
                 }
             }
         }).show();
@@ -414,19 +425,21 @@ public class UserCertificationActivity extends XSignBaseActivity {
 
                 Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
 
-                try {
-                    // Hash 생성
-                    binHash = mXSignTester.makeHash(edit1.getText().toString());
+                if (Constant.USE_XSIGN_DREAM) {
+                    try {
+                        // Hash 생성
+                        binHash = mXSignTester.makeHash(edit1.getText().toString());
 
-                    intent.putExtra("binHash", XSignCertPolicy.ByteToHex(binHash));
-                    intent.putExtra("Result", "Hash 생성 테스트 성공");
+                        intent.putExtra("binHash", XSignCertPolicy.ByteToHex(binHash));
+                        intent.putExtra("Result", "Hash 생성 테스트 성공");
 
-                } catch (MagicXSign_Exception e) {
+                    } catch (MagicXSign_Exception e) {
 
-                    intent.putExtra("Result", e.getErrorMessage());
+                        intent.putExtra("Result", e.getErrorMessage());
 
-                } finally {
-                    baseContext.startActivity(intent);
+                    } finally {
+                        baseContext.startActivity(intent);
+                    }
                 }
             }
         }).show();
@@ -446,21 +459,23 @@ public class UserCertificationActivity extends XSignBaseActivity {
 
                 Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
 
-                try {
-                    // Base64 Encode and Decode 값
-                    szEncBase64 = mXSignTester.makeEncodeBase64(edit1.getText().toString().getBytes());
-                    binDecBase64 = mXSignTester.makeDecodeBase64(szEncBase64);
+                if (Constant.USE_XSIGN_DREAM) {
+                    try {
+                        // Base64 Encode and Decode 값
+                        szEncBase64 = mXSignTester.makeEncodeBase64(edit1.getText().toString().getBytes());
+                        binDecBase64 = mXSignTester.makeDecodeBase64(szEncBase64);
 
-                    intent.putExtra("base64Enc", szEncBase64);
-                    intent.putExtra("base64Dec", new String(binDecBase64));
-                    intent.putExtra("Result", "Base64 테스트 성공");
+                        intent.putExtra("base64Enc", szEncBase64);
+                        intent.putExtra("base64Dec", new String(binDecBase64));
+                        intent.putExtra("Result", "Base64 테스트 성공");
 
-                } catch (MagicXSign_Exception e) {
+                    } catch (MagicXSign_Exception e) {
 
-                    intent.putExtra("Result", e.getErrorMessage());
+                        intent.putExtra("Result", e.getErrorMessage());
 
-                } finally {
-                    baseContext.startActivity(intent);
+                    } finally {
+                        baseContext.startActivity(intent);
+                    }
                 }
             }
         }).show();

@@ -13,6 +13,7 @@ import com.dki.hybridapptest.utils.GLog;
 import com.dki.hybridapptest.utils.Utils;
 import com.dreamsecurity.trustapp.TrustAppToolkit;
 
+// USE_TRUST_APP_DREAM
 public class TrustAppManager {
 
     // APPLICATION_ID는 앱 버전이 바뀔 때마다 새로 생성된 것을 받아야 한다.
@@ -87,7 +88,9 @@ public class TrustAppManager {
             if (msg.what == 0) {
                 GLog.d("txtData : " + txtData);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    ((IntroActivity) IntroActivity.mContext).trustAppResult(isSuccess);
+                    if (Constant.USE_TRUST_APP_DREAM) {
+                        ((IntroActivity) IntroActivity.mContext).trustAppResult(isSuccess);
+                    }
                 }
             }
         }

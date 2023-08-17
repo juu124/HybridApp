@@ -15,6 +15,7 @@ import com.dreamsecurity.trustapp.TrustAppToolkit;
 import java.util.Timer;
 import java.util.TimerTask;
 
+// USE_TRUST_APP_DREAM
 public class TrustAppUI {
     public static String PACKAGE_LIC = "";
     // /////////////////////////////////////////////

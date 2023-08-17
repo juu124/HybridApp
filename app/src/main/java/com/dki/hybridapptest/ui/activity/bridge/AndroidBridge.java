@@ -31,7 +31,6 @@ import com.dki.hybridapptest.Interface.ProgressBarListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.CustomDialog;
 import com.dki.hybridapptest.dialog.InputDialog;
-import com.dki.hybridapptest.encryption.EncryptionActivity;
 import com.dki.hybridapptest.kfido.FIDORegistration;
 import com.dki.hybridapptest.model.ContactInfo;
 import com.dki.hybridapptest.ui.activity.HelloWorldActivity;
@@ -686,15 +685,6 @@ public class AndroidBridge {
         mIntent = new Intent(mActivity, MoveWebViewActivity.class);
         mActivity.startActivity(mIntent);
     }
-
-
-    // 앱 위변조 인듯 (주석 잘 못 표기)
-    @JavascriptInterface
-    public void showEncryption() {
-        mIntent = new Intent(mActivity, EncryptionActivity.class);
-        mActivity.startActivity(mIntent);
-    }
-
 
     // HybridModeActivity 보안 키보드 버튼
     @JavascriptInterface

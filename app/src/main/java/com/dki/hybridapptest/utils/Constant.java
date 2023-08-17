@@ -5,6 +5,12 @@ public class Constant {
     //true: 디버그 false : 배포버전
     public static boolean IS_DEBUG = true;
 
+    //true: 앱 위변조 false : 위변조 사용 불가
+    public static boolean USE_TRUST_APP_DREAM = true;
+
+    //true: 인증서  false : 인증서 관련 기능 사용 불가
+    public static boolean USE_XSIGN_DREAM = true;
+
     //    public static String BASE_URL ="https://devpds.mydatacenter.or.kr:9443";
     public static String BASE_URL = "https://pds.mydatacenter.or.kr:9443";
     public static String TUTORIAL_URL = "/membership/identification.do";

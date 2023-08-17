@@ -69,7 +69,10 @@ public class IntroActivity extends AppCompatActivity {
         GLog.d();
 
         mContext = this;
-        trustApp = new TrustAppManager(IntroActivity.this);
+
+        if (Constant.USE_TRUST_APP_DREAM) {
+            trustApp = new TrustAppManager(IntroActivity.this);
+        }
 
         if (Build.VERSION.SDK_INT >= 23) {
             initPush(); // push 알림 권한
