@@ -2,17 +2,20 @@ package com.dki.hybridapptest.utils;
 
 public class Constant {
 
-    //true: 디버그 false : 배포버전
+    //true: 디버그 false: 배포버전
     public static boolean IS_DEBUG = true;
 
-    //true: 앱 위변조 false : 위변조 사용 불가  (배포 버전(디버그모드가 아닐 떄)일 때 위변조 사용, 디버그 모드일 때 사용불가능)
+    //true: 앱 위변조 false: 위변조 사용 불가  (배포 버전(디버그모드가 아닐 떄)일 때 위변조 사용, 디버그 모드일 때 사용불가능)
     public static boolean USE_TRUST_APP_DREAM = !IS_DEBUG;
 
-    //true: 인증서  false : 인증서 관련 기능 사용 불가
+    //true: 인증서  false: 인증서 관련 기능 사용 불가
     public static boolean USE_XSIGN_DREAM = true;
 
-    //true: 웹 플러그인  false : 웹 플러그인 기능 사용 불가
+    //true: 웹 플러그인  false: 웹 플러그인 기능 사용 불가
     public static boolean USE_XSIGN_PLUGIN_DREAM = true;
+
+    //true: 보안 키보드 false: 보안 키보드 사용 불가
+    public static boolean USE_MAGIC_KEYPAD_DREAM = true;
 
     //    public static String BASE_URL ="https://devpds.mydatacenter.or.kr:9443";
     public static String BASE_URL = "https://pds.mydatacenter.or.kr:9443";

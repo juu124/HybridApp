@@ -606,7 +606,6 @@ public class AndroidBridge {
                 data.put("deviceOs", deviceOs);
                 obj.put("resultCode", "SUCCESS");
                 obj.put("data", data);
-
                 // 앱 최초 실행하지 않음
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putBoolean(Constant.FIRST_LAUNCH, false);
@@ -1974,11 +1973,18 @@ public class AndroidBridge {
             // 풀모드
             if (magicVKeypad.isFullMode()) {
                 GLog.d("풀 모드 ");
-                if (!MagicVKeyPadSettings.bUseE2E)
+                if (!MagicVKeyPadSettings.bUseE2E) {
+                    GLog.d("1");
                     decData = magicVKeypad.getDecryptData(magicVKeypadResult.getEncryptData());
+                }
+
+                GLog.d("2");
                 if (magicVKeypad.getEncryptData() != null) {
-                    if (magicVKeypadResult.getEncryptData() != null)
+                    GLog.d("3");
+                    if (magicVKeypadResult.getEncryptData() != null) {
+                        GLog.d("4");
                         RSAEncryptData = new String(magicVKeypadResult.getEncryptData());
+                    }
                 }
 
                 if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_OK_BUTTON) { // 확인

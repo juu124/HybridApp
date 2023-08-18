@@ -40,3 +40,17 @@
     - netty-common-4.0.19.Final
     - rimeCoreAndroid3.0.2.9
     - universal-image-loader-1.9.3
+
+* 라이브러리 모듈
+    - Lib_Magic_FIDO
+    - magic_mvaccine
+    - magicmrsv2lib
+    - magicvkeypad
+
+
+* 앱 위변조
+* libAAPlusToolkit4.2.0.3.so
+
+* libMagicCrypto.so
+* libMagicSEv2.so
+* libDSToolkitV30Jni.so
