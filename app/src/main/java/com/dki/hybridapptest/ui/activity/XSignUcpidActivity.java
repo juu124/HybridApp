@@ -15,6 +15,7 @@ import com.dreamsecurity.dstoolkit.exception.DSToolkitException;
 import com.dreamsecurity.dstoolkit.util.Base64;
 import com.dreamsecurity.magicxsign.MagicXSign_Exception;
 
+// USE_XSIGN_DREAM
 public class XSignUcpidActivity extends XSignBaseActivity implements View.OnClickListener {
 
     private XSignTester mXSignTester;

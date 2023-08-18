@@ -8,7 +8,7 @@ import com.dreamsecurity.magicxsign.MagicXSign;
 import com.dreamsecurity.magicxsign.MagicXSign_Exception;
 import com.dreamsecurity.magicxsign.MagicXSign_Type;
 
-
+// USE_XSIGN_DREAM
 public class ProcessCertificate {
     private Context mContext = null;
 
@@ -26,69 +26,71 @@ public class ProcessCertificate {
     }
 
     public void writeCert(MRSCertificate mrsCertificate) {
-        MagicXSign Xsign = new MagicXSign();
-        try {
-
+        if (Constant.USE_XSIGN_DREAM) {
+            MagicXSign Xsign = new MagicXSign();
             try {
-                Xsign.Init(mContext, MagicXSign_Type.XSIGN_DEBUG_LEVEL_3);
-            } catch (Exception e) {
-                GLog.d("- XSIGN 초기화 오류 ------------[" + e + "]");
-                e.printStackTrace();
-                return;
-            }
 
-            int keyUsage = mrsCertificate.getKeyUsage();
-            // 서명용 인증서
-            if ((keyUsage & 1) == MagicMRSConfig.MAGICMRS_CERT_USAGE_SIGN) {
-                // 읽어온 서명용 인증서를 저장한다
-                // MagicXSign 으로 저장시 하기의 코드처럼 받은 인증서를 저장한다
                 try {
-                    Xsign.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER, MagicXSign_Type.XSIGN_PKI_CERT_SIGN, MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_ALL, "/sdcard");
+                    Xsign.Init(mContext, MagicXSign_Type.XSIGN_DEBUG_LEVEL_3);
+                } catch (Exception e) {
+                    GLog.d("- XSIGN 초기화 오류 ------------[" + e + "]");
+                    e.printStackTrace();
+                    return;
+                }
+
+                int keyUsage = mrsCertificate.getKeyUsage();
+                // 서명용 인증서
+                if ((keyUsage & 1) == MagicMRSConfig.MAGICMRS_CERT_USAGE_SIGN) {
+                    // 읽어온 서명용 인증서를 저장한다
+                    // MagicXSign 으로 저장시 하기의 코드처럼 받은 인증서를 저장한다
+                    try {
+                        Xsign.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER, MagicXSign_Type.XSIGN_PKI_CERT_SIGN, MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_ALL, "/sdcard");
 //                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    Xsign.MEDIA_WriteCertAndPriKey(mrsCertificate.getSignCert(), mrsCertificate.getSignPri(), MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_DISK);
+                        Xsign.MEDIA_WriteCertAndPriKey(mrsCertificate.getSignCert(), mrsCertificate.getSignPri(), MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_DISK);
 //                    }else{
 //                        Xsign.MEDIA_WriteCertAndPriKey(mrsCertificate.getSignCert(), mrsCertificate.getSignPri(), MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_REMOVABLE);
 //                    }
-                    Xsign.MEDIA_UnLoad();
-                } catch (MagicXSign_Exception e) {
-                    GLog.d("- 서명용 인증서 저장 오류 ------------[" + e + "]");
-                    e.printStackTrace();
-                } finally {
-                    try {
                         Xsign.MEDIA_UnLoad();
-                    } catch (MagicXSign_Exception ex) {
-                        ex.printStackTrace();
+                    } catch (MagicXSign_Exception e) {
+                        GLog.d("- 서명용 인증서 저장 오류 ------------[" + e + "]");
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            Xsign.MEDIA_UnLoad();
+                        } catch (MagicXSign_Exception ex) {
+                            ex.printStackTrace();
+                        }
+
                     }
-
                 }
-            }
 
-            if ((keyUsage & 2) == MagicMRSConfig.MAGICMRS_CERT_USAGE_KM) {
-                // 읽어온 암호화용 인증서를 저장한다
-                // DreamSecurity MagicXSign 으로 저장시 하기의 코드처럼 받은 인증서를 저장한다
-                try {
+                if ((keyUsage & 2) == MagicMRSConfig.MAGICMRS_CERT_USAGE_KM) {
+                    // 읽어온 암호화용 인증서를 저장한다
+                    // DreamSecurity MagicXSign 으로 저장시 하기의 코드처럼 받은 인증서를 저장한다
+                    try {
 //                    Xsign.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER, MagicXSign_Type.XSIGN_PKI_CERT_KM, MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_REMOVABLE, "/sdcard");
-                    Xsign.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER, MagicXSign_Type.XSIGN_PKI_CERT_KM, MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_ALL, "/sdcard");
+                        Xsign.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER, MagicXSign_Type.XSIGN_PKI_CERT_KM, MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_ALL, "/sdcard");
 //                    Xsign.MEDIA_WriteCertAndPriKey(mrsCertificate.getKmCert(), mrsCertificate.getKmPri(), MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_REMOVABLE);
-                    Xsign.MEDIA_WriteCertAndPriKey(mrsCertificate.getKmCert(), mrsCertificate.getKmPri(), MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_DISK);
-                    Xsign.MEDIA_UnLoad();
-
-                } catch (MagicXSign_Exception e) {
-                    GLog.d("- 암호화용 인증서 저장 오류 ------------[" + e + "]");
-                    e.printStackTrace();
-                } finally {
-                    try {
+                        Xsign.MEDIA_WriteCertAndPriKey(mrsCertificate.getKmCert(), mrsCertificate.getKmPri(), MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_DISK);
                         Xsign.MEDIA_UnLoad();
-                    } catch (MagicXSign_Exception ex) {
-                        ex.printStackTrace();
+
+                    } catch (MagicXSign_Exception e) {
+                        GLog.d("- 암호화용 인증서 저장 오류 ------------[" + e + "]");
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            Xsign.MEDIA_UnLoad();
+                        } catch (MagicXSign_Exception ex) {
+                            ex.printStackTrace();
+                        }
                     }
                 }
-            }
-        } finally {
-            try {
-                Xsign.Finish();
-            } catch (MagicXSign_Exception e) {
-                e.printStackTrace();
+            } finally {
+                try {
+                    Xsign.Finish();
+                } catch (MagicXSign_Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

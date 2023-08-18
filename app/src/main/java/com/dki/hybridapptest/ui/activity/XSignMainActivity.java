@@ -31,7 +31,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserCertificationActivity extends XSignBaseActivity {
+// USE_XSIGN_DREAM
+public class XSignMainActivity extends XSignBaseActivity {
 
     private XSignTester mXSignTester;
 
@@ -131,7 +132,6 @@ public class UserCertificationActivity extends XSignBaseActivity {
 
     @Override
     protected void onResume() {
-
         if (mXSignTester == null) {
             mXSignTester = new XSignTester(this, getDebugSettingValue());
         }
@@ -181,16 +181,20 @@ public class UserCertificationActivity extends XSignBaseActivity {
      * 인증서 목록 화면으로 이동
      */
     private void gotoCertListActivity() {
-        Intent intent = new Intent(baseContext, XSignCertListActivity.class);
-        baseContext.startActivity(intent);
+        if (Constant.USE_XSIGN_DREAM) {
+            Intent intent = new Intent(baseContext, XSignCertListActivity.class);
+            baseContext.startActivity(intent);
+        }
     }
 
     /**
      * 20.04.13 : XML 서명화면으로 이동
      */
     private void gotoXMLActivity() {
-        Intent intent = new Intent(baseContext, XSignXMLActivity.class);
-        baseContext.startActivity(intent);
+        if (Constant.USE_XSIGN_DREAM) {
+            Intent intent = new Intent(baseContext, XSignXMLActivity.class);
+            baseContext.startActivity(intent);
+        }
     }
 
     /**
@@ -222,16 +226,15 @@ public class UserCertificationActivity extends XSignBaseActivity {
      * 20210326 wj : pfx export
      */
     private void processPfxExport() {
-        XSignDialog.processInputPassword(baseContext, R.string.function_cert_pfx_export, new DialogInterface.OnClickListener() {
+        if (Constant.USE_XSIGN_DREAM) {
+            XSignDialog.processInputPassword(baseContext, R.string.function_cert_pfx_export, new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                byte[] bRetPfx = null;
-                EditText password = (EditText) ((android.app.AlertDialog) dialog).findViewById(R.id.edit_input1);
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    byte[] bRetPfx = null;
+                    EditText password = (EditText) ((android.app.AlertDialog) dialog).findViewById(R.id.edit_input1);
 
-                Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
-
-                if (Constant.USE_XSIGN_DREAM) {
+                    Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
                     try {
                         MagicXSign Xsign = new MagicXSign();
 
@@ -268,8 +271,8 @@ public class UserCertificationActivity extends XSignBaseActivity {
                         baseContext.startActivity(intent);
                     }
                 }
-            }
-        }).show();
+            }).show();
+        }
     }
 
 
@@ -278,14 +281,14 @@ public class UserCertificationActivity extends XSignBaseActivity {
      */
     private void processPfxImport() {
         Log.d(TAG, "processPfxImport");
-        XSignDialog.processInputPassword(baseContext, R.string.function_cert_pfx_import, new DialogInterface.OnClickListener() {
+        if (Constant.USE_XSIGN_DREAM) {
+            XSignDialog.processInputPassword(baseContext, R.string.function_cert_pfx_import, new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EditText password = (EditText) ((android.app.AlertDialog) dialog).findViewById(R.id.edit_input1);
-                Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    EditText password = (EditText) ((android.app.AlertDialog) dialog).findViewById(R.id.edit_input1);
+                    Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
 
-                if (Constant.USE_XSIGN_DREAM) {
                     try {
                         MagicXSign Xsign = new MagicXSign();
 
@@ -297,7 +300,6 @@ public class UserCertificationActivity extends XSignBaseActivity {
                         String sRetKey = null;
                         int nFlag = 0;
                         ArrayList<com.dreamsecurity.magicxsign.MagicXSign.CertPFX> certPFX = new ArrayList<>();
-
 
                         try {
                             Base64 base64 = new Base64();
@@ -329,8 +331,8 @@ public class UserCertificationActivity extends XSignBaseActivity {
                         baseContext.startActivity(intent);
                     }
                 }
-            }
-        }).show();
+            }).show();
+        }
     }
 
     /**
@@ -338,17 +340,15 @@ public class UserCertificationActivity extends XSignBaseActivity {
      */
     private void processENCPriKey() {
         Log.d(TAG, "processENCPriKey");
-        XSignDialog.processInputPassword(baseContext, R.string.function_cert_encPriKey, new DialogInterface.OnClickListener() {
+        if (Constant.USE_XSIGN_DREAM) {
+            XSignDialog.processInputPassword(baseContext, R.string.function_cert_encPriKey, new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    byte[] bEncKey = null;
+                    EditText password = (EditText) ((android.app.AlertDialog) dialog).findViewById(R.id.edit_input1);
+                    Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
 
-                byte[] bEncKey = null;
-                EditText password = (EditText) ((android.app.AlertDialog) dialog).findViewById(R.id.edit_input1);
-
-                Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
-
-                if (Constant.USE_XSIGN_DREAM) {
                     try {
                         MagicXSign Xsign = new MagicXSign();
                         Base64 base64 = new Base64();
@@ -372,25 +372,24 @@ public class UserCertificationActivity extends XSignBaseActivity {
                         baseContext.startActivity(intent);
                     }
                 }
-            }
-        }).show();
+            }).show();
+        }
     }
 
     /**
      * 대칭키 암/복호 테스트
      */
     private void processSeedEncAndDec() {
-        XSignDialog.processInputPlainText(baseContext, R.string.function_list_crypto_symmetric_enc_dec, new DialogInterface.OnClickListener() {
+        if (Constant.USE_XSIGN_DREAM) {
+            XSignDialog.processInputPlainText(baseContext, R.string.function_list_crypto_symmetric_enc_dec, new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EditText edit1 = (EditText) ((android.app.AlertDialog) dialog).findViewById(R.id.edit_input1);
-                StringBuffer encBuffer = new StringBuffer();
-                StringBuffer decBuffer = new StringBuffer();
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    EditText edit1 = (EditText) ((android.app.AlertDialog) dialog).findViewById(R.id.edit_input1);
+                    StringBuffer encBuffer = new StringBuffer();
+                    StringBuffer decBuffer = new StringBuffer();
 
-                Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
-
-                if (Constant.USE_XSIGN_DREAM) {
+                    Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
                     try {
                         // 대칭키 암/복호 생성, SEED 알고리즘 이용
                         if (mXSignTester.seedEncryptAndDecrypt(edit1.getText().toString(), encBuffer, decBuffer)) {
@@ -401,65 +400,60 @@ public class UserCertificationActivity extends XSignBaseActivity {
                             intent.putExtra("Result", "암/복호 실패");
                         }
                     } catch (MagicXSign_Exception e) {
-
                         intent.putExtra("Result", e.getErrorMessage());
-
                     } finally {
                         baseContext.startActivity(intent);
                     }
+
                 }
-            }
-        }).show();
+            }).show();
+        }
     }
 
     /**
      * Hash 생성 테스트
      */
     private void processMakeHash() {
-        XSignDialog.processInputPlainText(baseContext, R.string.function_list_crypto_hash, new DialogInterface.OnClickListener() {
+        if (Constant.USE_XSIGN_DREAM) {
+            XSignDialog.processInputPlainText(baseContext, R.string.function_list_crypto_hash, new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EditText edit1 = (EditText) ((android.app.AlertDialog) dialog).findViewById(R.id.edit_input1);
-                byte[] binHash = null;
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    EditText edit1 = (EditText) ((android.app.AlertDialog) dialog).findViewById(R.id.edit_input1);
+                    byte[] binHash = null;
+                    Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
 
-                Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
-
-                if (Constant.USE_XSIGN_DREAM) {
                     try {
                         // Hash 생성
                         binHash = mXSignTester.makeHash(edit1.getText().toString());
-
                         intent.putExtra("binHash", XSignCertPolicy.ByteToHex(binHash));
                         intent.putExtra("Result", "Hash 생성 테스트 성공");
-
                     } catch (MagicXSign_Exception e) {
-
                         intent.putExtra("Result", e.getErrorMessage());
-
                     } finally {
                         baseContext.startActivity(intent);
                     }
                 }
-            }
-        }).show();
+            }).show();
+        }
     }
 
     /**
      * Base64 생성 테스트
      */
     private void processMakeBase64() {
-        XSignDialog.processInputPlainText(baseContext, R.string.function_list_crypto_base64, new DialogInterface.OnClickListener() {
+        if (Constant.USE_XSIGN_DREAM) {
+            XSignDialog.processInputPlainText(baseContext, R.string.function_list_crypto_base64, new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                EditText edit1 = (EditText) ((AlertDialog) dialog).findViewById(R.id.edit_input1);
-                String szEncBase64;
-                byte[] binDecBase64;
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    EditText edit1 = (EditText) ((AlertDialog) dialog).findViewById(R.id.edit_input1);
+                    String szEncBase64;
+                    byte[] binDecBase64;
 
-                Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
+                    Intent intent = new Intent(baseContext, XSignProcessResultActivity.class);
 
-                if (Constant.USE_XSIGN_DREAM) {
+
                     try {
                         // Base64 Encode and Decode 값
                         szEncBase64 = mXSignTester.makeEncodeBase64(edit1.getText().toString().getBytes());
@@ -477,8 +471,8 @@ public class UserCertificationActivity extends XSignBaseActivity {
                         baseContext.startActivity(intent);
                     }
                 }
-            }
-        }).show();
+            }).show();
+        }
     }
 
     /**

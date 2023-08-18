@@ -14,8 +14,8 @@
 &nbsp
 <input type="button" value="Show Dialog" onClick="showAndroidToast('world')"/>
 <br><br>
-<input type="button" value="Show Input Dialog" onClick="showDialog()"/>
-<br><br>
+<input type="button" value="Show Input Dialog" onClick="showInputDialog()"/>
+&nbsp
 <input type="button" value="show User Information" onClick="showUserList()"/>
 <br><br>
 <input type="button" value="show User Information CertificationList"
@@ -23,16 +23,12 @@
 <br><br>
 <input type="button" value="show keyboard" onClick="showKeyboard()"/>
 <br><br>
-<input type="button" value="show segment encryption" onClick="showEncryption()"/>
-&nbsp
 <input type="button" value="move web view" onClick="moveWebView()"/>
+&nbsp
+<input type="button" value="move App Store" onClick="moveAppStore()"/>
 <br><br>
 <input type="button" value="SW Info" onClick="showSWInfo()"/>
 &nbsp
-<input type="button" value="move App Store" onClick="moveAppStore()"/>
-&nbsp
-<input type="button" value="search phone addresses" onclick="searchPhoneAddress()"/>
-<br><br>
 <input type="button" value="Login" onClick="moveLoginPage()">
 &nbsp
 <input type="button" value="Auto Login Off" onClick="autoLoginOff()">
@@ -59,8 +55,8 @@
     }
 
     <!-- 입력 다이얼로그 노출-->
-    function showDialog() {
-        DKITec.showDialog();
+    function showInputDialog() {
+        DKITec.showInputDialog();
     }
 
     <!-- 유저 리스트 -->
@@ -80,11 +76,6 @@
     <!-- 보안 키보드 -->
     function showKeyboard() {
         DKITec.showKeyboard();
-    }
-
-    <!-- 앱 위변조 -->
-    function showEncryption() {
-        DKITec.showEncryption();
     }
 
     <!-- url 입력 후 웹뷰 화면 이동 -->

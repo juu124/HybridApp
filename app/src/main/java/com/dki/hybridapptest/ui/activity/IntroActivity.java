@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -37,7 +35,7 @@ import m.client.push.library.common.PushConstants;
 import m.client.push.library.common.PushLog;
 import m.client.push.library.utils.PushUtils;
 
-@RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+// USE_TRUST_APP_DREAM
 public class IntroActivity extends AppCompatActivity {
     public static Context mContext;
 //    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};  // 권한 리스트
@@ -50,7 +48,6 @@ public class IntroActivity extends AppCompatActivity {
     public static boolean isRealTimeScanRunning = false;
     private VaccineManager vaccineManager;
     private TrustAppManager trustApp;
-    private AnimationDrawable animation;
 
     private static boolean isSuccess = true;
 
@@ -164,28 +161,17 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     public void startCheck() {
-        // 앱 위변조와 백신 테스트를 위해 디버그 모드일 때도 위변조 검사 실시
+        // 디버그 모드일때는 위변조 검사 하지 않음
         if (Constant.IS_DEBUG) {
-//            GLog.d("IS_DEBUG");
-//            // 앱 위변조 검사 완료 후 백신 검사 실시함
-//            TrustAppAsyncTask trustAppAsyncTask = new TrustAppAsyncTask();
-//            trustAppAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            GLog.d("IS_DEBUG");
 //            VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
 //            vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             moveToMainActivity();
+        } else {
+            GLog.d("IS_NOT_DEBUG");
+            TrustAppAsyncTask trustAppAsyncTask = new TrustAppAsyncTask();
+            trustAppAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
-
-        //디버그 모드일때는 위변조 검사 하지 않음
-//        if(Constant.IS_DEBUG){
-//            GLog.d("IS_DEBUG");
-//            VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
-//            vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//            moveToMainActivity();
-//        }else {
-//            GLog.d("IS_NOT_DEBUG");
-//            TrustAppAsyncTask trustAppAsyncTask = new TrustAppAsyncTask();
-//            trustAppAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//        }
     }
 
     // 위변조 앱 비동기 처리

@@ -6,6 +6,7 @@ import android.widget.RadioGroup;
 import com.dki.hybridapptest.R;
 import com.dreamsecurity.magicxsign.MagicXSign_Type;
 
+// USE_XSIGN_DREAM
 public class XSignSettingActivity extends XSignBaseActivity implements RadioGroup.OnCheckedChangeListener {
 
     private RadioGroup mDebugLevelGroup;

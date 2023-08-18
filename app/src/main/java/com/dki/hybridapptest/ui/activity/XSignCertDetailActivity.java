@@ -12,6 +12,7 @@ import com.dki.hybridapptest.tester.XSignCertPolicy;
 import com.dki.hybridapptest.tester.XSignTester;
 import com.dreamsecurity.magicxsign.MagicXSign_Exception;
 
+// USE_XSIGN_DREAM
 public class XSignCertDetailActivity extends XSignBaseActivity {
 
     private EditText mOldPassword;

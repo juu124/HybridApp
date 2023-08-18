@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.dki.hybridapptest.R;
 import com.dreamsecurity.magicxsign.MagicXSign_Type;
 
+// USE_XSIGN_DREAM
 public class XSignBaseActivity extends Activity {
 
     protected Context baseContext;

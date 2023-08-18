@@ -36,8 +36,8 @@ import com.dki.hybridapptest.model.ContactInfo;
 import com.dki.hybridapptest.ui.activity.HelloWorldActivity;
 import com.dki.hybridapptest.ui.activity.HybridModeActivity;
 import com.dki.hybridapptest.ui.activity.MoveWebViewActivity;
-import com.dki.hybridapptest.ui.activity.UserCertificationActivity;
 import com.dki.hybridapptest.ui.activity.UserListActivity;
+import com.dki.hybridapptest.ui.activity.XSignMainActivity;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.DeviceInfo;
 import com.dki.hybridapptest.utils.GLog;
@@ -49,14 +49,12 @@ import com.dki.hybridapptest.utils.Utils;
 import com.dki.hybridapptest.utils.WorkThread;
 import com.dream.magic.fido.rpsdk.client.LOCAL_AUTH_TYPE;
 import com.dream.magic.fido.rpsdk.client.MagicFIDOUtil;
-import com.dream.magic.fido.rpsdk.util.KFidoUtil;
 import com.dream.magic.fido.uaf.protocol.kfido.KCertificate;
 import com.dreamsecurity.magicvkeypad.MagicVKeypad;
 import com.dreamsecurity.magicvkeypad.MagicVKeypadOnClickInterface;
 import com.dreamsecurity.magicvkeypad.MagicVKeypadResult;
 import com.dreamsecurity.magicvkeypad.MagicVKeypadType;
 import com.dreamsecurity.magicxsign.MagicXSign;
-import com.dreamsecurity.magicxsign.MagicXSign_Type;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,6 +68,7 @@ import m.client.push.library.common.PushConstants;
 import m.client.push.library.common.PushLog;
 import m.client.push.library.utils.PushUtils;
 
+// USE_XSIGN_DREAM
 public class AndroidBridge {
     private WebView mWebView;
     private Activity mActivity;
@@ -105,6 +104,7 @@ public class AndroidBridge {
 
     // show Dialog 버튼 이벤트
     private InputDialog inputDialog;
+    private CustomDialog customDialog;
 
     // 보안 키패드
     private String RSAEncryptData = "";
@@ -130,7 +130,9 @@ public class AndroidBridge {
         this.mWebView = webView;
         this.mActivity = activity;
 
-        init();  // 인증서 관련 처리
+        if (Constant.USE_XSIGN_DREAM) {
+            init();  // 인증서 관련 처리
+        }
     }
 
     // 생성자 (프로그래스 바 리스너)
@@ -139,7 +141,9 @@ public class AndroidBridge {
         this.mActivity = activity;
         this.progressBarListener = progressBarListener;
 
-        init();  // 인증서 관련 처리
+        if (Constant.USE_XSIGN_DREAM) {
+            init();  // 인증서 관련 처리
+        }
     }
 
     // 인증서 관련 처리
@@ -725,7 +729,7 @@ public class AndroidBridge {
 
     // show Dialog 버튼 이벤트
     @JavascriptInterface
-    public void showDialog() {
+    public void showInputDialog() {
         inputDialog = new InputDialog(mActivity, new CustomDialogClickListener() {
             @Override
             public void onPositiveClick(String text) {
@@ -754,7 +758,7 @@ public class AndroidBridge {
     // show User Information Certification 선택
     @JavascriptInterface
     public void showCertificationList() {
-        mIntent = new Intent(mActivity, UserCertificationActivity.class);
+        mIntent = new Intent(mActivity, XSignMainActivity.class);
         mActivity.startActivity(mIntent);
     }
 
@@ -1560,49 +1564,49 @@ public class AndroidBridge {
 //        }
 //    }
 
-    public void fidoRegistration(String userKey) {
-
-        try {
-            pki.Init(mActivity, MagicXSign_Type.XSIGN_DEBUG_LEVEL_1);
-
-            int count = -1;
-            pki.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER,
-                    MagicXSign_Type.XSIGN_PKI_CERT_SIGN, MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_ALL, "/sdcard");
-            count = pki.MEDIA_GetCertCount();
-            GLog.d("count : " + count);
-
-            kCertificate.setDeliveryType(KCertificate.DELIVERY_TYPE_BINARY);
-
-            int nMediaType[] = new int[1];
-
-            for (int i = 0; i < count; i++) {
-                byte[] binCert = pki.MEDIA_ReadCert(i, MagicXSign_Type.XSIGN_PKI_CERT_SIGN, nMediaType);
-                String subjectDn = pki.CERT_GetAttribute(binCert, MagicXSign_Type.XSIGN_CERT_ATTR_SUBJECT_DN, true);
-
-                GLog.d("subjectDn : " + subjectDn);
-
-                // 전달 받은 dn과 값은 값을 가지고 있는 지 확인
-                if (userKey.equals(subjectDn)) {
-                    byte[] signCert = pki.MEDIA_ReadCert(i, MagicXSign_Type.XSIGN_PKI_CERT_SIGN, nMediaType);
-                    byte[] signPri = pki.MEDIA_ReadPriKey(i, MagicXSign_Type.XSIGN_PKI_CERT_SIGN);
-
-                    String signCert64 = KFidoUtil.getBase64URLToString(signCert);
-                    String signKey64 = KFidoUtil.getBase64URLToString(signPri);
-
-                    kCertificate.setSignCert(signCert64);
-                    kCertificate.setSignPri(signKey64);
-                }
-            }
-            pki.MEDIA_UnLoad();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        ArrayList<byte[]> tobeSignDatas = new ArrayList<>();
-        tobeSignDatas.add(tobeData1);
-        reg.registFIDO(kCertificate, tobeSignDatas);
-    }
+//    public void fidoRegistration(String userKey) {
+//
+//        try {
+//            pki.Init(mActivity, MagicXSign_Type.XSIGN_DEBUG_LEVEL_1);
+//
+//            int count = -1;
+//            pki.MEDIA_Load(MagicXSign_Type.XSIGN_PKI_TYPE_NPKI, MagicXSign_Type.XSIGN_PKI_CERT_TYPE_USER,
+//                    MagicXSign_Type.XSIGN_PKI_CERT_SIGN, MagicXSign_Type.XSIGN_PKI_MEDIA_TYPE_ALL, "/sdcard");
+//            count = pki.MEDIA_GetCertCount();
+//            GLog.d("count : " + count);
+//
+//            kCertificate.setDeliveryType(KCertificate.DELIVERY_TYPE_BINARY);
+//
+//            int nMediaType[] = new int[1];
+//
+//            for (int i = 0; i < count; i++) {
+//                byte[] binCert = pki.MEDIA_ReadCert(i, MagicXSign_Type.XSIGN_PKI_CERT_SIGN, nMediaType);
+//                String subjectDn = pki.CERT_GetAttribute(binCert, MagicXSign_Type.XSIGN_CERT_ATTR_SUBJECT_DN, true);
+//
+//                GLog.d("subjectDn : " + subjectDn);
+//
+//                // 전달 받은 dn과 값은 값을 가지고 있는 지 확인
+//                if (userKey.equals(subjectDn)) {
+//                    byte[] signCert = pki.MEDIA_ReadCert(i, MagicXSign_Type.XSIGN_PKI_CERT_SIGN, nMediaType);
+//                    byte[] signPri = pki.MEDIA_ReadPriKey(i, MagicXSign_Type.XSIGN_PKI_CERT_SIGN);
+//
+//                    String signCert64 = KFidoUtil.getBase64URLToString(signCert);
+//                    String signKey64 = KFidoUtil.getBase64URLToString(signPri);
+//
+//                    kCertificate.setSignCert(signCert64);
+//                    kCertificate.setSignPri(signKey64);
+//                }
+//            }
+//            pki.MEDIA_UnLoad();
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        ArrayList<byte[]> tobeSignDatas = new ArrayList<>();
+//        tobeSignDatas.add(tobeData1);
+//        reg.registFIDO(kCertificate, tobeSignDatas);
+//    }
 
     //등록, 삭제 콜백메소드
 //    private FIDOCallbackResult fidoAuthMgtResult = new FIDOCallbackResult() {

@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+// USE_XSIGN_DREAM
 public class XSignCertListActivity extends XSignBaseActivity {
     private XSignTester mXSignTester;
     private ListView mCertListView;

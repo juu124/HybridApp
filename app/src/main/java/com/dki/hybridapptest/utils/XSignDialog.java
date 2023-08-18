@@ -14,8 +14,8 @@ import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.tester.XSignCertPolicy;
 import com.dki.hybridapptest.tester.XSignTester;
 
+// USE_XSIGN_DREAM
 public class XSignDialog {
-
 
     public static AlertDialog processSignData(Context context, DialogInterface.OnClickListener listener) {
         Log.d(TAG, "processSignData:==");

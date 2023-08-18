@@ -19,6 +19,7 @@ import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
+// USE_XSIGN_DREAM
 public class XSignTester {
 
     /**

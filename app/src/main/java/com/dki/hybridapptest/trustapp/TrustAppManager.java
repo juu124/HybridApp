@@ -1,7 +1,6 @@
 package com.dki.hybridapptest.trustapp;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 
@@ -87,11 +86,7 @@ public class TrustAppManager {
             GLog.d("isSuccess : " + isSuccess);
             if (msg.what == 0) {
                 GLog.d("txtData : " + txtData);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    if (Constant.USE_TRUST_APP_DREAM) {
-                        ((IntroActivity) IntroActivity.mContext).trustAppResult(isSuccess);
-                    }
-                }
+                ((IntroActivity) IntroActivity.mContext).trustAppResult(isSuccess);
             }
         }
     };

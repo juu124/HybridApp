@@ -2,6 +2,7 @@ package com.dki.hybridapptest.tester;
 
 import com.dreamsecurity.magicxsign.MagicXSign_Type;
 
+// USE_XSIGN_DREAM
 public class XSignCertPolicy {
 
     // 인증서 OID 값

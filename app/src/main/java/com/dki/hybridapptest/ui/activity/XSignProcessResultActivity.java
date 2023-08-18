@@ -7,6 +7,7 @@ import android.widget.TextView;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.tester.XSignCertPolicy;
 
+// USE_XSIGN_DREAM
 public class XSignProcessResultActivity extends XSignBaseActivity {
 
     private Intent mParamIntent;
