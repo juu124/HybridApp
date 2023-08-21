@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -65,38 +66,11 @@ public class MainActivity extends AppCompatActivity {
     // 프로그래스 바
     private RelativeLayout mProgressBar;
 
-    // 웹 뷰에서 뒤로 가기
-    @Override
-    public void onBackPressed() {
-        if (TextUtils.equals(mWebView.getUrl(), Constant.WEB_VIEW_MAIN_URL)) {
-            super.onBackPressed();
-        } else if (mWebView.canGoBack()) {
-            mWebView.goBack();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    // push 토큰 확인
-    private String getFCMToken() {
-        GLog.d();
-        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
-            @Override
-            public void onComplete(@NonNull Task<String> task) {
-                if (!task.isSuccessful()) {
-                    GLog.w("Fetching FCM registration token failed ==== " + task.getException());
-                    return;
-                }
-                token = task.getResult();
-                GLog.d("FCM token is ==== " + token);
-            }
-        });
-        return token;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 화면 캡쳐 방지
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_main);
 
         // Firebase 사용전 초기화
@@ -188,6 +162,35 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver();
+    }
+
+    // 웹 뷰에서 뒤로 가기
+    @Override
+    public void onBackPressed() {
+        if (TextUtils.equals(mWebView.getUrl(), Constant.WEB_VIEW_MAIN_URL)) {
+            super.onBackPressed();
+        } else if (mWebView.canGoBack()) {
+            mWebView.goBack();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    // push 토큰 확인
+    private String getFCMToken() {
+        GLog.d();
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if (!task.isSuccessful()) {
+                    GLog.w("Fetching FCM registration token failed ==== " + task.getException());
+                    return;
+                }
+                token = task.getResult();
+                GLog.d("FCM token is ==== " + token);
+            }
+        });
+        return token;
     }
 
     // 리시버 등록

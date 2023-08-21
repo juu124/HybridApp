@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -38,32 +39,32 @@ import m.client.push.library.utils.PushUtils;
 // USE_TRUST_APP_DREAM
 public class IntroActivity extends AppCompatActivity {
     public static Context mContext;
-//    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};  // 권한 리스트
-
-    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_AUDIO};  // 권한 리스트
-    private final int permissionReqCode = 1000;
-    private Intent intent;
-    private ActivityResultLauncher<Intent> appSettingsLauncher;  // 앱 설정 화면
     private Handler handler = new Handler(Looper.getMainLooper());
-    public static boolean isRealTimeScanRunning = false;
+    private Intent intent;
+
+    // 권한
+    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_AUDIO};  // 권한 리스트
+    //    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};  // 권한 리스트
+
+    // 권한 코드
+    private final int permissionReqCode = 1000;
+
+    // 앱 설정 화면
+    private ActivityResultLauncher<Intent> appSettingsLauncher;
+
+    // 백신
     private VaccineManager vaccineManager;
+    public static boolean isRealTimeScanRunning = false;
+
+    // 앱 위변조
     private TrustAppManager trustApp;
-
-    private static boolean isSuccess = true;
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (vaccineManager != null) {
-            vaccineManager.stopVaccine();
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 화면 캡쳐 방지
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_intro);
-        GLog.d();
 
         mContext = this;
 
@@ -113,6 +114,14 @@ public class IntroActivity extends AppCompatActivity {
                 customDialog.show();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (vaccineManager != null) {
+            vaccineManager.stopVaccine();
+        }
     }
 
     // 백신 콜백 성공 후 메인 화면 이동

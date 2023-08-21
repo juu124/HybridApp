@@ -3,6 +3,7 @@ package com.dki.hybridapptest.ui.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -31,27 +32,27 @@ import java.util.Map;
 public class HybridModeActivity extends Activity {
     private WebView mWebview;
     private Button backButton = null;
+    private Button btn_sendE2E = null;
 
     private TextView tv_AESEncryptData = null;
     private TextView tv_AESDecryptData = null;
     private TextView tv_RSAEncryptData = null;
 
-    private static String strfieldID = null;
-    private String strViewMode = null;
-
-    private Button btn_sendE2E = null;
-
-    boolean bUseDummyData = false;
     private AndroidBridge mAndroidBridge;
 
-    String RSAEncryptData = null, AESDecData = null, AESEncData = null;
+    String RSAEncryptData = null;
+    String AESDecData = null;
+    String AESEncData = null;
     MagicVKeypad magicVKeypad = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         GLog.d();
         super.onCreate(savedInstanceState);
+        // 화면 캡쳐 방지
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         setContentView(R.layout.activity_hybrid_mode);
+
         backButton = findViewById(R.id.back_btn);
         mWebview = (WebView) findViewById(R.id.webview);
         // 보안 키보드 셋팅
@@ -95,7 +96,6 @@ public class HybridModeActivity extends Activity {
 
             btn_sendE2E = findViewById(R.id.Btn_E2EDataSend);
 
-
             if (!MagicVKeyPadSettings.bUseE2E) {
                 btn_sendE2E.setVisibility(View.GONE);
                 tv_RSAEncryptData.setVisibility(View.GONE);
@@ -126,7 +126,6 @@ public class HybridModeActivity extends Activity {
             });
 
             btn_sendE2E.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     new Thread() {
@@ -178,7 +177,6 @@ public class HybridModeActivity extends Activity {
         GLog.d("magicVKeypad.isKeyboardOpen()값은 == " + magicVKeypad.isKeyboardOpen());
         if (Constant.USE_MAGIC_KEYPAD_DREAM) {
             if (magicVKeypad.isKeyboardOpen()) {
-                GLog.d("키보드 열어져있음");
                 // 키패드를 닫는다.
                 magicVKeypad.closeKeypad();
             } else {
@@ -189,7 +187,6 @@ public class HybridModeActivity extends Activity {
                 HybridResult.RSAEncData = "";
                 HybridResult.AESEncData = "";
                 HybridResult.AESDecData = "";
-
                 finish();
             }
         }

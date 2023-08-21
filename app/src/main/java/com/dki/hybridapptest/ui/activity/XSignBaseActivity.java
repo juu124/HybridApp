@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.dki.hybridapptest.R;
@@ -41,7 +42,6 @@ public class XSignBaseActivity extends Activity {
     protected final static int FUNC_MODE_UCPID_REQ_INFO = 14;
 
     protected final static int FUNC_MODE_CERT_LIST = 100;
-
     protected final static String SET_KEY_DEBUG_LEVEL = "debug_level";
 
     private static int mFunctionMode;      // 현재 수행중인 Main Menu Index 저장 변수
@@ -51,6 +51,8 @@ public class XSignBaseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        // 화면 캡쳐 방지
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         baseContext = this;
         TAG = baseContext.getClass().getSimpleName();
     }
