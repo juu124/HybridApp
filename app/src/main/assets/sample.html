@@ -22,6 +22,8 @@
        onClick="showCertificationList()"/>
 <br><br>
 <input type="button" value="show keyboard" onClick="showKeyboard()"/>
+&nbsp
+<input type="button" value="send SMS" onClick="sendSMS('01000000000', '이제이가 초대하였습니다.')"/>
 <br><br>
 <input type="button" value="move web view" onClick="moveWebView()"/>
 &nbsp
@@ -74,6 +76,11 @@
         DKITec.showKeyboard();
     }
 
+    <!-- SMS 보내기 -->
+    function sendSMS(phoneNum, msg) {
+        DKITec.sendSMS(phoneNum, msg);
+    }
+
     <!-- url 입력 후 웹뷰 화면 이동 -->
     function moveWebView() {
         DKITec.moveWebView();
@@ -93,7 +100,7 @@
         DKITec.moveAppStore();
     }
 
-     function callbackSearchContact(value) {
+     function callbackSearchContact() {
         console.log("callbackSearchContact : " + value);
     }
 
@@ -132,6 +139,12 @@
         DKITec.autoLoginOff();
 	}
 
+	 <!--SMS 잘들어옴 -->
+    function sms() {
+        console.log("SMS 잘들어옴");
+	}
+
+
 </script>
 <br><br>
 <a href="tel:01012345678">Call 010-1234-5678</a>
@@ -139,5 +152,7 @@
 <a href="mailto:dkitectest@gmail.com">E-mail : dkitectest@gmail.com</a>
 <br><br>
 <a href="https://www.google.co.kr/?hl=ko">https://www.google.co.kr/?hl=ko</a>
+<br><br>
+<a href="smsto:01012341234?테스트메세지입니다."> SMS 문자 </a>
 </body>
 </html>

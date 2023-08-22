@@ -9,10 +9,10 @@ android {
 
     defaultConfig {
         // 현재 앱 패키지 ID (라이선스 부여 안되어 있음)
-//        applicationId "com.dki.hybridapptest"
+        applicationId "com.dki.hybridapptest"
 
         // 보안 키보드(magicvkeypad) 실행시 관련 라이선스 패키지 ID
-        applicationId "com.dreamsecurity.example.magicvkeypad"
+//        applicationId "com.dreamsecurity.example.magicvkeypad"
 
         // 구간 암호화 실행시 관련 라이선스 패키지 ID
 //        applicationId "com.example.trustappandroid"
@@ -88,10 +88,14 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.15.1'
 
     // firebase
-    implementation 'com.google.firebase:firebase-messaging:23.2.0'
+    implementation 'com.google.firebase:firebase-messaging:23.2.1'
     implementation 'com.google.firebase:firebase-iid:21.1.0'
     implementation 'androidx.work:work-runtime:2.8.1'
+    api platform('com.google.firebase:firebase-bom:30.1.0')
+    api 'com.google.firebase:firebase-crashlytics'
+    api 'com.google.firebase:firebase-analytics'
+    api 'com.google.firebase:firebase-dynamic-links'
 }
 
 // 반드시, script 맨 하단에 작성 [위치 옮기지 말것 ]
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'

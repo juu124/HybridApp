@@ -37,7 +37,6 @@ import com.dreamsecurity.magicxsign.MagicXSign_Type;
 import com.dreamsecurity.xsignweb.XSignWebPlugin;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
@@ -50,8 +49,6 @@ import m.client.push.library.common.PushConstantsEx;
 import m.client.push.library.utils.PushUtils;
 import retrofit2.Response;
 
-// USE_XSIGN_DREAM
-// USE_XSIGN_PLUGIN_DREAM
 public class MainActivity extends AppCompatActivity {
     private WebView mWebView;
     private WebSettings mWebSettings;
@@ -70,11 +67,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 화면 캡쳐 방지
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        if (Constant.USE_SCREEN_SHOT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }
         setContentView(R.layout.activity_main);
-
-        // Firebase 사용전 초기화
-        FirebaseApp.initializeApp(this);
 
         mWebView = findViewById(R.id.webview);
         mProgressBar = findViewById(R.id.dialog_user_info_progressbar);
@@ -144,6 +140,16 @@ public class MainActivity extends AppCompatActivity {
                     // 외부 url 링크
                     else if (url.startsWith("https:")) {
                         mAction = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(mAction);
+                    }
+                    // SMS 보내기
+                    else if (url.startsWith("smsto:")) {
+                        Uri phone = Uri.parse(url.substring(0, url.indexOf("?")));
+                        Uri msg = Uri.parse(url.substring(url.indexOf("?") + 1));
+                        GLog.d("phone == " + phone);
+                        GLog.d("msg == " + msg);
+                        mAction = new Intent(Intent.ACTION_SENDTO, Uri.parse(String.valueOf(phone)));
+                        mAction.putExtra("sms_body", msg);
                         startActivity(mAction);
                     }
                 }

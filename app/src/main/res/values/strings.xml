@@ -34,16 +34,19 @@
     <string name="half_mode">Half Mode</string>
     <string name="move">move</string>
     <!--  앱 종료  -->
-    <string name="close_app_message" translatable="false">앱을 종료하시겠습니까?</string>
+    <string name="close_app_message">앱을 종료하시겠습니까?</string>
     <!-- 인트로 권한 알림 -->
-    <string name="permission_app_message" translatable="false">앱 권한을 설정해주세요. (설정으로 이동)</string>
+    <string name="permission_app_message">앱 권한을 설정해주세요. (설정으로 이동)</string>
     <!-- 백신 -->
-    <string name="vaccine_rooting_error_message" translatable="false">해킹위험(루팅/탈옥)이 탐지되었습니다.\n고객님의 정보보호를 위해 순정상태의 단말기로\n서비스를 이용해 주시기 바랍니다.</string>
-    <string name="vaccine_malware_error_message" translatable="false">악성코드가 검출되었습니다.\n모두 삭제하시겠습니까?</string>
-    <string name="trust_app_error_message" translatable="false">위변조 검증을 통과하지 못했습니다.</string>
+    <string name="vaccine_rooting_error_message">해킹위험(루팅/탈옥)이 탐지되었습니다.\n고객님의 정보보호를 위해 순정상태의 단말기로\n서비스를 이용해 주시기 바랍니다.</string>
+    <string name="vaccine_malware_error_message">악성코드가 검출되었습니다.\n모두 삭제하시겠습니까?</string>
+    <string name="trust_app_error_message">위변조 검증을 통과하지 못했습니다.</string>
 
     <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:background">@android:color/holo_blue_light</item>
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
+
+    <!-- Firebase  -->
+    <string name="com.google.firebase.crashlytics.mapping_file_id" translatable="false">none</string>
 </resources>
