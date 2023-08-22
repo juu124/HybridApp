@@ -5,24 +5,24 @@
 
 
 * 앱 위변조
-* TrustAppAAB5.0.0.6 jar
+* TrustAppAAB5.0.0.6.jar
 * USE_TRUST_APP_DREAM
   - TrustAppManager.java
   - TrustAppUI.java
 
 * 인증서 (서명, 삭제, 인증서 비밀번호 변경, 본인 확인, XML 서명, 비대칭키 암/복호화, EnvelopedData 암/복호화, 대칭키 암/복호화, Hash 생성, Base
   64 생성, 인증서 상세 정보, PEX Export, PFX Import, 개인키 암호화, UCPID Request Info)
-* MagicXSign_1.0.9.2
+* MagicXSign_1.0.9.2.jar
 * USE_XSIGN_DREAM
-    - XSignCertPolicy.java
-    - XSignTester.java
-    - XSignCertPolicy.java
-    - MainActivity.java
-    - XSignBaseActivity.java
-    - XSignCertDetailActivity.java
-    - XSignCertListActivity.java
-    - XSignMainActivity.java
-    - XSignSettingActivity.java
+  - XSignCertPolicy.java
+  - XSignTester.java
+  - XSignCertPolicy.java
+  - MainActivity.java
+  - XSignBaseActivity.java
+  - XSignCertDetailActivity.java
+  - XSignCertListActivity.java
+  - XSignMainActivity.java
+  - XSignSettingActivity.java
     - XSignUcpidActivity.java
     - ProcessCertificate.java
 
@@ -74,14 +74,31 @@
   - PushLog.java
   - PushUtils.java
 
+* 보안 키보드
+* (라이브러리 모듈) magicvkeypad
+* USE_MAGIC_KEYPAD_DREAM
+  - MagicVKeypadType
+  - MagicVKeypad
+  - MagicVKeypadOnClickInterface
+  - MagicVKeypadResult
+  - MagicVKeypadType
+
 * 구간 암호화 (미구현)
 * MagicSE2.jar
 * Constant.미정
 
+* jniLibs
+  * 앱 위변조
+    - libAAPlusToolkit4.2.0.3.so
+  * 구간 암호화
+    - libMagicSEv2.so
+    - libDSToolkitV30Jni.so
+  * FIDO
+    - Lib_Magic_FIDO
+
 * 라이브러리 모듈
-  - Lib_Magic_FIDO
   - magicmrsv2lib
-  - magicvkeypad
+  - libMagicCrypto.so
 
 * Not Used library
   - commons-lang-2.5
@@ -92,12 +109,3 @@
   - netty-common-4.0.19.Final
   - rimeCoreAndroid3.0.2.9
   - universal-image-loader-1.9.3
-
-* jniLibs
-  * 앱 위변조
-    - libAAPlusToolkit4.2.0.3.so
-  * 구간 암호화
-    - libMagicSEv2.so
-    - libDSToolkitV30Jni.so
-
-* libMagicCrypto.so
