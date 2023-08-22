@@ -26,7 +26,7 @@ import com.dreamsecurity.magic_mvaccine.exception.MagicNullPointerException;
 import com.dreamsecurity.magic_mvaccine.exception.MagicTimeoutException;
 import com.dreamsecurity.magic_mvaccine.option.MagicmVaccineOptions;
 
-
+// USE_VACCINE_DREAM
 public class VaccineManager {
 
     private boolean createInstanceSuccess;

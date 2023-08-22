@@ -24,7 +24,7 @@ import com.dreamsecurity.magic_mvaccine.exception.MagicNullInstance;
 
 import java.util.ArrayList;
 
-
+// USE_VACCINE_DREAM
 public class VaccineCallback implements MagicmVaccineListener {
 
     private Context context;

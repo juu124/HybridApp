@@ -17,6 +17,15 @@ public class Constant {
     //true: 보안 키보드 false: 보안 키보드 사용 불가
     public static boolean USE_MAGIC_KEYPAD_DREAM = true;
 
+    //true: 백신 false: 백신 기능 사용 불가
+    public static boolean USE_VACCINE_DREAM = false;
+
+    //true: push fasle: push 기능 사용 불가
+    public static boolean USE_PUSH_FIRBASE = false;
+
+    //true: 화면 캡쳐 fasle: 화면 캡쳐 기능 사용 불가
+    public static boolean USE_SCREEN_SHOT = false;
+
     //    public static String BASE_URL ="https://devpds.mydatacenter.or.kr:9443";
     public static String BASE_URL = "https://pds.mydatacenter.or.kr:9443";
     public static String TUTORIAL_URL = "/membership/identification.do";

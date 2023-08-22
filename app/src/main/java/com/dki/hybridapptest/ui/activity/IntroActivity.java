@@ -36,7 +36,6 @@ import m.client.push.library.common.PushConstants;
 import m.client.push.library.common.PushLog;
 import m.client.push.library.utils.PushUtils;
 
-// USE_TRUST_APP_DREAM
 public class IntroActivity extends AppCompatActivity {
     public static Context mContext;
     private Handler handler = new Handler(Looper.getMainLooper());
@@ -63,7 +62,9 @@ public class IntroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 화면 캡쳐 방지
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        if (Constant.USE_SCREEN_SHOT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }
         setContentView(R.layout.activity_intro);
 
         mContext = this;
@@ -73,14 +74,18 @@ public class IntroActivity extends AppCompatActivity {
         }
 
         if (Build.VERSION.SDK_INT >= 23) {
-            initPush(); // push 알림 권한
+            if (Constant.USE_PUSH_FIRBASE) {
+                initPush(); // push 알림 권한
+            }
             requestPermissions(permissionName, permissionReqCode);
         }
 
         // push 초기화 (앱 실행시마다 호출)
         // Manifest.xml 설정 파일에서 라이브러리를 초기화하기 위한 정보를 가져온다.
         // Parameters: context (Context) – 현재 Context
-        PushManager.getInstance().initPushServer(this);
+        if (Constant.USE_PUSH_FIRBASE) {
+            PushManager.getInstance().initPushServer(this);
+        }
 
         // 설정에서 돌아온 후 권한 확인 (읽기 권한)
         appSettingsLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -94,7 +99,6 @@ public class IntroActivity extends AppCompatActivity {
                         startCheck();
                     }
                 }, 500);
-
             } else {
                 Toast.makeText(this, "필수 권한을 설정해주세요.", Toast.LENGTH_SHORT).show();
                 CustomDialog customDialog = new CustomDialog(this, new CustomDialogClickListener() {
@@ -119,8 +123,10 @@ public class IntroActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (vaccineManager != null) {
-            vaccineManager.stopVaccine();
+        if (Constant.USE_VACCINE_DREAM) {
+            if (vaccineManager != null) {
+                vaccineManager.stopVaccine();
+            }
         }
     }
 
@@ -154,10 +160,12 @@ public class IntroActivity extends AppCompatActivity {
             }
         } else {
             GLog.d("백신 작동");
-            VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
-            vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-//            vaccineTimer.schedule(vaccineTask, 0, 1000);
+            if (Constant.USE_VACCINE_DREAM) {
+                VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
+                vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                moveToMainActivity();
+            }
         }
     }
 
@@ -173,13 +181,18 @@ public class IntroActivity extends AppCompatActivity {
         // 디버그 모드일때는 위변조 검사 하지 않음
         if (Constant.IS_DEBUG) {
             GLog.d("IS_DEBUG");
-//            VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
-//            vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            moveToMainActivity();
+            if (Constant.USE_VACCINE_DREAM) {
+                VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
+                vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                moveToMainActivity();
+            }
         } else {
-            GLog.d("IS_NOT_DEBUG");
-            TrustAppAsyncTask trustAppAsyncTask = new TrustAppAsyncTask();
-            trustAppAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            if (Constant.USE_TRUST_APP_DREAM) {
+                GLog.d("IS_NOT_DEBUG");
+                TrustAppAsyncTask trustAppAsyncTask = new TrustAppAsyncTask();
+                trustAppAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
         }
     }
 
@@ -213,7 +226,9 @@ public class IntroActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(String... strings) {
             GLog.d("백신 비동기 처리");
-            vaccineManager = new VaccineManager(IntroActivity.this); // 백신검사 시작
+            if (Constant.USE_VACCINE_DREAM) {
+                vaccineManager = new VaccineManager(IntroActivity.this); // 백신검사 시작
+            }
             return true;
         }
 

@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
 
 public class WebViewSizeChangeActivity extends AppCompatActivity {
@@ -29,7 +30,9 @@ public class WebViewSizeChangeActivity extends AppCompatActivity {
         GLog.d();
         super.onCreate(savedInstanceState);
         // 화면 캡쳐 방지
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        if (Constant.USE_SCREEN_SHOT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }
         setContentView(R.layout.activity_full_web_view);
 
         mWebView = findViewById(R.id.webview);

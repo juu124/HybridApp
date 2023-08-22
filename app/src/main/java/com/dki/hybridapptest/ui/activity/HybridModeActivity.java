@@ -40,9 +40,8 @@ public class HybridModeActivity extends Activity {
 
     private AndroidBridge mAndroidBridge;
 
+    // 보안 키보드 입력 값
     String RSAEncryptData = null;
-    String AESDecData = null;
-    String AESEncData = null;
     MagicVKeypad magicVKeypad = null;
 
     @Override
@@ -50,7 +49,9 @@ public class HybridModeActivity extends Activity {
         GLog.d();
         super.onCreate(savedInstanceState);
         // 화면 캡쳐 방지
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        if (Constant.USE_SCREEN_SHOT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }
         setContentView(R.layout.activity_hybrid_mode);
 
         backButton = findViewById(R.id.back_btn);
@@ -111,15 +112,10 @@ public class HybridModeActivity extends Activity {
             backButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    HybridResult.RSAEncData = "";
-                    HybridResult.AESEncData = "";
-                    HybridResult.AESDecData = "";
-
                     if (magicVKeypad.isKeyboardOpen()) {
                         // 키패드를 닫는다.
                         magicVKeypad.closeKeypad();
                     }
-
                     magicVKeypad.finalizeMagicVKeypad();
                     finish();
                 }
@@ -135,6 +131,7 @@ public class HybridModeActivity extends Activity {
                                 URL url = new URL(MagicVKeyPadSettings.E2ETestUrl); // 호출할 url
                                 Map<String, Object> params = new LinkedHashMap<>(); // 파라미터 세팅
                                 params.put("encKeypad", RSAEncryptData);
+                                GLog.d("RSAEncryptData == " + RSAEncryptData);
 
                                 StringBuilder postData = new StringBuilder();
                                 for (Map.Entry<String, Object> param : params.entrySet()) {
@@ -145,7 +142,6 @@ public class HybridModeActivity extends Activity {
                                 }
 
                                 byte[] postDataBytes = postData.toString().getBytes("UTF-8");
-
 
                                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                                 conn.setRequestMethod("POST");
@@ -173,23 +169,26 @@ public class HybridModeActivity extends Activity {
 
     @Override
     public void onBackPressed() {
+        super.onBackPressed();
         GLog.d();
-        GLog.d("magicVKeypad.isKeyboardOpen()값은 == " + magicVKeypad.isKeyboardOpen());
         if (Constant.USE_MAGIC_KEYPAD_DREAM) {
             if (magicVKeypad.isKeyboardOpen()) {
                 // 키패드를 닫는다.
                 magicVKeypad.closeKeypad();
             } else {
                 super.onBackPressed();
-
-                // 키패드와의 연결을 종료하고 모든 값을 초기화한다.
-                magicVKeypad.finalizeMagicVKeypad();
-                HybridResult.RSAEncData = "";
-                HybridResult.AESEncData = "";
-                HybridResult.AESDecData = "";
-                finish();
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 키패드와의 연결을 종료하고 모든 값을 초기화한다.
+        magicVKeypad.finalizeMagicVKeypad();
+        HybridResult.RSAEncData = "";
+        HybridResult.AESEncData = "";
+        HybridResult.AESDecData = "";
     }
 
     private class MagicVKeypadWebCLient extends WebViewClient {

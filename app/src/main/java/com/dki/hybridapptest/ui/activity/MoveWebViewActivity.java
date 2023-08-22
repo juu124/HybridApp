@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.utils.Constant;
 
 public class MoveWebViewActivity extends AppCompatActivity {
     private EditText editUrl;
@@ -31,9 +32,10 @@ public class MoveWebViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 화면 캡쳐 방지
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        if (Constant.USE_SCREEN_SHOT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }
         setContentView(R.layout.activity_move_web_view);
-
 
         editUrl = findViewById(R.id.edit_url);
         btnMoveUrl = findViewById(R.id.btn_move_url);

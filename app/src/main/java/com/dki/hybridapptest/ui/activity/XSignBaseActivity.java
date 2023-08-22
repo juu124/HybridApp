@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.utils.Constant;
 import com.dreamsecurity.magicxsign.MagicXSign_Type;
 
 // USE_XSIGN_DREAM
@@ -52,7 +53,9 @@ public class XSignBaseActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         // 화면 캡쳐 방지
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        if (Constant.USE_SCREEN_SHOT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }
         baseContext = this;
         TAG = baseContext.getClass().getSimpleName();
     }

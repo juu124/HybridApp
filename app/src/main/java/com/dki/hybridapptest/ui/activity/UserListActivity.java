@@ -22,6 +22,7 @@ import com.dki.hybridapptest.dto.UsersList;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.ui.adapter.RvUserListAdapter;
+import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
 
 import java.util.ArrayList;
@@ -50,7 +51,9 @@ public class UserListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 화면 캡쳐 방지
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        if (Constant.USE_SCREEN_SHOT) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+        }
         setContentView(R.layout.activity_user_list);
 
         userRecyclerView = findViewById(R.id.rv_user_list);
