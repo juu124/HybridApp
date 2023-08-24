@@ -74,7 +74,7 @@ public class IntroActivity extends AppCompatActivity {
         }
 
         if (Build.VERSION.SDK_INT >= 23) {
-            if (Constant.USE_PUSH_FIRBASE) {
+            if (Constant.USE_PUSH_FIREBASE) {
                 initPush(); // push 알림 권한
             }
             requestPermissions(permissionName, permissionReqCode);
@@ -83,7 +83,7 @@ public class IntroActivity extends AppCompatActivity {
         // push 초기화 (앱 실행시마다 호출)
         // Manifest.xml 설정 파일에서 라이브러리를 초기화하기 위한 정보를 가져온다.
         // Parameters: context (Context) – 현재 Context
-        if (Constant.USE_PUSH_FIRBASE) {
+        if (Constant.USE_PUSH_FIREBASE) {
             PushManager.getInstance().initPushServer(this);
         }
 

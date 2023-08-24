@@ -34,7 +34,7 @@
         android:theme="@style/Theme.HybridAppTest"
         tools:targetApi="31">
         <activity
-            android:name=".EncryptionActivity"
+            android:name=".ui.activity.EncryptionActivity"
             android:exported="false" />
 
         <meta-data

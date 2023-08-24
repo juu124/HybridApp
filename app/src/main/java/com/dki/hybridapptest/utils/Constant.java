@@ -97,8 +97,8 @@ public class Constant {
     // sample.html 주소
     public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
 
-    // web server 주소
-//    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/upload";
+    // 파일 업로드 주소
+    public static final String WEB_FILE_UPLOAD_URL = "http://10.112.58.208/upload";
 
     // user List 주소
     public static final String USERS_INFO_URL = "https://reqres.in/api/";

@@ -3,7 +3,6 @@
 * Constant 변수 명
     - 사용하고 있는 파일 목록
 
-
 * 앱 위변조
 * TrustAppAAB5.0.0.6.jar
 * USE_TRUST_APP_DREAM
@@ -23,13 +22,14 @@
   - XSignCertListActivity.java
   - XSignMainActivity.java
   - XSignSettingActivity.java
-    - XSignUcpidActivity.java
-    - ProcessCertificate.java
+  - XSignUcpidActivity.java
+  - ProcessCertificate.java
 
 * 웹 플러그 인
 * XSignWebPlugin_Client_v1.4.4
 * USE_XSIGN_PLUGIN_DREAM
   - IntroActivity.java
+  - MainActivity.java
 
 * 백신
 * (라이브러리 모듈) magic_mvaccine
@@ -77,11 +77,11 @@
 * 보안 키보드
 * (라이브러리 모듈) magicvkeypad
 * USE_MAGIC_KEYPAD_DREAM
-  - MagicVKeypadType
-  - MagicVKeypad
-  - MagicVKeypadOnClickInterface
-  - MagicVKeypadResult
-  - MagicVKeypadType
+  - MagicVKeypadType.java
+  - MagicVKeypad.java
+  - MagicVKeypadOnClickInterface.java
+  - MagicVKeypadResult.java
+  - MagicVKeypadType.java
 
 * 구간 암호화 (미구현)
 * MagicSE2.jar
@@ -93,12 +93,12 @@
   * 구간 암호화
     - libMagicSEv2.so
     - libDSToolkitV30Jni.so
+    - libMagicCrypto.so
   * FIDO
     - Lib_Magic_FIDO
 
 * 라이브러리 모듈
   - magicmrsv2lib
-  - libMagicCrypto.so
 
 * Not Used library
   - commons-lang-2.5
