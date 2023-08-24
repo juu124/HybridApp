@@ -42,8 +42,8 @@ public class IntroActivity extends AppCompatActivity {
     private Intent intent;
 
     // 권한
-    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_AUDIO};  // 권한 리스트
-    //    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};  // 권한 리스트
+//    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_IMAGES};  // 권한 리스트
+    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};  // 권한 리스트
 
     // 권한 코드
     private final int permissionReqCode = 1000;
@@ -66,8 +66,8 @@ public class IntroActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         }
         setContentView(R.layout.activity_intro);
-
         mContext = this;
+        checkSomePermission();
 
         if (Constant.USE_TRUST_APP_DREAM) {
             trustApp = new TrustAppManager(IntroActivity.this);
@@ -271,6 +271,7 @@ public class IntroActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         startCheck();
+
 //                        moveToMainActivity();
                     }
                 }, 700);
@@ -320,8 +321,33 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     // 권한 여부
+//    private boolean checkSomePermission() {
+//        GLog.d( "권한체크 시작!");
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            if (hasPermission(this, Constant.REQUIRED_PERMISSIONS_OVER_TIRAMISU)) {
+//                GLog.d( "OVER 티라미수 버전 권한 확인 성공");
+//                startCheck();
+//                return true;
+//            } else {
+//                GLog.d( "OVER 티라미수 버전 권한 확인 실패");
+//                moveToPermissionSetting();
+//                return false;
+//            }
+//        } else {
+//            if (hasPermission(this, Constant.REQUIRED_PERMISSIONS_UNDER_TIRAMISU)) {
+//                GLog.d( "UNDER 티라미수 버전 권한 확인 성공");
+//                startCheck();
+//                return true;
+//            } else {
+//                GLog.d( "UNDER 티라미수 버전 권한 확인 실패");
+//                moveToPermissionSetting();
+//                return false;
+//            }
+//        }
+//    }
+
+    // 권한 여부
     private boolean checkSomePermission() {
-        GLog.d();
         for (int i = 0; i < permissionName.length; i++) {
             if (ContextCompat.checkSelfPermission(this, permissionName[i]) != PackageManager.PERMISSION_GRANTED) { // 권한 부여 실패
                 return false;

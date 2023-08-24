@@ -148,6 +148,23 @@ public class Utils {
         });
     }
 
+    public static boolean hasPermission(Context context, String[] permissions) {
+        GLog.d();
+        if (context != null && permissions != null) {
+            GLog.d("context, permissions 다 있음");
+
+            GLog.d("권한 전1 === " + permissions.length);
+            for (String permission : permissions) {
+                GLog.d("권한 전 === " + permission);
+                if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                    return false;
+                }
+                GLog.d("권한 후 === " + permission);
+            }
+        }
+        return true;
+    }
+
     public static String getFacetID(Context context) {
         try {
             // RPClient PackageInfo 획득

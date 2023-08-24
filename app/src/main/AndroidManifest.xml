@@ -6,24 +6,19 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 인터넷 권한 요청 -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- 생체 인증 권한 요청 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- 읽기 권한 요청 -->
-
     <!-- 백신 권한 -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!--휴대폰 단말기 고유 정보를 읽을 때 요구되는 권한-->
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!--악성 앱 진단 즉시 사용자에게 알리기 위해 요구되는 권한 (Android 10 이상)-->
-
-    <!-- 파일 다운로드 : 저장소 파일 접근 권한 (Android 12 이하,  Build.VERSION_CODES.R)  -->
-    <!--        <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
-
-    <!-- 파일 다운로드 : 저장소 파일 접근 권한 (Android 13 이상) - 버전에 따른 분할 처리 아직 안했음  -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!--Android 13 에서 READ_EXTERNAL_STORAGE권한이 아래 3개의 항목으로 세분화되었다.-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 휴대폰 단말기 고유 정보를 읽을 때 요구되는 권한 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 악성 앱 진단 즉시 사용자에게 알리기 위해 요구되는 권한 (Android 10 이상) -->
+    <!-- 파일 다운로드 : 저장소 파일 접근 권한 (Android 12 이하,  Build.VERSION_CODES.R) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- 파일 다운로드 : 저장소 파일 접근 권한 (Android 13 이상) - 버전에 따른 분할 처리 아직 안했음 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- Android 13 에서 READ_EXTERNAL_STORAGE권한이 아래 3개의 항목으로 세분화되었다. -->
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- SD Card 영역 권한-->
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- SD Card 영역 권한 -->
     <!-- 안드로이드 8.0이상 필수  라이브러리 버전 4.1.0.7 이상부터 추가된 리시버 등록 시 권한 등록위해 선언 (없으면 앱 디폴트 권한) -->
-    <!--    <permission android:name="${com.dki.hybridapptest}.permission.MPUSH_PERMISSION" android:protectionLevel="signature" />-->
-    <!--    <uses-permission android:name="${com.dki.hybridapptest}.permission.MPUSH_PERMISSION" />-->
-
+    <!-- <permission android:name="${com.dki.hybridapptest}.permission.MPUSH_PERMISSION" android:protectionLevel="signature" /> -->
+    <!-- <uses-permission android:name="${com.dki.hybridapptest}.permission.MPUSH_PERMISSION" /> -->
     <queries>
         <package android:name="kr.or.mydatacenter.pds" /> <!-- 외부 앱 사용 -->
     </queries>
@@ -38,16 +33,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HybridAppTest"
         tools:targetApi="31">
+        <activity
+            android:name=".EncryptionActivity"
+            android:exported="false" />
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_launcher_foreground" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/white" />
-        <!--        <meta-data-->
-        <!--            android:name="com.google.firebase.messaging.default_notification_channel_id"-->
-        <!--            android:value="@string/default_notification_channel_id" />-->
-
+            android:resource="@color/white" /> <!-- <meta-data -->
+        <!-- android:name="com.google.firebase.messaging.default_notification_channel_id" -->
+        <!-- android:value="@string/default_notification_channel_id" /> -->
         <service
             android:name=".fcm.FirebaseMessagingService"
             android:exported="true">
@@ -55,6 +52,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".ui.activity.IntroActivity"
             android:configChanges="orientation|screenSize"
@@ -65,9 +63,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- <activity -->
-        <!-- android:name=".activities.SWInfoActivity" -->
-        <!-- android:exported="false" /> -->
         <activity
             android:name=".ui.activity.WebViewSizeChangeActivity"
             android:configChanges="orientation|screenSize"
@@ -84,12 +79,6 @@
             android:name=".ui.activity.MainActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
-        <!--            <intent-filter>-->
-        <!--                <action android:name="android.intent.action.MAIN" />-->
-
-        <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-        <!--            </intent-filter>-->
-        <!--        </activity>-->
         <activity
             android:name=".ui.activity.XSignMainActivity"
             android:configChanges="orientation|screenSize"
@@ -131,6 +120,5 @@
             android:configChanges="orientation|screenSize"
             android:exported="false" />
     </application>
-
 
 </manifest>

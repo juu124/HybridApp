@@ -1,19 +1,24 @@
 package com.dki.hybridapptest.ui.activity;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -21,6 +26,10 @@ import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -55,6 +64,27 @@ public class MainActivity extends AppCompatActivity {
     private Intent mAction;
     private AndroidBridge androidBridge = null;
     private Handler handler = new Handler(Looper.getMainLooper());
+    private ValueCallback mFilePathCallback;
+    private final static int FILECHOOSER_NORMAL_REQ_CODE = 100;
+    ActivityResultLauncher<Intent> startActivityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult result) {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    mFilePathCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(result.getResultCode(), result.getData()));
+                } else {
+                    mFilePathCallback.onReceiveValue(new Uri[]{result.getData().getData()});
+                }
+                mFilePathCallback = null;
+            } else {
+                //cancel 했을 경우
+                if (mFilePathCallback != null) {
+                    mFilePathCallback.onReceiveValue(null);
+                    mFilePathCallback = null;
+                }
+            }
+        }
+    });
 
     // push
     private BroadcastReceiver mMainBroadcastReceiver;
@@ -62,6 +92,32 @@ public class MainActivity extends AppCompatActivity {
 
     // 프로그래스 바
     private RelativeLayout mProgressBar;
+
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        switch (requestCode) {
+//            case FILECHOOSER_NORMAL_REQ_CODE:
+//                if (resultCode == RESULT_OK) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                        mFilePathCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+//                    } else {
+//                        mFilePathCallback.onReceiveValue(new Uri[]{data.getData()});
+//                    }
+//                    mFilePathCallback = null;
+//                } else {
+//                    //cancel 했을 경우
+//                    if (mFilePathCallback != null) {
+//                        mFilePathCallback.onReceiveValue(null);
+//                        mFilePathCallback = null;
+//                    }
+//                }
+//                break;
+//            default:
+//                break;
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +137,9 @@ public class MainActivity extends AppCompatActivity {
         mWebView.clearHistory();
 
         // push 토큰 확인 (push 사용할 때 주석 풀기 (토큰 확인용))
-//        getFCMToken();
+        if (Constant.USE_PUSH_FIRBASE) {
+            getFCMToken();
+        }
 
         // 로그인 화면 프로그래스 바
         androidBridge = new AndroidBridge(mWebView, MainActivity.this, new ProgressBarListener() {
@@ -108,6 +166,41 @@ public class MainActivity extends AppCompatActivity {
         mWebView.addJavascriptInterface(androidBridge, "DKITec");
         mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
         webPlugin_Init(MainActivity.this);
+
+        // 파일 업로드
+        mWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                // 파일 선택시 초기화
+                if (mFilePathCallback != null) {
+                    mFilePathCallback.onReceiveValue(null);
+                }
+                mFilePathCallback = filePathCallback;
+
+                // Check if the device has a camera feature
+                if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                    // Create an intent to capture an image
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent chooserIntent;
+                    // Check if there's a camera app available to handle this intent
+                    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        intent.setType("*/*");  //모든 contentType 파일 표시
+                        Intent[] initialIntents = new Intent[]{takePictureIntent};
+//                        ArrayList<Intent> initialIntents = new ArrayList<>();
+//                        intentArrayList.add(takePictureIntent);
+                        chooserIntent = Intent.createChooser(intent, "골라주세요 제바알~~");
+                        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, initialIntents);
+
+//                        startActivityForResult(chooserIntent, 100);
+                        startActivityResult.launch(chooserIntent);
+                    }
+                }
+                return true;
+            }
+        });
+
 
         RetrofitApiManager.getInstance().requestPostUser(new RetrofitInterface() {
             @Override

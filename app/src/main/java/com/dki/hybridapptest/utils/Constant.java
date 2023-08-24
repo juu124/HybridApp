@@ -26,6 +26,20 @@ public class Constant {
     //true: 화면 캡쳐 fasle: 화면 캡쳐 기능 사용 불가
     public static boolean USE_SCREEN_SHOT = false;
 
+    // 필수권한 목록
+    public static final String[] REQUIRED_PERMISSIONS_UNDER_TIRAMISU = {
+            android.Manifest.permission.READ_CONTACTS,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    public static final String[] REQUIRED_PERMISSIONS_OVER_TIRAMISU = {
+            android.Manifest.permission.READ_CONTACTS,
+            android.Manifest.permission.READ_MEDIA_AUDIO,
+            android.Manifest.permission.READ_MEDIA_VIDEO,
+            android.Manifest.permission.READ_MEDIA_IMAGES
+    };
+
     //    public static String BASE_URL ="https://devpds.mydatacenter.or.kr:9443";
     public static String BASE_URL = "https://pds.mydatacenter.or.kr:9443";
     public static String TUTORIAL_URL = "/membership/identification.do";
@@ -36,6 +50,7 @@ public class Constant {
     public static String KPIDO_URL = "https://fidosvc.mydatacenter.or.kr:9443";
     public static String REQ_URL = "/processUafRequest.jspx?site=";
     public static String RES_URL = "/processUafResponse.jspx?site=";
+
     //Kfido 인증방식
     public static String PATTERN = "PATTERN";
     public static String FINGER = "FINGER";
@@ -80,10 +95,10 @@ public class Constant {
     public static final String LOGIN_PW = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
 
     // sample.html 주소
-    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
+//    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
 
     // web server 주소
-//    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208";
+    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/upload";
 
     // user List 주소
     public static final String USERS_INFO_URL = "https://reqres.in/api/";
