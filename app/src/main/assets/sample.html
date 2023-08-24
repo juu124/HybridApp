@@ -38,6 +38,10 @@
 <input type="button" value="Login Push Off" onClick="loginPushOff()">
 <br><br>
 <input type="button" value="File Download" onClick="fileDownload()">
+&nbsp
+<input type="button" value="File Upload" onClick="fileUpload()">
+<br><br>
+<input type="button" value="Section encryption" onclick="useEncryption()"/>
 <br><br>
 <input type="button" value="End App" onclick="closeApp()"/>
 <script type="text/javascript" src="./autologin.html"></script>
@@ -109,11 +113,6 @@
         DKITec.searchPhoneAddress('{"callback":"callbackSearchContact"}');
     }
 
-    <!-- 앱 종료 -->
-    function closeApp() {
-        DKITec.closeApp();
-    }
-
     <!-- 로그인 화면으로 이동 -->
     function moveLoginPage() {
         DKITec.moveLoginPage();
@@ -139,10 +138,15 @@
         DKITec.autoLoginOff();
 	}
 
-	 <!--SMS 잘들어옴 -->
-    function sms() {
-        console.log("SMS 잘들어옴");
+    <!-- 구간 암호화 -->
+    function useEncryption() {
+        DKITec.useEncryption();
 	}
+
+	    <!-- 앱 종료 -->
+    function closeApp() {
+        DKITec.closeApp();
+    }
 
 
 </script>

@@ -33,6 +33,7 @@ import com.dki.hybridapptest.dialog.CustomDialog;
 import com.dki.hybridapptest.dialog.InputDialog;
 import com.dki.hybridapptest.kfido.FIDORegistration;
 import com.dki.hybridapptest.model.ContactInfo;
+import com.dki.hybridapptest.ui.activity.EncryptionActivity;
 import com.dki.hybridapptest.ui.activity.HelloWorldActivity;
 import com.dki.hybridapptest.ui.activity.HybridModeActivity;
 import com.dki.hybridapptest.ui.activity.MoveWebViewActivity;
@@ -178,6 +179,26 @@ public class AndroidBridge {
         } catch (NullPointerException ne) {
             ne.printStackTrace();
         }
+    }
+
+    // 구간 암호화
+    @JavascriptInterface
+    public void useEncryption() {
+        GLog.d();
+        mIntent = new Intent(mActivity, EncryptionActivity.class);
+        mActivity.startActivity(mIntent);
+    }
+
+    // 파일 업로드
+    @JavascriptInterface
+    public void fileUpload() {
+        GLog.d();
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                mWebView.loadUrl(Constant.WEB_FILE_UPLOAD_URL);
+            }
+        });
     }
 
     // SMS 보내기
