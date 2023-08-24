@@ -51,6 +51,9 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import m.client.push.library.PushHandler;
 import m.client.push.library.common.Logger;
 import m.client.push.library.common.PushConstants;
@@ -137,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         mWebView.clearHistory();
 
         // push 토큰 확인 (push 사용할 때 주석 풀기 (토큰 확인용))
-        if (Constant.USE_PUSH_FIRBASE) {
+        if (Constant.USE_PUSH_FIREBASE) {
             getFCMToken();
         }
 
@@ -237,13 +240,30 @@ public class MainActivity extends AppCompatActivity {
                     }
                     // SMS 보내기
                     else if (url.startsWith("smsto:")) {
-                        Uri phone = Uri.parse(url.substring(0, url.indexOf("?")));
-                        Uri msg = Uri.parse(url.substring(url.indexOf("?") + 1));
-                        GLog.d("phone == " + phone);
-                        GLog.d("msg == " + msg);
-                        mAction = new Intent(Intent.ACTION_SENDTO, Uri.parse(String.valueOf(phone)));
-                        mAction.putExtra("sms_body", msg);
-                        startActivity(mAction);
+                        String phoneStr, msgStr;
+                        Uri phone;
+                        if (url.contains("?")) {
+                            phoneStr = url.substring(0, url.indexOf("?"));
+                            msgStr = url.substring(url.indexOf("?") + 1);
+
+                            phone = Uri.parse(phoneStr);
+                            String msg1;
+                            try {
+                                msg1 = URLDecoder.decode(msgStr, "UTF-8");
+                            } catch (UnsupportedEncodingException e) {
+                                throw new RuntimeException(e);
+                            }
+
+                            GLog.d("phone == " + phone);
+                            GLog.d("msg1 == " + msg1);
+
+                            mAction = new Intent(Intent.ACTION_SENDTO, phone);
+                            mAction.putExtra("sms_body", msg1);
+                            startActivity(mAction);
+                        } else {
+                            Toast.makeText(MainActivity.this, "SMS 형식이 아닙니다.", Toast.LENGTH_SHORT).show();
+                            GLog.d("SMS 형식이 아닙니다.");
+                        }
                     }
                 }
                 return true;

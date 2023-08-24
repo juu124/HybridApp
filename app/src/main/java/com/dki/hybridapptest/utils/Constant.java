@@ -21,7 +21,7 @@ public class Constant {
     public static boolean USE_VACCINE_DREAM = false;
 
     //true: push fasle: push 기능 사용 불가
-    public static boolean USE_PUSH_FIRBASE = false;
+    public static boolean USE_PUSH_FIREBASE = false;
 
     //true: 화면 캡쳐 fasle: 화면 캡쳐 기능 사용 불가
     public static boolean USE_SCREEN_SHOT = false;
@@ -95,10 +95,10 @@ public class Constant {
     public static final String LOGIN_PW = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
 
     // sample.html 주소
-//    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
+    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
 
     // web server 주소
-    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/upload";
+//    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/upload";
 
     // user List 주소
     public static final String USERS_INFO_URL = "https://reqres.in/api/";
