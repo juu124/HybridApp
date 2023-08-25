@@ -1,5 +1,6 @@
 package com.dki.hybridapptest.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.NotificationManager;
@@ -87,6 +88,41 @@ public class Utils {
         return resultList;
     }
 
+    public static boolean isGrantedAllPermission(Context context) {
+        GLog.d("isGrantedAllPermission");
+        for (String permission : getPermissionListAll()) {
+            if (context.checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
+                GLog.d("permission ===== " + permission);
+                return false;
+            }
+        }
+        GLog.d("isGrantedAllPermission success");
+        return true;
+    }
+
+    public static ArrayList<String> getPermissionListAll() {
+        ArrayList<String> permissionList = new ArrayList<>();
+        permissionList.add(Manifest.permission.READ_CONTACTS);
+        permissionList.add(Manifest.permission.CAMERA);
+
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+//            // 외부 저장소 허용, R 이상은 권한 불필요
+//            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // 파일 다운로드 필요 권한 버전 티라미수 이상
+            permissionList.add(Manifest.permission.READ_MEDIA_AUDIO);
+            permissionList.add(Manifest.permission.READ_MEDIA_VIDEO);
+            permissionList.add(Manifest.permission.READ_MEDIA_IMAGES);
+        } else {
+            // 파일 다운로드 필요 권한
+            permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        return permissionList;
+    }
+
     // 파일 다운로드 리스너
     public static void setDownloadListener(Activity activity, WebView webView) {
         webView.setDownloadListener(new DownloadListener() {
@@ -146,23 +182,6 @@ public class Utils {
                 }
             };
         });
-    }
-
-    public static boolean hasPermission(Context context, String[] permissions) {
-        GLog.d();
-        if (context != null && permissions != null) {
-            GLog.d("context, permissions 다 있음");
-
-            GLog.d("권한 전1 === " + permissions.length);
-            for (String permission : permissions) {
-                GLog.d("권한 전 === " + permission);
-                if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-                GLog.d("권한 후 === " + permission);
-            }
-        }
-        return true;
     }
 
     public static String getFacetID(Context context) {
