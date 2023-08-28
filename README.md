@@ -8,6 +8,7 @@
 * USE_TRUST_APP_DREAM
   - TrustAppManager.java
   - TrustAppUI.java
+  - rimeCoreAndroid3.0.2.9
 
 * 인증서 (서명, 삭제, 인증서 비밀번호 변경, 본인 확인, XML 서명, 비대칭키 암/복호화, EnvelopedData 암/복호화, 대칭키 암/복호화, Hash 생성, Base
   64 생성, 인증서 상세 정보, PEX Export, PFX Import, 개인키 암호화, UCPID Request Info)
@@ -107,5 +108,5 @@
   - MDCPdfViewer
   - morpheus_push_library_5.2.0.6
   - netty-common-4.0.19.Final
-  - rimeCoreAndroid3.0.2.9
+  - // 이거 포함시켜라 앱 위변조에서 사용하고 있음 앱 소스에도 잇지만
   - universal-image-loader-1.9.3

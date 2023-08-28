@@ -32,6 +32,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.dki.hybridapptest.Interface.ProgressBarListener;
@@ -51,8 +52,12 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import m.client.push.library.PushHandler;
 import m.client.push.library.common.Logger;
@@ -67,20 +72,37 @@ public class MainActivity extends AppCompatActivity {
     private Intent mAction;
     private AndroidBridge androidBridge = null;
     private Handler handler = new Handler(Looper.getMainLooper());
+
+    // 파일 업로드
     private ValueCallback mFilePathCallback;
-    private final static int FILECHOOSER_NORMAL_REQ_CODE = 100;
+    private String currentPhotoPath;
+    private File photoFile = null;
+    private String photoPath = null;
+    private Uri photoURI;
+
     ActivityResultLauncher<Intent> startActivityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
             if (result.getResultCode() == Activity.RESULT_OK) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    mFilePathCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(result.getResultCode(), result.getData()));
+                GLog.d("RESULT_OK");
+                Intent intent = result.getData();
+
+                if (intent == null) {
+                    GLog.d("intent null");
+                    Uri[] results = {photoURI};
+                    GLog.d("results ==== " + results);
+                    if (mFilePathCallback != null) {
+                        GLog.d("mFilePathCallback not null ==== ");
+                        mFilePathCallback.onReceiveValue(results);
+                    }
                 } else {
-                    mFilePathCallback.onReceiveValue(new Uri[]{result.getData().getData()});
+                    GLog.d("intent not null");
+                    mFilePathCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(result.getResultCode(), result.getData()));
                 }
                 mFilePathCallback = null;
             } else {
                 //cancel 했을 경우
+                GLog.d("RESULT_CANCELED");
                 if (mFilePathCallback != null) {
                     mFilePathCallback.onReceiveValue(null);
                     mFilePathCallback = null;
@@ -95,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
 
     // 프로그래스 바
     private RelativeLayout mProgressBar;
-
 
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -121,6 +142,22 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        super.onActivityResult(requestCode, resultCode, data);
 //    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,10 +207,11 @@ public class MainActivity extends AppCompatActivity {
         mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
         webPlugin_Init(MainActivity.this);
 
-        // 파일 업로드
+        // 파일 업로드 (카메라, 내 파일)
         mWebView.setWebChromeClient(new WebChromeClient() {
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
+                GLog.d();
                 // 파일 선택시 초기화
                 if (mFilePathCallback != null) {
                     mFilePathCallback.onReceiveValue(null);
@@ -181,9 +219,22 @@ public class MainActivity extends AppCompatActivity {
                 mFilePathCallback = filePathCallback;
 
                 // Check if the device has a camera feature
-                if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
                     // Create an intent to capture an image
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    try {
+                        photoFile = createImageFile();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
+                    if (photoFile != null) {
+                        photoURI = FileProvider.getUriForFile(MainActivity.this,
+                                "com.dki.hybridapptest.provider",
+                                photoFile);
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    }
+                    GLog.d("photoFile  === " + photoFile);
                     Intent chooserIntent;
                     // Check if there's a camera app available to handle this intent
                     if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -203,7 +254,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
 
         RetrofitApiManager.getInstance().requestPostUser(new RetrofitInterface() {
             @Override

@@ -1,12 +1,10 @@
 package com.dki.hybridapptest.ui.activity;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,6 +24,7 @@ import com.dki.hybridapptest.dialog.CustomDialog;
 import com.dki.hybridapptest.trustapp.TrustAppManager;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
+import com.dki.hybridapptest.utils.Utils;
 import com.dki.hybridapptest.vaccine.VaccineManager;
 
 import org.json.JSONException;
@@ -43,10 +42,10 @@ public class IntroActivity extends AppCompatActivity {
 
     // 권한
 //    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_IMAGES};  // 권한 리스트
-    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};  // 권한 리스트
+//    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};  // 권한 리스트
 
     // 권한 코드
-    private final int permissionReqCode = 1000;
+    private static final int permissionReqCode = 1000;
 
     // 앱 설정 화면
     private ActivityResultLauncher<Intent> appSettingsLauncher;
@@ -67,18 +66,40 @@ public class IntroActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_intro);
         mContext = this;
-        checkSomePermission();
 
         if (Constant.USE_TRUST_APP_DREAM) {
             trustApp = new TrustAppManager(IntroActivity.this);
         }
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (Constant.USE_PUSH_FIREBASE) {
-                initPush(); // push 알림 권한
-            }
-            requestPermissions(permissionName, permissionReqCode);
+        if (!Utils.isGrantedAllPermission(this)) {
+            requestPermissions(Utils.getPermissionListAll().toArray(new String[0]), permissionReqCode);
+        } else {
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    startCheck();
+                }
+            }, 500);
         }
+
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            if (Constant.USE_PUSH_FIREBASE) {
+//                initPush(); // push 알림 권한
+//            }
+//            requestPermissions(Constant.REQUIRED_PERMISSIONS_OVER_TIRAMISU, permissionReqCode);
+//        } else {
+//            if (Constant.USE_PUSH_FIREBASE) {
+//                initPush(); // push 알림 권한
+//            }
+//            requestPermissions(Constant.REQUIRED_PERMISSIONS_UNDER_TIRAMISU, permissionReqCode);
+//        }
+
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            if (Constant.USE_PUSH_FIREBASE) {
+//                initPush(); // push 알림 권한
+//            }
+//            requestPermissions(permissionName, permissionReqCode);
+//        }
 
         // push 초기화 (앱 실행시마다 호출)
         // Manifest.xml 설정 파일에서 라이브러리를 초기화하기 위한 정보를 가져온다.
@@ -89,8 +110,7 @@ public class IntroActivity extends AppCompatActivity {
 
         // 설정에서 돌아온 후 권한 확인 (읽기 권한)
         appSettingsLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            GLog.d("설정에서 다시 돌아와서 권한 확인하기 checkSomePermission == " + checkSomePermission());
-            if (checkSomePermission()) {  // 권한이 허용되었을 경우에 대한 처리를 진행
+            if (Utils.isGrantedAllPermission(this)) {  // 권한 허락 상태면 밖으로 빠지고, 권한 허락 못받았을 때 아래 구문 실행
                 GLog.d("권한 허용");
                 // 설정화면으로 이동
                 handler.postDelayed(new Runnable() {
@@ -117,6 +137,34 @@ public class IntroActivity extends AppCompatActivity {
                 customDialog.setCancelable(false);
                 customDialog.show();
             }
+
+//            if (checkSomePermission()) {  // 권한이 허용되었을 경우에 대한 처리를 진행
+//                GLog.d("권한 허용");
+//                // 설정화면으로 이동
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        startCheck();
+//                    }
+//                }, 500);
+//            } else {
+//                Toast.makeText(this, "필수 권한을 설정해주세요.", Toast.LENGTH_SHORT).show();
+//                CustomDialog customDialog = new CustomDialog(this, new CustomDialogClickListener() {
+//                    @Override
+//                    public void onPositiveClick(String text) {
+//                        moveToPermissionSetting();
+//                    }
+//
+//                    @Override
+//                    public void onNegativeClick() {
+//                        // 권한 설정 거부
+//                        finish();
+//                    }
+//                }, "권한 알림", this.getResources().getString(R.string.permission_app_message), Constant.TWO_BUTTON, true);
+//                customDialog.setTwoButtonText("닫기", "설정");
+//                customDialog.setCancelable(false);
+//                customDialog.show();
+//            }
         });
     }
 
@@ -178,13 +226,16 @@ public class IntroActivity extends AppCompatActivity {
     }
 
     public void startCheck() {
+        GLog.d("startCheck");
         // 디버그 모드일때는 위변조 검사 하지 않음
         if (Constant.IS_DEBUG) {
             GLog.d("IS_DEBUG");
             if (Constant.USE_VACCINE_DREAM) {
+                GLog.d("USE_VACCINE_DREAM");
                 VaccineAsyncTask vaccineAsyncTask = new VaccineAsyncTask();
                 vaccineAsyncTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             } else {
+                GLog.d("NONE_USE_VACCINE_DREAM");
                 moveToMainActivity();
             }
         } else {
@@ -256,14 +307,13 @@ public class IntroActivity extends AppCompatActivity {
         if (requestCode == permissionReqCode) {
             if (permissions != null) {
                 for (int i = 0; i < permissions.length; i++) {
-                    GLog.d("permission ===== " + permissions[i] + " == " + grantResults[i]);
+                    GLog.d("permission 권한 ===== " + permissions + " == " + grantResults[i]);
                     if (grantResults[i] != PackageManager.PERMISSION_GRANTED) { // 권한 부여 실패
                         permissionGranted = false;
                         break;
                     }
                 }
             }
-
             GLog.d("permissionGranted : " + permissionGranted);
 
             if (permissionGranted) {
@@ -271,7 +321,6 @@ public class IntroActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         startCheck();
-
 //                        moveToMainActivity();
                     }
                 }, 700);
@@ -348,8 +397,8 @@ public class IntroActivity extends AppCompatActivity {
 
     // 권한 여부
     private boolean checkSomePermission() {
-        for (int i = 0; i < permissionName.length; i++) {
-            if (ContextCompat.checkSelfPermission(this, permissionName[i]) != PackageManager.PERMISSION_GRANTED) { // 권한 부여 실패
+        for (int i = 0; i < Constant.REQUIRED_PERMISSIONS_OVER_TIRAMISU.length; i++) {
+            if (ContextCompat.checkSelfPermission(this, Constant.REQUIRED_PERMISSIONS_OVER_TIRAMISU[i]) != PackageManager.PERMISSION_GRANTED) { // 권한 부여 실패
                 return false;
             } else {
                 return true;
