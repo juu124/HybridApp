@@ -95,11 +95,17 @@ public class Constant {
     public static final String LOGIN_PW = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
 
     // sample.html 주소
-//    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
-    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/";
+    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
+//    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/";
 
     // 파일 업로드 주소
     public static final String WEB_FILE_UPLOAD_URL = "http://10.112.58.208/upload";
+
+    // 인증서 주소
+    public static final String WEB_SIGN_DISITAL_URL = "file:///android_asset/index.html";
+//    public static final String WEB_SIGN_DISITAL_URL = "file:///android_asset/show_popup_export.html";
+//    public static final String WEB_SIGN_DISITAL_URL = "file:///android_asset/show_popup_import.html";
+//    public static final String WEB_SIGN_DISITAL_URL = "file:///android_asset/install_popup.html";
 
     // user List 주소
     public static final String USERS_INFO_URL = "https://reqres.in/api/";
@@ -114,5 +120,7 @@ public class Constant {
     // 다이얼로그
     public static String TWO_BUTTON = "TWO_BUTTON";
     public static String ONE_BUTTON = "ONE_BUTTON";
+
+    public static String FILE_CACHE_DIRECTORY_NAME = "pickImg";
 
 }

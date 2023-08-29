@@ -25,6 +25,8 @@
 &nbsp
 <input type="button" value="send SMS" onClick="sendSMS('01000000000', '이제이가 초대하였습니다.')"/>
 <br><br>
+<input type="button" value="search phone addresses" onclick="searchPhoneAddress()"/>
+<br><br>
 <input type="button" value="move web view" onClick="moveWebView()"/>
 &nbsp
 <input type="button" value="move App Store" onClick="moveAppStore()"/>
@@ -43,8 +45,23 @@
 <br><br>
 <input type="button" value="Section encryption" onclick="useEncryption()"/>
 <br><br>
+<!--인증서 서명-->
+<input type="button" value="Digital Signature" onclick="importCert()"/>
+<!--&nbsp-->
+<!--&lt;!&ndash;인증서 내보내기&ndash;&gt;-->
+<!--<input type="button" value="export certificate" onclick="exportCertificate()"/>-->
+<!--&nbsp-->
+<!--&lt;!&ndash;인증서 가져오기&ndash;&gt;-->
+<!--<input type="button" value="import certificate" onclick="importCertificate()"/>-->
+<!--<br><br>-->
+<br><br>
 <input type="button" value="End App" onclick="closeApp()"/>
 <script type="text/javascript" src="./autologin.html"></script>
+<!--<script type="text/javascript" src="js/jquery-1.10.2.js"></script>-->
+<!--<script type="text/javascript" src="js/jquery-ui.min.js"></script>-->
+<!--<script type="text/javascript" src="js/jquery.blockUI.js"></script>-->
+<!--<script type="text/javascript" src="js/json2.js"></script>-->
+<!--<script type="text/javascript" src="js/ML_Config.js"></script>-->
 <script type="text/javascript" language="javascript">
 
     <!-- 토스트, 다이얼로그, 화면 전환 이벤트-->
@@ -143,11 +160,19 @@
         DKITec.useEncryption();
 	}
 
+    function callbackSearchContact() {
+        console.log("callbackSearchContact : " + value);
+    }
+
+	 <!-- 전자 서명 -->
+    function importCert() {
+        DKITec.importCert('{"callback":"callbackSearchContact"}');
+	}
+
 	    <!-- 앱 종료 -->
     function closeApp() {
         DKITec.closeApp();
     }
-
 
 </script>
 <br><br>

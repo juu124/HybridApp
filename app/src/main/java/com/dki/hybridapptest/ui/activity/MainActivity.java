@@ -42,6 +42,11 @@ import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.ui.activity.bridge.AndroidBridge;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
+import com.dki.hybridapptest.utils.Utils;
+import com.dreamsecurity.magicmrs.MRSCertificate;
+import com.dreamsecurity.magicmrs.MagicMRS;
+import com.dreamsecurity.magicmrs.MagicMRSCallback;
+import com.dreamsecurity.magicmrs.MagicMRSResult;
 import com.dreamsecurity.magicxsign.MagicXSign;
 import com.dreamsecurity.magicxsign.MagicXSign_Type;
 import com.dreamsecurity.xsignweb.XSignWebPlugin;
@@ -80,6 +85,29 @@ public class MainActivity extends AppCompatActivity {
     private String photoPath = null;
     private Uri photoURI;
 
+    // 인증서
+    private MagicMRS mMagicMRS = null;
+    private Uri mCameraOutputFileUri = null;
+
+    private void uploadImgFileFromCamera(Uri uri) {
+        GLog.d("uploadImgFileFromCamera uri == " + uri);
+
+        if (uri != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                if (mFilePathCallback != null) {
+                    Uri[] uris = {Uri.parse(uri.toString())};
+                    mFilePathCallback.onReceiveValue(uris);
+                }
+            } else {
+                Intent data = new Intent();
+                data.setData(mCameraOutputFileUri);
+                if (mFilePathCallback != null) {
+                    mFilePathCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(Activity.RESULT_OK, data));
+                }
+            }
+        }
+    }
+
     ActivityResultLauncher<Intent> startActivityResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
@@ -89,15 +117,23 @@ public class MainActivity extends AppCompatActivity {
 
                 if (intent == null) {
                     GLog.d("intent null");
-                    Uri[] results = {photoURI};
-                    GLog.d("results ==== " + results);
-                    if (mFilePathCallback != null) {
-                        GLog.d("mFilePathCallback not null ==== ");
-                        mFilePathCallback.onReceiveValue(results);
-                    }
+                    uploadImgFileFromCamera(mCameraOutputFileUri);
+//                    Uri[] results = {photoURI};
+//                    GLog.d("results ==== " + results);
+//                    if (mFilePathCallback != null) {
+//                        GLog.d("mFilePathCallback not null ==== ");
+//                        mFilePathCallback.onReceiveValue(results);
+//                    }
                 } else {
                     GLog.d("intent not null");
-                    mFilePathCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(result.getResultCode(), result.getData()));
+                    Uri photoValue = intent.getData();
+                    if (photoValue != null) {
+                        Uri[] uris = {photoValue};
+                        if (mFilePathCallback != null) {
+                            mFilePathCallback.onReceiveValue(uris);
+                        }
+                    }
+//                    mFilePathCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(result.getResultCode(), result.getData()));
                 }
                 mFilePathCallback = null;
             } else {
@@ -143,11 +179,12 @@ public class MainActivity extends AppCompatActivity {
 //        super.onActivityResult(requestCode, resultCode, data);
 //    }
 
+    // 사진이 저장될 폴더
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File storageDir = Utils.makeDirectory(getApplicationContext());
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
                 ".jpg",         /* suffix */
@@ -220,21 +257,30 @@ public class MainActivity extends AppCompatActivity {
 
                 // Check if the device has a camera feature
                 if (getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-                    // Create an intent to capture an image
+                    // 카메라 인텐트
                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                    if (takePictureIntent != null) {
+                        // 카메라 애 설치 여부 확인
+                        takePictureIntent.resolveActivity(getApplicationContext().getPackageManager());
+                        try {
+                            photoFile = createImageFile();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            GLog.d("Build.VERSION.SDK_INT >= N ");
+                            mCameraOutputFileUri = FileProvider.getUriForFile(MainActivity.this, MainActivity.this.getPackageName(), photoFile);
+                        } else {
+                            mCameraOutputFileUri = Uri.fromFile(photoFile);
+                        }
+//                        photoURI = FileProvider.getUriForFile(MainActivity.this,
+//                                "com.dki.hybridapptest.provider",
+//                                photoFile);
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCameraOutputFileUri);
+                        GLog.d("photoFile  === " + photoFile);
                     }
 
-                    if (photoFile != null) {
-                        photoURI = FileProvider.getUriForFile(MainActivity.this,
-                                "com.dki.hybridapptest.provider",
-                                photoFile);
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                    }
-                    GLog.d("photoFile  === " + photoFile);
                     Intent chooserIntent;
                     // Check if there's a camera app available to handle this intent
                     if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -319,6 +365,19 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        MagicMRSCallback callback = new MagicMRSCallback() {
+            @Override
+            public void MRSCallbackResult(int i, MagicMRSResult magicMRSResult, MRSCertificate mrsCertificate) {
+                GLog.d("getErrorCode [" + magicMRSResult.getErrorCode() + "]");
+                GLog.d("getErrorDescription [" + magicMRSResult.getErrorDescription() + "]");
+                GLog.d();
+            }
+        };
+
+        mMagicMRS = new MagicMRS(this, callback);
+//        mMagicMRS.initializeMagicMRS();
+//        mMagicMRS.setURL(/*MagicMRS Server IP*/, /*MagicMRS Server Port*/);
     }
 
     @Override

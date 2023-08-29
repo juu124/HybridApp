@@ -104,9 +104,9 @@
 * Not Used library
   - commons-lang-2.5
   - jcaos-client-1.4.7.8
-  - MagicMRS
+  - MagicMRS // 인증서 이동 서비스 (pc, 스마트폰에 저장된 인증서를 다른 PC 또는 스마트 폰에서 사용할 수 있도록 별도 저장 매체 없이 인증서 이동 장) (
+    내보내기 / 가져오기)
   - MDCPdfViewer
   - morpheus_push_library_5.2.0.6
   - netty-common-4.0.19.Final
-  - // 이거 포함시켜라 앱 위변조에서 사용하고 있음 앱 소스에도 잇지만
   - universal-image-loader-1.9.3

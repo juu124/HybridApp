@@ -51,6 +51,11 @@ import com.dki.hybridapptest.utils.WorkThread;
 import com.dream.magic.fido.rpsdk.client.LOCAL_AUTH_TYPE;
 import com.dream.magic.fido.rpsdk.client.MagicFIDOUtil;
 import com.dream.magic.fido.uaf.protocol.kfido.KCertificate;
+import com.dreamsecurity.magicmrs.MRSCertificate;
+import com.dreamsecurity.magicmrs.MagicMRS;
+import com.dreamsecurity.magicmrs.MagicMRSCallback;
+import com.dreamsecurity.magicmrs.MagicMRSResult;
+import com.dreamsecurity.magicmrs.etc.MagicMRSConfig;
 import com.dreamsecurity.magicvkeypad.MagicVKeypad;
 import com.dreamsecurity.magicvkeypad.MagicVKeypadOnClickInterface;
 import com.dreamsecurity.magicvkeypad.MagicVKeypadResult;
@@ -97,7 +102,8 @@ public class AndroidBridge {
     private MagicFIDOUtil magicFIDOUtil = null;
     private MagicXSign pki;
     private ProcessCertificate processCertificate = null;
-//    private JSONArray arrSignText;
+    //    private JSONArray arrSignText;
+    private MagicMRS mMagicMRS = null;
 
     // show Dialog 버튼 이벤트
     private InputDialog inputDialog;
@@ -117,6 +123,54 @@ public class AndroidBridge {
 
     // 자동 로그인
     private ProgressBarListener progressBarListener;
+
+    public void setCallbakckFuction(String callbakckFuction) {
+        mCallbackFuntion = callbakckFuction;
+    }
+
+    public String getCallbackFunction() {
+        return mCallbackFuntion;
+    }
+
+    public void setAuthCode(String authCode) {
+        mAuthCode = authCode;
+    }
+
+    public String getAuthCode() {
+        return mAuthCode;
+    }
+
+    public void setUserKey(String userKey) {
+        mUserKey = userKey;
+    }
+
+    public String getUserKey() {
+        return mUserKey;
+    }
+
+    public void setIssuedn(String issuedn) {
+        mIssuedn = issuedn;
+    }
+
+    public String getIssuedn() {
+        return mIssuedn;
+    }
+
+    public void setSubjdn(String subjdn) {
+        mSubjdn = subjdn;
+    }
+
+    public String getSubjdn() {
+        return mSubjdn;
+    }
+
+    public void setSn(String sn) {
+        mSn = sn;
+    }
+
+    public String getSn() {
+        return mSn;
+    }
 
     public AndroidBridge() {
     }
@@ -180,6 +234,145 @@ public class AndroidBridge {
             ne.printStackTrace();
         }
     }
+
+    // 인증서 전자서명
+    @JavascriptInterface
+    public void importCert(String strJsonObject) {
+        GLog.d("인증서 누름누름누ㅡㅁ");
+
+        initMagicMRS();
+
+        JSONObject jsonObject = null;
+        String authCode = "";
+        String callback = "";
+        try {
+            if (!strJsonObject.equals("")) {
+                jsonObject = new JSONObject(strJsonObject);
+                if (!jsonObject.isNull("authCode")) {
+                    authCode = jsonObject.getString("authCode");
+                }
+                if (!jsonObject.isNull("callback")) {
+                    callback = jsonObject.getString("callback");
+                }
+                setCallbakckFuction(callback);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mMagicMRS.importCertificateWithAuthCodeWithoutUI(authCode);
+
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                mWebView.loadUrl(Constant.WEB_SIGN_DISITAL_URL);
+//            }
+//        });
+    }
+
+    private String makeJsonResult(boolean isSuccess, int type, int errorCode) {
+        JSONObject obj = new JSONObject();
+        JSONObject data = new JSONObject();
+        String result = "";
+        try {
+            if (isSuccess) {
+                if (type == MagicMRSConfig.MAGICMRS_TYPE_EXPORT) {
+                    //인증서 내보내기 성공
+                    obj.put("resultCode", "EXPORT");
+                    GLog.d("makeJsonResult - authCode : " + getAuthCode());
+                    if (!"".equals(getAuthCode())) {
+                        data.put("issuNum", getAuthCode());
+                    }
+                } else {
+                    //인증서 가져오기 성공
+                    obj.put("resultCode", "SUCCESS");
+                }
+            } else {
+                if (errorCode == 3001) {
+                    //내보내기 시간 초과시
+                    data.put("errorCode", errorCode);
+                    obj.put("resultCode", "TIMEOUT");
+                } else {
+                    //내보내기 실패
+                    data.put("errorCode", errorCode);
+                    obj.put("resultCode", "FAIL");
+                }
+            }
+            obj.put("data", data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        result = obj.toString();
+        return result;
+    }
+
+    private void showToast(final String msg) {
+        if (Constant.IS_DEBUG) {
+            mActivity.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    private void initMagicMRS() {
+        MagicMRSCallback magicMRSCallback = new MagicMRSCallback() {
+            @Override
+            public void MRSCallbackResult(int i, MagicMRSResult magicMRSResult, MRSCertificate mrsCertificate) {
+                GLog.d("MRSCallbackResult");
+                GLog.d("getErrorCode [" + magicMRSResult.getErrorCode() + "]");
+                GLog.d("getErrorDescription [" + magicMRSResult.getErrorDescription() + "]");
+
+                String type = null;
+                if (i == MagicMRSConfig.MAGICMRS_TYPE_IMPORT_AUTHCODE || i == MagicMRSConfig.MAGICMRS_TYPE_IMPORT_QRCODE) {
+                    type = "인증서 가져오기";
+                } else if (i == MagicMRSConfig.MAGICMRS_TYPE_EXPORT) {
+                    type = "인증서 내보내기";
+                }
+
+                if (magicMRSResult.getErrorCode() == 0) {
+//                    showToast(type + "에 성공하였습니다.");
+                    // QRCode로 인증서 가져오기 , AuthCode로 가져오기
+                    if (i == MagicMRSConfig.MAGICMRS_TYPE_IMPORT_QRCODE || i == MagicMRSConfig.MAGICMRS_TYPE_IMPORT_AUTHCODE) {
+                        // 인증서 저장
+                        processCertificate.writeCert(mrsCertificate);
+                    }
+                    //결과값을 json 스트릥으로 변경
+                    String result = makeJsonResult(true, i, magicMRSResult.getErrorCode());
+                    callbackFunction(getCallbackFunction(), result);
+                } else {
+                    String result = makeJsonResult(false, i, magicMRSResult.getErrorCode());
+                    callbackFunction(getCallbackFunction(), result);
+                    showToast(type + "에 실패하였습니다.(" + magicMRSResult.getErrorCode() + ")");
+                }
+
+                try {
+                    if (mMagicMRS != null) {
+                        mMagicMRS.finalizeMagicMRS();
+                    }
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        mMagicMRS = new MagicMRS(mActivity, magicMRSCallback);
+        //MRS 초기화
+        mMagicMRS.initializeMagicMRS();
+
+        String serverIp = "";
+        String serverPort = "";
+
+        serverIp = Constant.PDS_MRS_SERVER_IP;
+        serverPort = Constant.PDS_MRS_SERVER_PORT;
+
+        mMagicMRS.setURL(serverIp, serverPort);
+    }
+
+//    @JavascriptInterface
+//    public void open(String url, String winName, String features) {
+//
+//    }
 
     // 구간 암호화
     @JavascriptInterface
