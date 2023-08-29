@@ -18,6 +18,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.view.Window;
 import android.view.WindowManager;
@@ -32,6 +33,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URLDecoder;
@@ -100,15 +102,103 @@ public class Utils {
         return true;
     }
 
+    // 파일을 저장하려는 폴더가 존재하지 않을 경우 생성하여 반환
+    public static File makeDirectory(Context context) {
+        GLog.i("call :: makeDirectory");
+        File dir;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            dir = new File(context.getCacheDir().getPath() + File.separator + Constant.FILE_CACHE_DIRECTORY_NAME);
+        } else {
+            dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), Constant.FILE_CACHE_DIRECTORY_NAME);
+        }
+
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        return dir;
+    }
+
+    // 저장 되어 있는 임시 img 파일을 삭제
+    public static void clearCacheFiles(Context context) {
+        GLog.i("call :: clearCacheFiles");
+        File dir;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            dir = new File(context.getCacheDir().getPath() + File.separator + Constant.FILE_CACHE_DIRECTORY_NAME);
+        } else {
+            dir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), Constant.FILE_CACHE_DIRECTORY_NAME);
+        }
+
+        GLog.i("SDK_INT_OVER dir == " + dir);
+        clearCacheRecursively(dir);
+    }
+
+    public static void clearCacheRecursively(File directory) {
+        GLog.i("call :: clearCacheRecursively ==== " + directory.isDirectory());
+
+        if (directory.isDirectory()) {
+            GLog.i("call :: clearCacheRecursively  1");
+            File[] files = directory.listFiles();
+            for (int i = 0; i < files.length; i++) {
+
+                GLog.i("call :: clearCacheRecursively  2");
+                File file = files[i];
+                if (file.isDirectory()) {
+
+                    GLog.i("call :: clearCacheRecursively  3");
+                    if (TextUtils.equals(file.getName(), Constant.FILE_CACHE_DIRECTORY_NAME)) {
+
+                        GLog.i("call :: clearCacheRecursively  4");
+                        File[] caches = directory.listFiles();
+                        for (int j = 0; j < caches.length; j++) {
+
+                            GLog.i("call :: clearCacheRecursively  5");
+                            File cache = caches[j];
+                            cache.delete();
+                        }
+//                        for (File cache : caches) {
+//                            // 파일 삭제
+//                            cache.delete();
+//                        }
+                    } else {
+                        // 하위 directory 일 경우
+                        clearCacheRecursively(file);
+                    }
+                } else {
+                    // 파일 삭제
+                    file.delete();
+                }
+            }
+//            for (File file : files) {
+//                if (file.isDirectory()) {
+//                    if (TextUtils.equals(file.getName(), Constant.FILE_CACHE_DIRECTORY_NAME)) {
+//                        File[] caches = directory.listFiles();
+//                        for (File cache : caches) {
+//                            // 파일 삭제
+//                            cache.delete();
+//                        }
+//                    } else {
+//                        // 하위 directory 일 경우
+//                        clearCacheRecursively(file);
+//                    }
+//                } else {
+//                    // 파일 삭제
+//                    file.delete();
+//                }
+//            }
+        }
+    }
+
+
     public static ArrayList<String> getPermissionListAll() {
         ArrayList<String> permissionList = new ArrayList<>();
         permissionList.add(Manifest.permission.READ_CONTACTS);
         permissionList.add(Manifest.permission.CAMERA);
+        permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
-            // 외부 저장소 허용, R 이상은 권한 불필요
-            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        }
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+//            // 외부 저장소 허용, R 이상은 권한 불필요
+//            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // 파일 다운로드 필요 권한 버전 티라미수 이상
@@ -118,7 +208,6 @@ public class Utils {
         } else {
             // 파일 다운로드 필요 권한
             permissionList.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-//            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
         return permissionList;
     }
