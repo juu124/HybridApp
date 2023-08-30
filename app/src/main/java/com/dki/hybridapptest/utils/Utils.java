@@ -309,31 +309,25 @@ public class Utils {
             String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()).toLowerCase();
             String mimeType = mtm.getMimeTypeFromExtension(fileExtension);
 
+            if (TextUtils.isEmpty(destFileName)) {
+                GLog.d("fileDownload====== destFileName : " + destFileName);
+                fileName = destFileName;
+            }
+
             fileName = fileName.replaceAll("\"", "");
             GLog.d("fileDownload====== fileName : " + fileName);
             DownloadManager.Request request = new DownloadManager.Request(downloadUri);
+            request.setTitle(fileName);
+            request.setDescription("Downloading file...");
+            request.setNotificationVisibility(1);
+            request.setMimeType(mimeType);
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
 
-            if (TextUtils.isEmpty(destFileName)) {
-                GLog.d("fileDownload====== fileName : " + fileName);
-                request.setTitle(fileName);
-                request.setDescription("Downloading file...");
-                request.setNotificationVisibility(1);
-                request.setMimeType(mimeType);
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
-            } else {
-                GLog.d("fileDownload====== destFileName : " + destFileName);
-                request.setTitle(destFileName);
-                request.setDescription("Downloading file...");
-                request.setNotificationVisibility(1);
-                request.setMimeType(mimeType);
-                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, destFileName);
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
-            }
             // 다운로드 매니저에 요청 등록
             downloadManager.enqueue(request);
         } catch (Exception e) {
-            GLog.e("Exception : " + e.toString());
+            GLog.e("Exception : " + e.getMessage());
         }
     }
 
