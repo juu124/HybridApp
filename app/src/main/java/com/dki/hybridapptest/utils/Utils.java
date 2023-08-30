@@ -193,12 +193,12 @@ public class Utils {
         ArrayList<String> permissionList = new ArrayList<>();
         permissionList.add(Manifest.permission.READ_CONTACTS);
         permissionList.add(Manifest.permission.CAMERA);
-        permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//        permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
-//            // 외부 저장소 허용, R 이상은 권한 불필요
-//            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//        }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.R) {
+            // 외부 저장소 허용, R 이상은 권한 불필요
+            permissionList.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             // 파일 다운로드 필요 권한 버전 티라미수 이상

@@ -1,4 +1,4 @@
-package com.dki.hybridapptest;
+package com.dki.hybridapptest.base;
 
 import android.app.Application;
 
