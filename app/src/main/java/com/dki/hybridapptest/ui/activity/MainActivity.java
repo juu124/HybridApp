@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -35,8 +37,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.Interface.ProgressBarListener;
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.dialog.CustomDialog;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.ui.activity.bridge.AndroidBridge;
@@ -83,12 +87,12 @@ public class MainActivity extends AppCompatActivity {
     private String currentPhotoPath;
     private File photoFile = null;
     private String photoPath = null;
-    private Uri photoURI;
 
     // 인증서
     private MagicMRS mMagicMRS = null;
     private Uri mCameraOutputFileUri = null;
 
+    // 업로드 카메라 이미지 파일
     private void uploadImgFileFromCamera(Uri uri) {
         GLog.d("uploadImgFileFromCamera uri == " + uri);
 
@@ -118,12 +122,6 @@ public class MainActivity extends AppCompatActivity {
                 if (intent == null) {
                     GLog.d("intent null");
                     uploadImgFileFromCamera(mCameraOutputFileUri);
-//                    Uri[] results = {photoURI};
-//                    GLog.d("results ==== " + results);
-//                    if (mFilePathCallback != null) {
-//                        GLog.d("mFilePathCallback not null ==== ");
-//                        mFilePathCallback.onReceiveValue(results);
-//                    }
                 } else {
                     GLog.d("intent not null");
                     Uri photoValue = intent.getData();
@@ -133,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                             mFilePathCallback.onReceiveValue(uris);
                         }
                     }
-//                    mFilePathCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(result.getResultCode(), result.getData()));
                 }
                 mFilePathCallback = null;
             } else {
@@ -240,6 +237,8 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
+        mWebSettings.setDefaultTextEncodingName("utf-8");
         mWebView.addJavascriptInterface(androidBridge, "DKITec");
         mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
         webPlugin_Init(MainActivity.this);
@@ -314,6 +313,40 @@ public class MainActivity extends AppCompatActivity {
 
         // webView 화면 (전화, e-mail, 외부 url 링크)
         mWebView.setWebViewClient(new WebViewClient() {
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                GLog.d("웹뷰 시작");
+                super.onPageStarted(view, url, favicon);
+            }
+
+            // webView Error
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                GLog.d("웹뷰 에러");
+                super.onReceivedError(view, request, error);
+                GLog.d("error====" + error);
+                if (error.equals(ERROR_AUTHENTICATION) || error.equals(ERROR_BAD_URL) || error.equals(ERROR_CONNECT) || error.equals(ERROR_FAILED_SSL_HANDSHAKE) ||
+                        error.equals(ERROR_FILE) || error.equals(ERROR_FILE_NOT_FOUND) || error.equals(ERROR_HOST_LOOKUP) || error.equals(ERROR_IO) || error.equals(ERROR_PROXY_AUTHENTICATION) ||
+                        error.equals(ERROR_REDIRECT_LOOP) || error.equals(ERROR_TIMEOUT) || error.equals(ERROR_TOO_MANY_REQUESTS) || error.equals(ERROR_UNKNOWN) || error.equals(ERROR_UNSUPPORTED_AUTH_SCHEME) || error.equals(ERROR_UNSUPPORTED_SCHEME)) {
+//                if (error.equals(ERROR_UNSUPPORTED_SCHEME)) {
+                    view.loadUrl("about:blank"); // 빈페이지 출력
+                    CustomDialog customDialog = new CustomDialog(MainActivity.this, new CustomDialogClickListener() {
+                        @Override
+                        public void onPositiveClick(String text) {
+                            // 확인시 클릭 이벤트
+                            finish();
+                        }
+
+                        @Override
+                        public void onNegativeClick() {
+
+                        }
+                    }, "에러", "네트워크 상태가 원활하지 않습니다. 어플을 종료합니다.", Constant.ONE_BUTTON, true);
+                    customDialog.setCancelable(false);
+                    customDialog.setOneButtonText("확인");
+                    customDialog.show();
+                }
+            }
+
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 String url = request.getUrl().toString();
                 if (TextUtils.isEmpty(url)) {
@@ -375,7 +408,9 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        mMagicMRS = new MagicMRS(this, callback);
+        mMagicMRS = new
+
+                MagicMRS(this, callback);
 //        mMagicMRS.initializeMagicMRS();
 //        mMagicMRS.setURL(/*MagicMRS Server IP*/, /*MagicMRS Server Port*/);
     }
@@ -518,6 +553,7 @@ public class MainActivity extends AppCompatActivity {
     public void webPlugin_Init(Context c) {
         GLog.d("잘 들어왔습니다. =========" + c);
         if (Constant.USE_XSIGN_DREAM || Constant.USE_XSIGN_PLUGIN_DREAM) {
+            GLog.d("웹 플러그인 == ");
             int SDK_INT = Build.VERSION.SDK_INT;
             try {
                 MagicXSign xSign = null;

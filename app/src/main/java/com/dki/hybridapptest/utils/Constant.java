@@ -95,8 +95,8 @@ public class Constant {
     public static final String LOGIN_PW = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
 
     // sample.html 주소
-    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
-//    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/";
+//    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
+    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/";
 
     // 파일 업로드 주소
     public static final String WEB_FILE_UPLOAD_URL = "http://10.112.58.208/upload";
@@ -115,7 +115,7 @@ public class Constant {
     public static final String KEY_CNAME = "CNAME";
 
     // 파일 다운로드 url
-    public static final String FILE_DOWNLOAD_URL = "https://filesamples.com/samples/document/ppt/sample2.ppt";
+//    public static final String FILE_DOWNLOAD_URL = "https://filesamples.com/samples/document/ppt/sample2.ppt";
 
     // 다이얼로그
     public static String TWO_BUTTON = "TWO_BUTTON";
