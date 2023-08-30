@@ -323,27 +323,39 @@ public class MainActivity extends AppCompatActivity {
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 GLog.d("웹뷰 에러");
                 super.onReceivedError(view, request, error);
-                GLog.d("error====" + error);
-                if (error.equals(ERROR_AUTHENTICATION) || error.equals(ERROR_BAD_URL) || error.equals(ERROR_CONNECT) || error.equals(ERROR_FAILED_SSL_HANDSHAKE) ||
-                        error.equals(ERROR_FILE) || error.equals(ERROR_FILE_NOT_FOUND) || error.equals(ERROR_HOST_LOOKUP) || error.equals(ERROR_IO) || error.equals(ERROR_PROXY_AUTHENTICATION) ||
-                        error.equals(ERROR_REDIRECT_LOOP) || error.equals(ERROR_TIMEOUT) || error.equals(ERROR_TOO_MANY_REQUESTS) || error.equals(ERROR_UNKNOWN) || error.equals(ERROR_UNSUPPORTED_AUTH_SCHEME) || error.equals(ERROR_UNSUPPORTED_SCHEME)) {
-//                if (error.equals(ERROR_UNSUPPORTED_SCHEME)) {
-                    view.loadUrl("about:blank"); // 빈페이지 출력
-                    CustomDialog customDialog = new CustomDialog(MainActivity.this, new CustomDialogClickListener() {
-                        @Override
-                        public void onPositiveClick(String text) {
-                            // 확인시 클릭 이벤트
-                            finish();
-                        }
+                GLog.d("error====" + error.getErrorCode());
+                switch (error.getErrorCode()) {
+                    case ERROR_AUTHENTICATION: // 서버에서 사용자 인증 실패
+                    case ERROR_BAD_URL: // 잘못된 URL
+                    case ERROR_CONNECT: // 서버로 연결 실패
+                    case ERROR_FAILED_SSL_HANDSHAKE: // SSL handshake 수행 실패
+                    case ERROR_FILE: // 일반 파일 오류
+                    case ERROR_FILE_NOT_FOUND: // 파일을 찾을 수 없습니다
+                    case ERROR_HOST_LOOKUP: // 서버 또는 프록시 호스트 이름 조회 실패
+                    case ERROR_IO: // 서버에서 읽거나 서버로 쓰기 실패
+                    case ERROR_PROXY_AUTHENTICATION: // 프록시에서 사용자 인증 실패
+                    case ERROR_REDIRECT_LOOP: // 너무 많은 리디렉션
+                    case ERROR_TIMEOUT: // 연결 시간 초과
+                    case ERROR_TOO_MANY_REQUESTS: // 페이지 로드중 너무 많은 요청 발생
+                    case ERROR_UNKNOWN: // 일반 오류
+                    case ERROR_UNSUPPORTED_AUTH_SCHEME: // 지원되지 않는 인증 체계
+                    case ERROR_UNSUPPORTED_SCHEME:
+                        view.loadUrl("about:blank"); // 빈페이지 출력
+                        CustomDialog customDialog = new CustomDialog(MainActivity.this, new CustomDialogClickListener() {
+                            @Override
+                            public void onPositiveClick(String text) {
+                                // 확인시 클릭 이벤트
+                                finish();
+                            }
 
-                        @Override
-                        public void onNegativeClick() {
+                            @Override
+                            public void onNegativeClick() {
 
-                        }
-                    }, "에러", "네트워크 상태가 원활하지 않습니다. 어플을 종료합니다.", Constant.ONE_BUTTON, true);
-                    customDialog.setCancelable(false);
-                    customDialog.setOneButtonText("확인");
-                    customDialog.show();
+                            }
+                        }, "에러", "네트워크 상태가 원활하지 않습니다. 어플을 종료합니다.", Constant.ONE_BUTTON, true);
+                        customDialog.setCancelable(false);
+                        customDialog.show();
+                        customDialog.setOneButtonText("확인");
                 }
             }
 
