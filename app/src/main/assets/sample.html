@@ -56,6 +56,8 @@
 <!--<br><br>-->
 <br><br>
 <input type="button" value="End App" onclick="closeApp()"/>
+<br><br>
+<input type="button" value="Screen capture" onclick="captureScreen()"/>
 <script type="text/javascript" src="./autologin.html"></script>
 <!--<script type="text/javascript" src="js/jquery-1.10.2.js"></script>-->
 <!--<script type="text/javascript" src="js/jquery-ui.min.js"></script>-->
@@ -161,18 +163,27 @@
         DKITec.useEncryption();
 	}
 
-    function callbackSearchContact() {
-        console.log("callbackSearchContact : " + value);
+    function callbackCert() {
+        console.log("callbackCert : " + value);
     }
 
 	 <!-- 전자 서명 -->
     function importCert() {
-        DKITec.importCert('{"callback":"callbackSearchContact"}');
+        DKITec.importCert('{"callback":"callbackCert"}');
 	}
 
 	    <!-- 앱 종료 -->
     function closeApp() {
         DKITec.closeApp();
+    }
+
+    function callbackCaptureScreen(value) {
+        console.log("callbackCaptureScreen : " + value);
+    }
+
+    <!-- 화면 캡처 -->
+    function captureScreen() {
+        DKITec.captureScreen();
     }
 
 </script>

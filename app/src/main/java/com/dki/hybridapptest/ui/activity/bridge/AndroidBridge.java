@@ -246,7 +246,7 @@ public class AndroidBridge {
         String authCode = "";
         String callback = "";
         try {
-            if (!strJsonObject.equals("")) {
+            if (!TextUtils.isEmpty(strJsonObject)) {
                 jsonObject = new JSONObject(strJsonObject);
                 if (!jsonObject.isNull("authCode")) {
                     authCode = jsonObject.getString("authCode");
@@ -369,11 +369,6 @@ public class AndroidBridge {
         mMagicMRS.setURL(serverIp, serverPort);
     }
 
-//    @JavascriptInterface
-//    public void open(String url, String winName, String features) {
-//
-//    }
-
     // 구간 암호화
     @JavascriptInterface
     public void useEncryption() {
@@ -404,6 +399,26 @@ public class AndroidBridge {
             sendToSMS.putExtra("sms_body", shareMsg);
             mActivity.startActivity(sendToSMS);
         }
+    }
+
+    // 화면 캡처
+    @JavascriptInterface
+    public void captureScreen() {
+        GLog.d();
+        boolean result = Utils.screenCapture(mWebView.getRootView());
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (result) {
+                    Toast.makeText(mActivity, "캡처완료", Toast.LENGTH_SHORT).show();
+                    mWebView.loadUrl("javascript:callbackCaptureScreen('success')");
+                } else {
+                    Toast.makeText(mActivity, "캡처실패", Toast.LENGTH_SHORT).show();
+                    mWebView.loadUrl("javascript:callbackCaptureScreen('failure')");
+                }
+            }
+        });
     }
 
 //    // 파일 다운로드

@@ -4,11 +4,14 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.NotificationManager;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.hardware.fingerprint.FingerprintManager;
 import android.net.ConnectivityManager;
@@ -16,8 +19,11 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
@@ -25,8 +31,13 @@ import android.webkit.CookieSyncManager;
 import android.webkit.MimeTypeMap;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -34,7 +45,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Utils {
@@ -81,6 +94,7 @@ public class Utils {
         return resultList;
     }
 
+    // 모든 권한 검사
     public static boolean isGrantedAllPermission(Context context) {
         GLog.d("isGrantedAllPermission");
         for (String permission : getPermissionListAll()) {
@@ -123,6 +137,7 @@ public class Utils {
         clearCacheRecursively(dir);
     }
 
+    // 파일 캐시 삭제
     public static void clearCacheRecursively(File directory) {
         GLog.i("call :: clearCacheRecursively ==== " + directory.isDirectory());
 
@@ -146,10 +161,6 @@ public class Utils {
                             File cache = caches[j];
                             cache.delete();
                         }
-//                        for (File cache : caches) {
-//                            // 파일 삭제
-//                            cache.delete();
-//                        }
                     } else {
                         // 하위 directory 일 경우
                         clearCacheRecursively(file);
@@ -159,27 +170,109 @@ public class Utils {
                     file.delete();
                 }
             }
-//            for (File file : files) {
-//                if (file.isDirectory()) {
-//                    if (TextUtils.equals(file.getName(), Constant.FILE_CACHE_DIRECTORY_NAME)) {
-//                        File[] caches = directory.listFiles();
-//                        for (File cache : caches) {
-//                            // 파일 삭제
-//                            cache.delete();
-//                        }
-//                    } else {
-//                        // 하위 directory 일 경우
-//                        clearCacheRecursively(file);
-//                    }
-//                } else {
-//                    // 파일 삭제
-//                    file.delete();
-//                }
-//            }
         }
     }
 
+    public static byte[] bitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+        return byteArray;
+    }
 
+    // 화면 캡처
+    public static boolean screenCapture(View root) {
+        if (root == null) return false;
+        root.setDrawingCacheEnabled(true);
+        root.buildDrawingCache();
+        // 루트뷰의 캐시를 가져옴
+        Bitmap screenshot = root.getDrawingCache();
+
+        // get view coordinates
+        int[] location = new int[2];
+        root.getLocationInWindow(location);
+
+        // 이미지를 자를 수 있으나 전체 화면을 캡쳐 하도록 함
+        Bitmap bmp = Bitmap.createBitmap(screenshot, location[0], location[1], root.getWidth(), root.getHeight(), null, false);
+
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = timeStamp + ".png";
+
+        if (android.os.Build.VERSION.SDK_INT >= 28) {
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.DISPLAY_NAME, imageFileName);
+            values.put(MediaStore.Images.Media.MIME_TYPE, "image/*");
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                values.put(MediaStore.Images.Media.IS_PENDING, 1);
+            }
+
+            ContentResolver contentResolver = root.getContext().getContentResolver();
+            Uri item = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+
+            try {
+                ParcelFileDescriptor pfd = contentResolver.openFileDescriptor(item, "w", null);
+
+                if (pfd != null) {
+
+                    byte[] bmpToByte = Utils.bitmapToByteArray(bmp);
+
+                    FileOutputStream fos = new FileOutputStream(pfd.getFileDescriptor());
+                    fos.write(bmpToByte);
+                    fos.close();
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        values.clear();
+                        values.put(MediaStore.Images.Media.IS_PENDING, 0);
+                        contentResolver.update(item, values, null, null);
+                    }
+                }
+            } catch (FileNotFoundException e) {
+                GLog.e("FileNotFoundException == " + e.getMessage());
+//                com.dkitec.redwoodhealth.utils.RedwoodLog.printStackTrace(e);
+            } catch (IOException e) {
+                GLog.e("IOException == " + e.getMessage());
+//                com.dkitec.redwoodhealth.utils.RedwoodLog.printStackTrace(e);
+            }
+
+        } else {
+
+            String strFolderPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString();
+            File folder = new File(strFolderPath);
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+
+            String strFilePath = strFolderPath + "/" + imageFileName;
+            File fileCacheItem = new File(strFilePath);
+            OutputStream out = null;
+            try {
+                fileCacheItem.createNewFile();
+                out = new FileOutputStream(fileCacheItem);
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+
+                Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                intent.setData(Uri.fromFile(fileCacheItem));
+                root.getContext().sendBroadcast(intent);
+
+            } catch (Exception e) {
+                GLog.e("Exception == " + e.getMessage());
+//                com.dkitec.redwoodhealth.utils.RedwoodLog.printStackTrace(e);
+                return false;
+            } finally {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    GLog.e("IOException == " + e.getMessage());
+//                    com.dkitec.redwoodhealth.utils.RedwoodLog.printStackTrace(e);
+                }
+            }
+        }
+        root.setDrawingCacheEnabled(false);
+        return true;
+    }
+
+    // 권한 설정
     public static ArrayList<String> getPermissionListAll() {
         ArrayList<String> permissionList = new ArrayList<>();
         permissionList.add(Manifest.permission.READ_CONTACTS);
