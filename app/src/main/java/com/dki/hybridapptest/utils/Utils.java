@@ -4,10 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -24,19 +22,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.webkit.DownloadListener;
 import android.webkit.MimeTypeMap;
-import android.webkit.WebView;
-import android.widget.Toast;
-
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -93,8 +84,8 @@ public class Utils {
     public static boolean isGrantedAllPermission(Context context) {
         GLog.d("isGrantedAllPermission");
         for (String permission : getPermissionListAll()) {
+            GLog.d("permission ===== " + permission);
             if (context.checkSelfPermission(permission) == PackageManager.PERMISSION_DENIED) {
-                GLog.d("permission ===== " + permission);
                 return false;
             }
         }
@@ -212,66 +203,110 @@ public class Utils {
         return permissionList;
     }
 
-    // 파일 다운로드 리스너
-    public static void setDownloadListener(Activity activity, WebView webView) {
-        webView.setDownloadListener(new DownloadListener() {
-            @Override
-            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
-                try {
-                    MimeTypeMap mtm = MimeTypeMap.getSingleton();
-                    DownloadManager downloadManager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+    // 파일 다운로드
+    public static void fileDownload(Context context, String downUrl, String destFileName) {
+        try {
+            MimeTypeMap mtm = MimeTypeMap.getSingleton();
+            DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 
-                    Uri downloadUri = Uri.parse(url);
-                    // 파일 이름을 추출한다. contentDisposition에 filename이 있으면 그걸 쓰고 없으면 URL의 마지막 파일명을 사용한다.
-                    String fileName = downloadUri.getLastPathSegment();
-                    int pos = 0;
-                    contentDisposition = URLDecoder.decode(contentDisposition, "UTF-8"); //디코딩
-                    if ((pos = contentDisposition.toLowerCase().lastIndexOf("filename=")) >= 0) {
-                        fileName = contentDisposition.substring(pos + 9);
-                        pos = fileName.lastIndexOf(";");
-                        if (pos > 0) {
-                            fileName = fileName.substring(0, pos - 1);
-                        }
-                    }
+            Uri downloadUri = Uri.parse(downUrl);
+            String fileName = downloadUri.getLastPathSegment();
 
-                    // MIME Type을 확장자를 통해 예측한다.
-                    String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()).toLowerCase();
-                    String mimeType = mtm.getMimeTypeFromExtension(fileExtension);
+            // MIME Type을 확장자를 통해 예측한다.
+            String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()).toLowerCase();
+            String mimeType = mtm.getMimeTypeFromExtension(fileExtension);
 
-                    fileName = fileName.replaceAll("\"", "");
-                    DownloadManager.Request request = new DownloadManager.Request(downloadUri);
-                    request.setTitle(fileName);
-                    request.setDescription("Downloading file...");
-                    request.setNotificationVisibility(1);
-                    request.setMimeType(mimeType);
-                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
+            fileName = fileName.replaceAll("\"", "");
+            GLog.d("fileDownload====== fileName : " + fileName);
+            DownloadManager.Request request = new DownloadManager.Request(downloadUri);
 
-                    Toast.makeText(activity, "다운로드를 시작합니다.", Toast.LENGTH_SHORT).show();
-                    // 다운로드 매니저에 요청 등록
-                    downloadManager.enqueue(request);
-                    activity.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
-                } catch (Exception e) {
-                    if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                            Toast.makeText(activity, "다운로드를 위해\n권한이 필요합니다.", Toast.LENGTH_LONG).show();
-                            ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1004);
-                        } else {
-                            Toast.makeText(activity, "다운로드를 위해\n권한이 필요합니다.", Toast.LENGTH_LONG).show();
-                            ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1004);
-                        }
-                    }
-                }
+            if (TextUtils.isEmpty(destFileName)) {
+                GLog.d("fileDownload====== fileName : " + fileName);
+                request.setTitle(fileName);
+                request.setDescription("Downloading file...");
+                request.setNotificationVisibility(1);
+                request.setMimeType(mimeType);
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
+            } else {
+                GLog.d("fileDownload====== destFileName : " + destFileName);
+                request.setTitle(destFileName);
+                request.setDescription("Downloading file...");
+                request.setNotificationVisibility(1);
+                request.setMimeType(mimeType);
+                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, destFileName);
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
             }
-
-            BroadcastReceiver onComplete = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    Toast.makeText(activity, "다운로드가 완료되었어요.", Toast.LENGTH_SHORT).show();
-                }
-            };
-        });
+            // 다운로드 매니저에 요청 등록
+            downloadManager.enqueue(request);
+        } catch (Exception e) {
+            GLog.e("Exception : " + e.toString());
+        }
     }
+
+    // 파일 다운로드 리스너
+//    public static void setDownloadListener(Activity activity, WebView webView) {
+//        GLog.d();
+//        webView.setDownloadListener(new DownloadListener() {
+//            @Override
+//            public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+//                try {
+//
+//                    GLog.d("url ===" + url);
+//                    MimeTypeMap mtm = MimeTypeMap.getSingleton();
+//                    DownloadManager downloadManager = (DownloadManager) activity.getSystemService(Context.DOWNLOAD_SERVICE);
+//
+//                    Uri downloadUri = Uri.parse(url);
+//                    // 파일 이름을 추출한다. contentDisposition에 filename이 있으면 그걸 쓰고 없으면 URL의 마지막 파일명을 사용한다.
+//                    String fileName = downloadUri.getLastPathSegment();
+//                    int pos = 0;
+//                    contentDisposition = URLDecoder.decode(contentDisposition, "UTF-8"); //디코딩
+//                    if ((pos = contentDisposition.toLowerCase().lastIndexOf("filename=")) >= 0) {
+//                        fileName = contentDisposition.substring(pos + 9);
+//                        pos = fileName.lastIndexOf(";");
+//                        if (pos > 0) {
+//                            fileName = fileName.substring(0, pos - 1);
+//                        }
+//                    }
+//
+//                    // MIME Type을 확장자를 통해 예측한다.
+//                    String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()).toLowerCase();
+//                    String mimeType = mtm.getMimeTypeFromExtension(fileExtension);
+//
+//                    fileName = fileName.replaceAll("\"", "");
+//                    DownloadManager.Request request = new DownloadManager.Request(downloadUri);
+//                    request.setTitle(fileName);
+//                    request.setDescription("Downloading file...");
+//                    request.setNotificationVisibility(1);
+//                    request.setMimeType(mimeType);
+//                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+//                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).mkdirs();
+//
+//                    Toast.makeText(activity, "다운로드를 시작합니다.", Toast.LENGTH_SHORT).show();
+//                    // 다운로드 매니저에 요청 등록
+//                    downloadManager.enqueue(request);
+//                    activity.registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+//                } catch (Exception e) {
+//                    if (ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//                        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//                            Toast.makeText(activity, "다운로드를 위해\n권한이 필요합니다.", Toast.LENGTH_LONG).show();
+//                            ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1004);
+//                        } else {
+//                            Toast.makeText(activity, "다운로드를 위해\n권한이 필요합니다.", Toast.LENGTH_LONG).show();
+//                            ActivityCompat.requestPermissions(activity, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1004);
+//                        }
+//                    }
+//                }
+//            }
+//
+//            BroadcastReceiver onComplete = new BroadcastReceiver() {
+//                @Override
+//                public void onReceive(Context context, Intent intent) {
+//                    Toast.makeText(activity, "다운로드가 완료되었어요.", Toast.LENGTH_SHORT).show();
+//                }
+//            };
+//        });
+//    }
 
     public static String getFacetID(Context context) {
         try {

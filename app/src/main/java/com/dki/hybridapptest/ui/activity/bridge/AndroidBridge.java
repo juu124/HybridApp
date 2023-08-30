@@ -406,15 +406,44 @@ public class AndroidBridge {
         }
     }
 
+//    // 파일 다운로드
+//    @JavascriptInterface
+//    public void fileDownload() {
+//        handler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                GLog.d();
+//                mWebView.loadUrl(Constant.FILE_DOWNLOAD_URL);
+//                Utils.setDownloadListener(mActivity, mWebView);
+//            }
+//        });
+//    }
+
     // 파일 다운로드
     @JavascriptInterface
-    public void fileDownload() {
-        GLog.d("fileDownload======");
+    public void fileDownload(String strJsonObject) {
+        GLog.d("fileDownload====== " + strJsonObject);
         handler.post(new Runnable() {
             @Override
             public void run() {
-                mWebView.loadUrl(Constant.FILE_DOWNLOAD_URL);
-                Utils.setDownloadListener(mActivity, mWebView);
+                String url = "";
+                String fileName = "";
+                JSONObject jsonObj = null;
+                try {
+                    if (!TextUtils.isEmpty(strJsonObject)) {
+                        jsonObj = new JSONObject(strJsonObject);
+                        if (!jsonObj.isNull("url")) {
+                            url = jsonObj.getString("url");
+                        }
+                        if (!jsonObj.isNull("fileName")) {
+                            fileName = jsonObj.getString("fileName");
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                GLog.d("fileDownload====== url : " + url);
+                Utils.fileDownload(mActivity, url, fileName);
             }
         });
     }
