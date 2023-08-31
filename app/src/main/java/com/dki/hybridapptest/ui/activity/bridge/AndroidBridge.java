@@ -31,6 +31,7 @@ import com.dki.hybridapptest.Interface.ProgressBarListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.CustomDialog;
 import com.dki.hybridapptest.dialog.InputDialog;
+import com.dki.hybridapptest.dto.UserAccount;
 import com.dki.hybridapptest.kfido.FIDORegistration;
 import com.dki.hybridapptest.model.ContactInfo;
 import com.dki.hybridapptest.ui.activity.EncryptionActivity;
@@ -472,6 +473,38 @@ public class AndroidBridge {
         SharedPreferencesAPI.getInstance(mActivity).setLoginPw("");
     }
 
+    //     로그인 저장값 (작성중)
+    @JavascriptInterface
+    public void setLoginInfo(String strJsonObject) {
+        GLog.d();
+        String callback = "";
+        JSONObject jsonObj = null;
+        try {
+            if (!TextUtils.isEmpty(strJsonObject)) {
+                GLog.d("로그인 정보 ===== " + strJsonObject);
+                jsonObj = new JSONObject(strJsonObject);
+                if (!jsonObj.isNull("callback")) {
+                    callback = jsonObj.getString("callback");
+                }
+
+                // todo:: 로그인 정보 파싱 id, pwd, isAdutoLogin
+                UserAccount userAccount = new UserAccount();
+                userAccount.setId(jsonObj.getString("id"));
+                userAccount.setPwd(jsonObj.getString("pwd"));
+                userAccount.setAutoLogin(jsonObj.getBoolean("isAutoLogin"));
+
+                GLog.d(" 자동 로그인 정보 ===== " + jsonObj.getBoolean("isAutoLogin"));
+
+                SharedPreferencesAPI.getInstance(mActivity).setLoginId(jsonObj.getString("id"));
+                SharedPreferencesAPI.getInstance(mActivity).setLoginPw(jsonObj.getString("pwd"));
+                SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(jsonObj.getBoolean("isAutoLogin"));
+                Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     // 프로그래스바 리스너 show/unshown
     private void showProgressBarListener(boolean isShown) {
         if (progressBarListener == null) {
@@ -505,16 +538,16 @@ public class AndroidBridge {
 
     // 로그인
     @JavascriptInterface
-    public void login(String id, String pw, String check) {
+    public void login(String id, String pwd, boolean isAutoLogin) {
         loadWebView(true, "", 0); // 프로그래스 바 노출
-        GLog.d("name === " + id + "\n hash ==== " + pw + " \n check ====== " + check);
+        GLog.d("name === " + id + "\n hash ==== " + pwd + " \n check ====== " + isAutoLogin);
 
         // id가 null 일 때
         if (TextUtils.isEmpty(id)) {
             Toast.makeText(mActivity, "Username을 입력하세요.", Toast.LENGTH_SHORT).show();
         }
         // pw가 null 일 때
-        else if (TextUtils.isEmpty(pw)) {
+        else if (TextUtils.isEmpty(pwd)) {
             Toast.makeText(mActivity, "Password를 입력하세요.", Toast.LENGTH_SHORT).show();
         }
         // id가 똑같지 않을 때
@@ -522,21 +555,42 @@ public class AndroidBridge {
             Toast.makeText(mActivity, "Username을 다시 입력하세요.", Toast.LENGTH_SHORT).show();
         }
         // PW가 똑같지 않을 때 때
-        else if (!TextUtils.equals(Constant.LOGIN_PW, pw)) {
+        else if (!TextUtils.equals(Constant.LOGIN_PW, pwd)) {
             Toast.makeText(mActivity, "Password를 다시 입력하세요.", Toast.LENGTH_SHORT).show();
         } else {
+//            JSONObject jsonObject = new JSONObject();
+//
+//            JSONObject data = new JSONObject();
+//            data.put("id", id);
+//            data.put("pwd", pwd);
+//            data.put("isAutoLogin", isAutoLogin);
+//
+//            JSONArray req_array = new JSONArray();
+//            req_array.put(data);
+//
+//            jsonObject.put("REQ_DATA", req_array);
+//            ArrayList<UserAccount> userAccounts = new ArrayList<>();
+//            for (:
+//                 ) {
+//
+//            }
+//            userAccounts.get(0).setId(id);
+
             // 입력한 id, pw 일치 했을 시 SharedPreferences에 저장
             SharedPreferencesAPI.getInstance(mActivity).setLoginId(id);
-            SharedPreferencesAPI.getInstance(mActivity).setLoginPw(pw);
+            SharedPreferencesAPI.getInstance(mActivity).setLoginPw(pwd);
+            SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(isAutoLogin);
             Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
 
-            // 자동 로그인 체크 저장
-            if (!TextUtils.isEmpty(check)) {
-                SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(Boolean.parseBoolean(check));
-            }
+//
+//
+//            // 자동 로그인 체크 저장
+//            if (isAutoLogin) {
+//                SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(isAutoLogin);
+//            }
 
             // push 사용자 등록
-            initPush(id, pw);
+            initPush(id, pwd);
 
             // 메인 화면 이동 및 프로그래스 바 노출
             loadWebView(false, Constant.WEB_VIEW_MAIN_URL, 500);

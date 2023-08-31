@@ -46,6 +46,7 @@ import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.ui.activity.bridge.AndroidBridge;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
+import com.dki.hybridapptest.utils.SharedPreferencesAPI;
 import com.dki.hybridapptest.utils.Utils;
 import com.dreamsecurity.magicmrs.MRSCertificate;
 import com.dreamsecurity.magicmrs.MagicMRS;
@@ -240,7 +241,14 @@ public class MainActivity extends AppCompatActivity {
 
         mWebSettings.setDefaultTextEncodingName("utf-8");
         mWebView.addJavascriptInterface(androidBridge, "DKITec");
-        mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
+
+        // 자동 로그인 여부에 따른 웹뷰 화면
+        GLog.d("자동 로그인=== " + SharedPreferencesAPI.getInstance(this).getAutoLogin());
+        if (SharedPreferencesAPI.getInstance(this).getAutoLogin()) {
+            mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
+        } else {
+            mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
+        }
         webPlugin_Init(MainActivity.this);
 
         // 파일 업로드 (카메라, 내 파일)
