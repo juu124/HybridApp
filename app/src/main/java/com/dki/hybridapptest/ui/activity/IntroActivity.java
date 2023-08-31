@@ -16,7 +16,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.R;
@@ -39,10 +38,6 @@ public class IntroActivity extends AppCompatActivity {
     public static Context mContext;
     private Handler handler = new Handler(Looper.getMainLooper());
     private Intent intent;
-
-    // 권한
-//    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_MEDIA_AUDIO, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_IMAGES};  // 권한 리스트
-//    private static final String[] permissionName = {Manifest.permission.READ_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};  // 권한 리스트
 
     // 권한 코드
     private static final int permissionReqCode = 1000;
@@ -82,25 +77,6 @@ public class IntroActivity extends AppCompatActivity {
             }, 500);
         }
 
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//            if (Constant.USE_PUSH_FIREBASE) {
-//                initPush(); // push 알림 권한
-//            }
-//            requestPermissions(Constant.REQUIRED_PERMISSIONS_OVER_TIRAMISU, permissionReqCode);
-//        } else {
-//            if (Constant.USE_PUSH_FIREBASE) {
-//                initPush(); // push 알림 권한
-//            }
-//            requestPermissions(Constant.REQUIRED_PERMISSIONS_UNDER_TIRAMISU, permissionReqCode);
-//        }
-
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            if (Constant.USE_PUSH_FIREBASE) {
-//                initPush(); // push 알림 권한
-//            }
-//            requestPermissions(permissionName, permissionReqCode);
-//        }
-
         // push 초기화 (앱 실행시마다 호출)
         // Manifest.xml 설정 파일에서 라이브러리를 초기화하기 위한 정보를 가져온다.
         // Parameters: context (Context) – 현재 Context
@@ -137,34 +113,6 @@ public class IntroActivity extends AppCompatActivity {
                 customDialog.setCancelable(false);
                 customDialog.show();
             }
-
-//            if (checkSomePermission()) {  // 권한이 허용되었을 경우에 대한 처리를 진행
-//                GLog.d("권한 허용");
-//                // 설정화면으로 이동
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        startCheck();
-//                    }
-//                }, 500);
-//            } else {
-//                Toast.makeText(this, "필수 권한을 설정해주세요.", Toast.LENGTH_SHORT).show();
-//                CustomDialog customDialog = new CustomDialog(this, new CustomDialogClickListener() {
-//                    @Override
-//                    public void onPositiveClick(String text) {
-//                        moveToPermissionSetting();
-//                    }
-//
-//                    @Override
-//                    public void onNegativeClick() {
-//                        // 권한 설정 거부
-//                        finish();
-//                    }
-//                }, "권한 알림", this.getResources().getString(R.string.permission_app_message), Constant.TWO_BUTTON, true);
-//                customDialog.setTwoButtonText("닫기", "설정");
-//                customDialog.setCancelable(false);
-//                customDialog.show();
-//            }
         });
     }
 
@@ -367,43 +315,5 @@ public class IntroActivity extends AppCompatActivity {
         } catch (Exception e) {
             GLog.d("usri parse 불가 == " + e);
         }
-    }
-
-    // 권한 여부
-//    private boolean checkSomePermission() {
-//        GLog.d( "권한체크 시작!");
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//            if (hasPermission(this, Constant.REQUIRED_PERMISSIONS_OVER_TIRAMISU)) {
-//                GLog.d( "OVER 티라미수 버전 권한 확인 성공");
-//                startCheck();
-//                return true;
-//            } else {
-//                GLog.d( "OVER 티라미수 버전 권한 확인 실패");
-//                moveToPermissionSetting();
-//                return false;
-//            }
-//        } else {
-//            if (hasPermission(this, Constant.REQUIRED_PERMISSIONS_UNDER_TIRAMISU)) {
-//                GLog.d( "UNDER 티라미수 버전 권한 확인 성공");
-//                startCheck();
-//                return true;
-//            } else {
-//                GLog.d( "UNDER 티라미수 버전 권한 확인 실패");
-//                moveToPermissionSetting();
-//                return false;
-//            }
-//        }
-//    }
-
-    // 권한 여부
-    private boolean checkSomePermission() {
-        for (int i = 0; i < Constant.REQUIRED_PERMISSIONS_OVER_TIRAMISU.length; i++) {
-            if (ContextCompat.checkSelfPermission(this, Constant.REQUIRED_PERMISSIONS_OVER_TIRAMISU[i]) != PackageManager.PERMISSION_GRANTED) { // 권한 부여 실패
-                return false;
-            } else {
-                return true;
-            }
-        }
-        return false;
     }
 }

@@ -484,23 +484,23 @@ public class AndroidBridge {
         }
     }
 
-    // 로그인 페이지 접속
-    @JavascriptInterface
-    public void moveLoginPage() {
-        GLog.d("SharedPreferencesAPI.getInstance(mActivity).getAutoLogin() == " + SharedPreferencesAPI.getInstance(mActivity).getAutoLogin());
-
-        // 로그인 화면으로 이동
-        loadWebView(true, Constant.WEB_VIEW_LOGIN_URL, 0);
-
-        if (SharedPreferencesAPI.getInstance(mActivity).getAutoLogin() &&
-                TextUtils.equals(Constant.LOGIN_ID, SharedPreferencesAPI.getInstance(mActivity).getLoginId()) &&
-                TextUtils.equals(Constant.LOGIN_PW, SharedPreferencesAPI.getInstance(mActivity).getLoginPw())) {
-            loadWebView(false, Constant.WEB_VIEW_MAIN_URL, 500); // 메인 화면 이동 및 프로그래스 바 노출
-            Toast.makeText(mActivity, "자동로그인", Toast.LENGTH_SHORT).show();
-        } else {
-            loadWebView(false, "", 500); // 프로그래스 바 비노출
-        }
-    }
+    // 로그인 페이지 접속 (서버 생성 전에 사용)
+//    @JavascriptInterface
+//    public void moveLoginPage() {
+//        GLog.d("SharedPreferencesAPI.getInstance(mActivity).getAutoLogin() == " + SharedPreferencesAPI.getInstance(mActivity).getAutoLogin());
+//
+//        // 로그인 화면으로 이동
+//        loadWebView(true, Constant.WEB_VIEW_LOGIN_URL, 0);
+//
+//        if (SharedPreferencesAPI.getInstance(mActivity).getAutoLogin() &&
+//                TextUtils.equals(Constant.LOGIN_ID, SharedPreferencesAPI.getInstance(mActivity).getLoginId()) &&
+//                TextUtils.equals(Constant.LOGIN_PW, SharedPreferencesAPI.getInstance(mActivity).getLoginPw())) {
+//            loadWebView(false, Constant.WEB_VIEW_MAIN_URL, 500); // 메인 화면 이동 및 프로그래스 바 노출
+//            Toast.makeText(mActivity, "자동로그인", Toast.LENGTH_SHORT).show();
+//        } else {
+//            loadWebView(false, "", 500); // 프로그래스 바 비노출
+//        }
+//    }
 
     // 로그인 (서버 생생 전에 사용)
 //    @JavascriptInterface
@@ -593,7 +593,6 @@ public class AndroidBridge {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    // TODO Auto-generated method stub
                     GLog.d("push checkNetWork true");
                     PushManager.getInstance().registerServiceAndUser(mActivity, params);
 //                    GLog.d("push checkNetWork true ==== " + PushManager.getInstance().getPushJsonData());

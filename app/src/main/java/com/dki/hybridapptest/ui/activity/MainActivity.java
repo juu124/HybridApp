@@ -41,6 +41,7 @@ import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.Interface.ProgressBarListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.CustomDialog;
+import com.dki.hybridapptest.dto.LoginResponse;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
 import com.dki.hybridapptest.ui.activity.bridge.AndroidBridge;
@@ -58,7 +59,6 @@ import com.dreamsecurity.xsignweb.XSignWebPlugin;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -316,29 +316,25 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Response response) {
                     try {
-                        String responseStr = new Gson().toJson(response.body());
-                        JSONObject jsonObject = new JSONObject(responseStr);
-                        GLog.d("data == " + jsonObject.getJSONObject("data"));
-                        GLog.d("resultCode == " + jsonObject.getString("resultCode"));
+                        if (response.isSuccessful() && response.body() != null) {
+                            LoginResponse loginResponse = (LoginResponse) response.body();
+                            GLog.d("data == " + loginResponse.getData());
+                            GLog.d("resultCode == " + loginResponse.getResultCode());
+                            GLog.d("isLoginCheck == " + loginResponse.getData().getIsLoginCheck());
 
-                        JSONObject data = new JSONObject(jsonObject.getString("data"));
-                        GLog.d("isLoginCheck == " + data.getBoolean("isLoginCheck"));
+                            // 자동 로그인 여부에 따른 웹뷰 화면
+                            if (loginResponse.getData().getIsLoginCheck()) {
+                                mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
+                            } else {
+                                mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
+                            }
 
-                        // 자동 로그인 여부에 따른 웹뷰 화면
-                        if (data.getBoolean("isLoginCheck")) {
-                            mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
                         } else {
-                            mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
+                            GLog.d("오류 메세지 == " + response.errorBody().toString());
                         }
+
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
-
-                    if (response.isSuccessful() && response.body() != null) {
-                        GLog.d("성공 == " + new Gson().toJson(response.body()));
-                        GLog.d("getData == " + response.body());
-                    } else {
-                        GLog.d("오류 메세지 == " + response.errorBody().toString());
                     }
                 }
 
@@ -354,14 +350,13 @@ public class MainActivity extends AppCompatActivity {
         // webView 화면 (전화, e-mail, 외부 url 링크)
         mWebView.setWebViewClient(new WebViewClient() {
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                GLog.d("웹뷰 시작");
                 super.onPageStarted(view, url, favicon);
             }
 
             // webView 에러
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
-                GLog.d("웹뷰 에러");
+                GLog.d();
                 super.onReceivedError(view, request, error);
                 GLog.d("error====" + error.getErrorCode());
                 switch (error.getErrorCode()) {

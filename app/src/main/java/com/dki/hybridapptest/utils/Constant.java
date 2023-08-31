@@ -2,6 +2,7 @@ package com.dki.hybridapptest.utils;
 
 public class Constant {
 
+    /********************* 라이브러리  ************************/
     //true: 디버그 false: 배포버전
     public static boolean IS_DEBUG = true;
 
@@ -26,48 +27,57 @@ public class Constant {
     //true: 화면 캡쳐 fasle: 화면 캡쳐 기능 사용 불가
     public static boolean USE_SCREEN_SHOT = false;
 
-    // 필수권한 목록
-    public static final String[] REQUIRED_PERMISSIONS_UNDER_TIRAMISU = {
-            android.Manifest.permission.READ_CONTACTS,
-            android.Manifest.permission.READ_EXTERNAL_STORAGE,
-            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
 
-    public static final String[] REQUIRED_PERMISSIONS_OVER_TIRAMISU = {
-            android.Manifest.permission.READ_CONTACTS,
-            android.Manifest.permission.READ_MEDIA_AUDIO,
-            android.Manifest.permission.READ_MEDIA_VIDEO,
-            android.Manifest.permission.READ_MEDIA_IMAGES
-    };
+    /********************* 웹 URL ************************/
+    // 메인 서버 주소
+    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/";
+
+    // sample.html 주소
+//    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
+
+    // 파일 업로드 주소
+    public static final String WEB_FILE_UPLOAD_URL = "http://10.112.58.208/upload";
+
+    // 인증서 주소
+    public static final String WEB_SIGN_DISITAL_URL = "file:///android_asset/index.html";
+
+    // 로그인 주소
+    //    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/login";
+    public static final String WEB_VIEW_LOGIN_URL = "http://10.112.58.208/login";
 
     //    public static String BASE_URL ="https://devpds.mydatacenter.or.kr:9443";
     public static String BASE_URL = "https://pds.mydatacenter.or.kr:9443";
     public static String TUTORIAL_URL = "/membership/identification.do";
     public static String HOST_URL = "/auth/index.do";
 
-    //kfido url
+    //kfido 주소
 //    public static String KPIDO_URL = "https://devfidosvc.mydatacenter.or.kr:9443";
     public static String KPIDO_URL = "https://fidosvc.mydatacenter.or.kr:9443";
     public static String REQ_URL = "/processUafRequest.jspx?site=";
     public static String RES_URL = "/processUafResponse.jspx?site=";
-
-    //Kfido 인증방식
-    public static String PATTERN = "PATTERN";
-    public static String FINGER = "FINGER";
 
     // 인증서 가져오기 내보내기 IP, PORT 설정
 //    public static String PDS_MRS_SERVER_IP = "https://devmrs.mydatacenter.or.kr";
     public static String PDS_MRS_SERVER_IP = "https://mrs.mydatacenter.or.kr";
     public static String PDS_MRS_SERVER_PORT = "25050";
 
-    //푸쉬 서버 주소
-    public static String PUSH_SERVER_URL = "https://pushapi.mydatacenter.or.kr:9443";
-
-    //Trust 앱 url
+    //Trust 앱 주소
 //    public static String SERVER_URL_VERITY = "https://devpds.mydatacenter.or.kr:9443/trustapp_svr/trustapp_server_demo.jsp";
     public static String SERVER_URL_VERITY = "https://pds.mydatacenter.or.kr:9443/trustapp_svr/trustapp_server_demo.jsp";
 
-    /********************* 프리퍼런스 키값 시작 ************************/
+
+    /*********************  API URL ************************/
+    // user List 주소
+    public static final String USERS_INFO_URL = "https://reqres.in/api/";
+
+    // user login 주소
+    public static final String USERS_LOGIN_CHECK_URL = "http://10.112.58.208/pilot/api/";
+
+    //푸쉬 서버 주소
+    public static String PUSH_SERVER_URL = "https://pushapi.mydatacenter.or.kr:9443";
+
+
+    /********************* 프리퍼런스 키값 ************************/
     //앱 처음 실행시 튜토리얼 실행
     public static String TUTORIAL_KEY = "TUTORIAL";
 
@@ -85,45 +95,26 @@ public class Constant {
 
     //URL 주소
     public static String SELECT_URL = "SELECT_URL";
-    /********************* 프리퍼런스 키값 끝 ************************/
 
-    public static int PDF_ENC_VIEWER_REQUEST_CODE = 10001;
 
-    // 로그인
-//    public static final String WEB_VIEW_LOGIN_URL = "file:///android_asset/autologin.html";
-    public static final String LOGIN_ID = "1234";
-    public static final String LOGIN_PW = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
-
-    // sample.html 주소
-//    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
-    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/";
-
-    //    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/login";
-    public static final String WEB_VIEW_LOGIN_URL = "http://10.112.58.208/login";
-
-    // 파일 업로드 주소
-    public static final String WEB_FILE_UPLOAD_URL = "http://10.112.58.208/upload";
-
-    // 인증서 주소
-    public static final String WEB_SIGN_DISITAL_URL = "file:///android_asset/index.html";
-
-    // user List 주소
-    public static final String USERS_INFO_URL = "https://reqres.in/api/";
-
-    // user login 주소
-    public static final String USERS_LOGIN_CHECK_URL = "http://10.112.58.208/pilot/api/";
-
-    // Push Key 값
+    /********************* 여러 키 값 ************************/
+    // Push 키 값
     public static final String KEY_CUID = "CUID";
     public static final String KEY_CNAME = "CNAME";
 
-    // 파일 다운로드 url
-//    public static final String FILE_DOWNLOAD_URL = "https://filesamples.com/samples/document/ppt/sample2.ppt";
-
-    // 다이얼로그
+    // 다이얼로그 키 값
     public static String TWO_BUTTON = "TWO_BUTTON";
     public static String ONE_BUTTON = "ONE_BUTTON";
 
+    //Kfido 인증방식
+    public static String PATTERN = "PATTERN";
+    public static String FINGER = "FINGER";
+
+
+    /********************* 파일 이름 ************************/
     public static String FILE_CACHE_DIRECTORY_NAME = "pickImg";
 
+
+    /********************* 코드 번호 ************************/
+    public static int PDF_ENC_VIEWER_REQUEST_CODE = 10001;
 }
