@@ -106,12 +106,12 @@ public class Constant {
 
     // 인증서 주소
     public static final String WEB_SIGN_DISITAL_URL = "file:///android_asset/index.html";
-//    public static final String WEB_SIGN_DISITAL_URL = "file:///android_asset/show_popup_export.html";
-//    public static final String WEB_SIGN_DISITAL_URL = "file:///android_asset/show_popup_import.html";
-//    public static final String WEB_SIGN_DISITAL_URL = "file:///android_asset/install_popup.html";
 
     // user List 주소
     public static final String USERS_INFO_URL = "https://reqres.in/api/";
+
+    // user login 주소
+    public static final String USERS_LOGIN_CHECK_URL = "http://10.112.58.208/pilot/api/";
 
     // Push Key 값
     public static final String KEY_CUID = "CUID";

@@ -58,6 +58,7 @@ import com.dreamsecurity.xsignweb.XSignWebPlugin;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -92,6 +93,18 @@ public class MainActivity extends AppCompatActivity {
     // 인증서
     private MagicMRS mMagicMRS = null;
     private Uri mCameraOutputFileUri = null;
+
+    // 로그인
+    private String id;
+    private String pwd;
+    private boolean isLoginCheck;
+
+    // push
+    private BroadcastReceiver mMainBroadcastReceiver;
+    String token = null;
+
+    // 프로그래스 바
+    private RelativeLayout mProgressBar;
 
     // 업로드 카메라 이미지 파일
     private void uploadImgFileFromCamera(Uri uri) {
@@ -145,12 +158,6 @@ public class MainActivity extends AppCompatActivity {
         }
     });
 
-    // push
-    private BroadcastReceiver mMainBroadcastReceiver;
-    String token = null;
-
-    // 프로그래스 바
-    private RelativeLayout mProgressBar;
 
 //    @Override
 //    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -241,14 +248,6 @@ public class MainActivity extends AppCompatActivity {
 
         mWebSettings.setDefaultTextEncodingName("utf-8");
         mWebView.addJavascriptInterface(androidBridge, "DKITec");
-
-        // 자동 로그인 여부에 따른 웹뷰 화면
-        GLog.d("자동 로그인=== " + SharedPreferencesAPI.getInstance(this).getAutoLogin());
-        if (SharedPreferencesAPI.getInstance(this).getAutoLogin()) {
-            mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
-        } else {
-            mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
-        }
         webPlugin_Init(MainActivity.this);
 
         // 파일 업로드 (카메라, 내 파일)
@@ -308,16 +307,49 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        RetrofitApiManager.getInstance().requestPostUser(new RetrofitInterface() {
-            @Override
-            public void onResponse(Response response) {
-            }
+        id = SharedPreferencesAPI.getInstance(MainActivity.this).getLoginId();
+        pwd = SharedPreferencesAPI.getInstance(MainActivity.this).getLoginPw();
+        isLoginCheck = SharedPreferencesAPI.getInstance(this).getAutoLogin();
 
-            @Override
-            public void onFailure(Throwable t) {
-                GLog.d("오류 메세지 == " + t.toString());
-            }
-        });
+        if (isLoginCheck) {
+            RetrofitApiManager.getInstance().requestPostLogin(id, pwd, new RetrofitInterface() {
+                @Override
+                public void onResponse(Response response) {
+                    try {
+                        String responseStr = new Gson().toJson(response.body());
+                        JSONObject jsonObject = new JSONObject(responseStr);
+                        GLog.d("data == " + jsonObject.getJSONObject("data"));
+                        GLog.d("resultCode == " + jsonObject.getString("resultCode"));
+
+                        JSONObject data = new JSONObject(jsonObject.getString("data"));
+                        GLog.d("isLoginCheck == " + data.getBoolean("isLoginCheck"));
+
+                        // 자동 로그인 여부에 따른 웹뷰 화면
+                        if (data.getBoolean("isLoginCheck")) {
+                            mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
+                        } else {
+                            mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (response.isSuccessful() && response.body() != null) {
+                        GLog.d("성공 == " + new Gson().toJson(response.body()));
+                        GLog.d("getData == " + response.body());
+                    } else {
+                        GLog.d("오류 메세지 == " + response.errorBody().toString());
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    GLog.d("오류 메세지 == " + t.toString());
+                }
+            });
+        } else {
+            mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
+        }
 
         // webView 화면 (전화, e-mail, 외부 url 링크)
         mWebView.setWebViewClient(new WebViewClient() {
@@ -326,7 +358,7 @@ public class MainActivity extends AppCompatActivity {
                 super.onPageStarted(view, url, favicon);
             }
 
-            // webView Error
+            // webView 에러
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 GLog.d("웹뷰 에러");
@@ -428,11 +460,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        mMagicMRS = new
-
-                MagicMRS(this, callback);
-//        mMagicMRS.initializeMagicMRS();
-//        mMagicMRS.setURL(/*MagicMRS Server IP*/, /*MagicMRS Server Port*/);
+        mMagicMRS = new MagicMRS(this, callback);
     }
 
     @Override
@@ -571,9 +599,8 @@ public class MainActivity extends AppCompatActivity {
 
     // web 플러그 인 초기화
     public void webPlugin_Init(Context c) {
-        GLog.d("잘 들어왔습니다. =========" + c);
+        GLog.d();
         if (Constant.USE_XSIGN_DREAM || Constant.USE_XSIGN_PLUGIN_DREAM) {
-            GLog.d("웹 플러그인 == ");
             int SDK_INT = Build.VERSION.SDK_INT;
             try {
                 MagicXSign xSign = null;

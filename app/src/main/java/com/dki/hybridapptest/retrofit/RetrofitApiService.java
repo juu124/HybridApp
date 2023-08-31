@@ -1,8 +1,10 @@
 package com.dki.hybridapptest.retrofit;
 
+import com.dki.hybridapptest.dto.LoginResponse;
 import com.dki.hybridapptest.dto.UserCreate;
 import com.dki.hybridapptest.dto.UserCreateResponse;
 import com.dki.hybridapptest.dto.UserDataSupport;
+import com.dki.hybridapptest.dto.UserSimpleAccount;
 import com.dki.hybridapptest.dto.UsersList;
 
 import retrofit2.Call;
@@ -24,4 +26,7 @@ public interface RetrofitApiService {
 
     @POST("users/")
     Call<UserCreateResponse> getUserInfo(@Body UserCreate userCreate);
+
+    @POST("login/")
+    Call<LoginResponse> getLoginInfo(@Body UserSimpleAccount userSimpleAccount);
 }

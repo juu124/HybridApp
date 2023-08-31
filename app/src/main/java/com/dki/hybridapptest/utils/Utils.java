@@ -309,7 +309,7 @@ public class Utils {
             String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length()).toLowerCase();
             String mimeType = mtm.getMimeTypeFromExtension(fileExtension);
 
-            if (TextUtils.isEmpty(destFileName)) {
+            if (!TextUtils.isEmpty(destFileName)) {
                 GLog.d("fileDownload====== destFileName : " + destFileName);
                 fileName = destFileName;
             }

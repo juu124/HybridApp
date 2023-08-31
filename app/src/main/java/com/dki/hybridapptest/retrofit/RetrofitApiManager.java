@@ -1,8 +1,8 @@
 package com.dki.hybridapptest.retrofit;
 
-import com.dki.hybridapptest.dto.UserCreate;
-import com.dki.hybridapptest.dto.UserCreateResponse;
+import com.dki.hybridapptest.dto.LoginResponse;
 import com.dki.hybridapptest.dto.UserDataSupport;
+import com.dki.hybridapptest.dto.UserSimpleAccount;
 import com.dki.hybridapptest.dto.UsersList;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
@@ -42,6 +42,7 @@ public class RetrofitApiManager {
         return instance;
     }
 
+    // 유저 정보 목록 빌드
     public static Retrofit Build() {
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -54,6 +55,20 @@ public class RetrofitApiManager {
                 .build();
     }
 
+    // 로그인
+    public static Retrofit BuildLogin() {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        return new Retrofit.Builder()
+                .client(getUnsafeOkHttpClient().build()) //OkHttp 사용해서 로그 보기
+                .baseUrl(Constant.USERS_LOGIN_CHECK_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+    }
+
+    // 유저 정보 요청
     public void requestOneUserInfo(String idNum, RetrofitInterface retrofitInterface) {
         Build().create(RetrofitApiService.class).getOneUser(idNum).enqueue(new Callback<UserDataSupport>() {
             @Override
@@ -68,20 +83,7 @@ public class RetrofitApiManager {
         });
     }
 
-//    public void requestGetUser(RetrofitInterface retrofitInterface) {
-//        Build().create(RetrofitApiService.class).getOneUserInfo("2").enqueue(new Callback<UsersList>() {
-//            @Override
-//            public void onResponse(Call<UsersList> call, Response<UsersList> response) {
-//                retrofitInterface.onResponse(response);
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UsersList> call, Throwable t) {
-//                retrofitInterface.onFailure(t);
-//            }
-//        });
-//    }
-
+    // 유저 정보 목록 요청
     public void requestUserInfoList(RetrofitInterface retrofitInterface) {
         Build().create(RetrofitApiService.class).getUserInfoList().enqueue(new Callback<UsersList>() {
             @Override
@@ -96,6 +98,7 @@ public class RetrofitApiManager {
         });
     }
 
+    // 더보기 유저 정보 목록 요청
     public void requestUserNextList(int page, RetrofitInterface retrofitInterface) {
         Build().create(RetrofitApiService.class).getUserNextInfo(page).enqueue(new Callback<UsersList>() {
             @Override
@@ -110,16 +113,17 @@ public class RetrofitApiManager {
         });
     }
 
-    public void requestPostUser(RetrofitInterface retrofitInterface) {
-        UserCreate userCreate = new UserCreate("aaa", "leader");
-        Build().create(RetrofitApiService.class).getUserInfo(userCreate).enqueue(new Callback<UserCreateResponse>() {
+    // 로그인 id, pw 확인
+    public void requestPostLogin(String id, String pwd, RetrofitInterface retrofitInterface) {
+        UserSimpleAccount userSimpleAccount = new UserSimpleAccount(id, pwd);
+        BuildLogin().create(RetrofitApiService.class).getLoginInfo(userSimpleAccount).enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<UserCreateResponse> call, Response<UserCreateResponse> response) {
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 retrofitInterface.onResponse(response);
             }
 
             @Override
-            public void onFailure(Call<UserCreateResponse> call, Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
                 retrofitInterface.onFailure(t);
             }
         });

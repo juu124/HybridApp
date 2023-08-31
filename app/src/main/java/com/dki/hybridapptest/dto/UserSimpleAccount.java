@@ -1,9 +1,18 @@
 package com.dki.hybridapptest.dto;
 
-public class UserAccount {
+import com.google.gson.annotations.SerializedName;
+
+public class UserSimpleAccount {
+    @SerializedName("id")
     private String id;
+
+    @SerializedName("pwd")
     private String pwd;
-    private boolean isAutoLogin;
+
+    public UserSimpleAccount(String id, String pwd) {
+        this.id = id;
+        this.pwd = pwd;
+    }
 
     public String getId() {
         return id;
@@ -19,13 +28,5 @@ public class UserAccount {
 
     public void setPwd(String pwd) {
         this.pwd = pwd;
-    }
-
-    public boolean isAutoLogin() {
-        return isAutoLogin;
-    }
-
-    public void setAutoLogin(boolean autoLogin) {
-        this.isAutoLogin = autoLogin;
     }
 }
