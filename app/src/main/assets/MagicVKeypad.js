@@ -95,7 +95,6 @@ function inputData(fieldName, data) {
 }
 
 function callMagicVKeypadAndroid(fieldName, viewMode, keypadType, option) {
-     console.log("잘들어옴");
         console.log("fieldName  " + fieldName + "\n" +
                 "viewMode  " + viewMode.value + "\n" +
                 "keypadType  " + keypadType.value + "\n" +

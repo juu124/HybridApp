@@ -31,6 +31,7 @@ import com.dki.hybridapptest.Interface.ProgressBarListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.CustomDialog;
 import com.dki.hybridapptest.dialog.InputDialog;
+import com.dki.hybridapptest.dto.SMSInfo;
 import com.dki.hybridapptest.kfido.FIDORegistration;
 import com.dki.hybridapptest.model.ContactInfo;
 import com.dki.hybridapptest.ui.activity.EncryptionActivity;
@@ -238,7 +239,7 @@ public class AndroidBridge {
     // 인증서 전자서명
     @JavascriptInterface
     public void importCert(String strJsonObject) {
-        GLog.d("인증서 누름누름누ㅡㅁ");
+        GLog.d();
 
         initMagicMRS();
 
@@ -398,6 +399,66 @@ public class AndroidBridge {
             Intent sendToSMS = new Intent(Intent.ACTION_SENDTO, phone);
             sendToSMS.putExtra("sms_body", shareMsg);
             mActivity.startActivity(sendToSMS);
+        }
+    }
+
+//    // SMS 보내기
+//    @JavascriptInterface
+//    public void sendSMS(String callback, ArrayList<String> phoneNumbers, String message) {
+//        GLog.d("브릿지::: jsSendSMS(" + callback + "," + phoneNumbers + ", " + message + ")");
+////        if (!(TextUtils.isEmpty(phoneNumbers) && TextUtils.isEmpty(shareMsg))) {
+////            Uri phone = Uri.parse("sms:" + phoneNumbers);
+////            Intent sendToSMS = new Intent(Intent.ACTION_SENDTO, phone);
+////            sendToSMS.putExtra("sms_body", shareMsg);
+////            mActivity.startActivity(sendToSMS);
+////        }
+//    }
+
+    // SMS 보내기
+    @JavascriptInterface
+    public void sendToSMS(String strJsonObject) {
+        GLog.d("SMS strJsonObject == " + strJsonObject);
+        JSONObject jsonObj = null;
+//        String callback;
+        SMSInfo smsInfo = null;
+        try {
+            if (!TextUtils.isEmpty(strJsonObject)) {
+                jsonObj = new JSONObject(strJsonObject);
+                if (!jsonObj.isNull("callback")) {
+//                    callback = jsonObj.getString("callback");
+                    smsInfo = new SMSInfo();
+                    smsInfo.setCallback(jsonObj.getString("callback"));
+                    smsInfo.setMessage(jsonObj.getString("message"));
+
+                    JSONArray jsonArray = new JSONArray(jsonObj.getString("phoneNumbers"));
+                    ArrayList<String> arrayList = new ArrayList<>();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        GLog.d("phoneNumbers [" + i + "] == " + jsonArray.get(i).toString());
+                        arrayList.add(jsonArray.get(i).toString());
+                    }
+                    smsInfo.setPhoneNumbers(arrayList.toString());
+                    String a = smsInfo.getPhoneNumbers().substring(1, smsInfo.getPhoneNumbers().length() - 1);
+//                    GLog.d("a = " + a);
+//                    String b = a.substring(1, a.length()-1);
+                    smsInfo.setPhoneNumbers(a);
+                    GLog.d("a = " + a);
+
+                    Uri phone = Uri.parse("sms:" + smsInfo.getPhoneNumbers());
+                    Intent sendToSMS = new Intent(Intent.ACTION_SENDTO, phone);
+                    sendToSMS.putExtra("sms_body", smsInfo.getMessage());
+                    mActivity.startActivity(sendToSMS);
+
+                    // todo :: 콜백 선언하기
+//                    if () {
+//                        jsonObject.put("resultCode", "SUCCESS");
+//                    } else {
+//                        jsonObject.put("resultCode", "FAIL");
+//                    }
+//                    callbackFunction(jsonObj.toString(), jsonObject.toString());
+                }
+            }
+        } catch (Exception e) {
+
         }
     }
 
