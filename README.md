@@ -1,7 +1,16 @@
+* 보안 키보드 기능 사용시 준비
+  - build.gradle(module)에서 apply plugin: 'com.google.gms.google-services' 부분 해제
+  - build.gradle(module)에서 applicationID 를 "com.dreamsecurity.example.magicvkeypad"로 변경하기 (해당 패키지의
+    키보드 라이브러리가 없기 때문에 샘플 키보드 앱의 라이브러리 사용)
+  - build.gradle(project)에서 id 'com.google.gms.google-services' version '4.3.15' apply false 주석 해제
+  - google-services.json 파일 복사해서 다른 파일에 붙여놓고 해당 프로젝트 안에 있는 json 파일은 삭제 및 이름변경
+  - MagicVKeyPadSettings.java에서 strLicense 값 변경(해당 applicationId에 맞는 값 넣기)
+  - 앱 build 하기 전 단말에 해당 앱 삭제하고 build 하기
+
 * 기능 명
 * 라이브러리 명
 * Constant 변수 명
-    - 사용하고 있는 파일 목록
+  - 사용하고 있는 파일 목록
 
 * 앱 위변조
 * TrustAppAAB5.0.0.6.jar
