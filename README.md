@@ -1,12 +1,4 @@
-* 보안 키보드 기능 사용시 준비
-  - build.gradle(module)에서 apply plugin: 'com.google.gms.google-services' 부분 해제
-  - build.gradle(module)에서 applicationID 를 "com.dreamsecurity.example.magicvkeypad"로 변경하기 (해당 패키지의
-    키보드 라이브러리가 없기 때문에 샘플 키보드 앱의 라이브러리 사용)
-  - build.gradle(project)에서 id 'com.google.gms.google-services' version '4.3.15' apply false 주석 해제
-  - google-services.json 파일 복사해서 다른 파일에 붙여놓고 해당 프로젝트 안에 있는 json 파일은 삭제 및 이름변경
-  - MagicVKeyPadSettings.java에서 strLicense 값 변경(해당 applicationId에 맞는 값 넣기)
-  - 앱 build 하기 전 단말에 해당 앱 삭제하고 build 하기
-
+## 라이브러리
 * 기능 명
 * 라이브러리 명
 * Constant 변수 명
@@ -110,12 +102,30 @@
 * 라이브러리 모듈
   - magicmrsv2lib
 
-* Not Used library
-  - commons-lang-2.5
-  - jcaos-client-1.4.7.8
-  - MagicMRS // 인증서 이동 서비스 (pc, 스마트폰에 저장된 인증서를 다른 PC 또는 스마트 폰에서 사용할 수 있도록 별도 저장 매체 없이 인증서 이동 장) (
-    내보내기 / 가져오기)
-  - MDCPdfViewer
-  - morpheus_push_library_5.2.0.6
-  - netty-common-4.0.19.Final
-  - universal-image-loader-1.9.3
+#### Not Used library
+
+- commons-lang-2.5
+- jcaos-client-1.4.7.8
+- MagicMRS // 인증서 이동 서비스 (pc, 스마트폰에 저장된 인증서를 다른 PC 또는 스마트 폰에서 사용할 수 있도록 별도 저장 매체 없이 인증서 이동 장) (
+  내보내기 / 가져오기)
+- MDCPdfViewer
+- morpheus_push_library_5.2.0.6
+- netty-common-4.0.19.Final
+- universal-image-loader-1.9.3
+
+## 보안 키보드(가상 키보드)
+
+#### 보안 키보드 기능 사용시 준비
+
+- build.gradle(module)에서 apply plugin: 'com.google.gms.google-services' 부분 해제
+- build.gradle(module)에서 applicationID 를 "com.dreamsecurity.example.magicvkeypad"로 변경하기 (해당 패키지의
+  키보드 라이브러리가 없기 때문에 샘플 키보드 앱의 라이브러리 사용)
+- build.gradle(project)에서 id 'com.google.gms.google-services' version '4.3.15' apply false 주석 해제
+- google-services.json 파일 복사해서 다른 파일에 붙여놓고 해당 프로젝트 안에 있는 json 파일은 삭제 및 이름변경
+- MagicVKeyPadSettings.java에서 strLicense 값 변경(해당 applicationId에 맞는 값 넣기)
+- 앱 build 하기 전 단말에 해당 앱 삭제하고 build 하기
+
+#### 보안 키보드 이슈
+
+- 풀 모드 보안키보드에서 android.support.v4.app.FragmentActivity를 사용하는데, 오래된 내용이라서 새 라이브러리를 받아야한다.
+- 현재 가상키패드는 '문자 키패드 HALF 모드, 숫자 키패드 HALF 모드'만 지원한다. (나머지 풀모드는 지원하지 않음)

@@ -236,7 +236,7 @@ public class AndroidBridge {
         }
     }
 
-    // 인증서 전자서명
+    // 인증서 가져오기
     @JavascriptInterface
     public void importCert(String strJsonObject) {
         GLog.d();
@@ -1094,7 +1094,7 @@ public class AndroidBridge {
                 bUseDummyData = false;
             }
 
-            // 풀모드(CHAR, NUM) - 현재 라이브러리 문제로 작동 되지 않음
+            // 풀모드(CHAR, NUM) - 새 라이브러리 필요. 현재 사용 불가
             if (TextUtils.equals(viewMode, "FULL_TYPE")) {
                 GLog.d("풀모드");
                 if (keypadType.equals("CHAR_TYPE")) { // 풀모드 - 문자키패드
