@@ -261,13 +261,6 @@ public class AndroidBridge {
             e.printStackTrace();
         }
         mMagicMRS.importCertificateWithAuthCodeWithoutUI(authCode);
-
-//        handler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                mWebView.loadUrl(Constant.WEB_SIGN_DISITAL_URL);
-//            }
-//        });
     }
 
     private String makeJsonResult(boolean isSuccess, int type, int errorCode) {
@@ -390,17 +383,17 @@ public class AndroidBridge {
         });
     }
 
-    // SMS 보내기
-    @JavascriptInterface
-    public void sendSMS(String phoneNumbers, String shareMsg) {
-        GLog.d("브릿지::: jsSendSMS(" + phoneNumbers + "," + shareMsg + ")");
-        if (!(TextUtils.isEmpty(phoneNumbers) && TextUtils.isEmpty(shareMsg))) {
-            Uri phone = Uri.parse("sms:" + phoneNumbers);
-            Intent sendToSMS = new Intent(Intent.ACTION_SENDTO, phone);
-            sendToSMS.putExtra("sms_body", shareMsg);
-            mActivity.startActivity(sendToSMS);
-        }
-    }
+//    // SMS 보내기
+//    @JavascriptInterface
+//    public void sendSMS(String phoneNumbers, String shareMsg) {
+//        GLog.d("브릿지::: jsSendSMS(" + phoneNumbers + "," + shareMsg + ")");
+//        if (!(TextUtils.isEmpty(phoneNumbers) && TextUtils.isEmpty(shareMsg))) {
+//            Uri phone = Uri.parse("sms:" + phoneNumbers);
+//            Intent sendToSMS = new Intent(Intent.ACTION_SENDTO, phone);
+//            sendToSMS.putExtra("sms_body", shareMsg);
+//            mActivity.startActivity(sendToSMS);
+//        }
+//    }
 
 //    // SMS 보내기
 //    @JavascriptInterface
@@ -417,31 +410,31 @@ public class AndroidBridge {
     // SMS 보내기
     @JavascriptInterface
     public void sendToSMS(String strJsonObject) {
-        GLog.d("SMS strJsonObject == " + strJsonObject);
-        JSONObject jsonObj = null;
-//        String callback;
+        JSONObject callBackJsonObj = new JSONObject();
+        JSONObject smsJsonObj = null;
         SMSInfo smsInfo = null;
         try {
             if (!TextUtils.isEmpty(strJsonObject)) {
-                jsonObj = new JSONObject(strJsonObject);
-                if (!jsonObj.isNull("callback")) {
-//                    callback = jsonObj.getString("callback");
+                smsJsonObj = new JSONObject(strJsonObject);
+                if (!smsJsonObj.isNull("callback")) {
                     smsInfo = new SMSInfo();
-                    smsInfo.setCallback(jsonObj.getString("callback"));
-                    smsInfo.setMessage(jsonObj.getString("message"));
+                    smsInfo.setCallback(smsJsonObj.getString("callback"));
+                    smsInfo.setMessage(smsJsonObj.getString("message"));
 
-                    JSONArray jsonArray = new JSONArray(jsonObj.getString("phoneNumbers"));
+                    JSONArray jsonArray = new JSONArray(smsJsonObj.getString("phoneNumbers"));
                     ArrayList<String> arrayList = new ArrayList<>();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         GLog.d("phoneNumbers [" + i + "] == " + jsonArray.get(i).toString());
                         arrayList.add(jsonArray.get(i).toString());
                     }
                     smsInfo.setPhoneNumbers(arrayList.toString());
-                    String a = smsInfo.getPhoneNumbers().substring(1, smsInfo.getPhoneNumbers().length() - 1);
-//                    GLog.d("a = " + a);
-//                    String b = a.substring(1, a.length()-1);
-                    smsInfo.setPhoneNumbers(a);
-                    GLog.d("a = " + a);
+                    // 번호가 여러개 일때
+                    if (smsInfo.getPhoneNumbers().startsWith("[") && smsInfo.getPhoneNumbers().endsWith("]")) {
+                        String phoneNumbers = smsInfo.getPhoneNumbers().substring(1, smsInfo.getPhoneNumbers().length() - 1);
+                        smsInfo.setPhoneNumbers(phoneNumbers);
+                        GLog.d("phoneNumbers = " + phoneNumbers);
+                    }
+                    GLog.d("phoneNumber == " + smsInfo.getPhoneNumbers());
 
                     Uri phone = Uri.parse("sms:" + smsInfo.getPhoneNumbers());
                     Intent sendToSMS = new Intent(Intent.ACTION_SENDTO, phone);
@@ -450,12 +443,16 @@ public class AndroidBridge {
 
                     // todo :: 콜백 선언하기
 //                    if () {
-//                        jsonObject.put("resultCode", "SUCCESS");
+//                        callBackjsonObj.put("resultCode", "SUCCESS");
 //                    } else {
-//                        jsonObject.put("resultCode", "FAIL");
+//                        callBackjsonObj.put("resultCode", "FAIL");
 //                    }
-//                    callbackFunction(jsonObj.toString(), jsonObject.toString());
+                    callBackJsonObj.put("resultCode", "SUCCESS");
                 }
+//                else {
+//                    callBackjsonObj.put("resultCode", "FAIL");
+//                }
+                callbackFunction(smsJsonObj.toString(), callBackJsonObj.toString());
             }
         } catch (Exception e) {
 
