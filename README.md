@@ -4,14 +4,14 @@
 * Constant 변수 명
   - 사용하고 있는 파일 목록
 
-* 앱 위변조
+#### 앱 위변조
 * TrustAppAAB5.0.0.6.jar
 * USE_TRUST_APP_DREAM
   - TrustAppManager.java
   - TrustAppUI.java
   - rimeCoreAndroid3.0.2.9
 
-* 인증서 (서명, 삭제, 인증서 비밀번호 변경, 본인 확인, XML 서명, 비대칭키 암/복호화, EnvelopedData 암/복호화, 대칭키 암/복호화, Hash 생성, Base
+#### 인증서 (서명, 삭제, 인증서 비밀번호 변경, 본인 확인, XML 서명, 비대칭키 암/복호화, EnvelopedData 암/복호화, 대칭키 암/복호화, Hash 생성, Base
   64 생성, 인증서 상세 정보, PEX Export, PFX Import, 개인키 암호화, UCPID Request Info)
 * MagicXSign_1.0.9.2.jar
 * USE_XSIGN_DREAM
@@ -27,13 +27,13 @@
   - XSignUcpidActivity.java
   - ProcessCertificate.java
 
-* 웹 플러그 인
+#### 웹 플러그 인
 * XSignWebPlugin_Client_v1.4.4
 * USE_XSIGN_PLUGIN_DREAM
   - IntroActivity.java
   - MainActivity.java
 
-* 백신
+#### 백신
 * (라이브러리 모듈) magic_mvaccine
 * USE_VACCINE_DREAM
   - MagicResult.java
@@ -58,7 +58,7 @@
   - MagicmVaccineOptions.java
   - VaccineManager.java
 
-* push 기능
+#### push 기능
 * morpheus_push_library_5.2.0.6.aar
 * USE_PUSH_FIRBASE
   - PushManager.java
@@ -85,11 +85,10 @@
   - MagicVKeypadResult.java
   - MagicVKeypadType.java
 
-* 구간 암호화 (미구현)
+#### 구간 암호화
 * MagicSE2.jar
-* Constant.미정
 
-* jniLibs
+#### jniLibs
   * 앱 위변조
     - libAAPlusToolkit4.2.0.3.so
   * 구간 암호화
@@ -99,7 +98,7 @@
   * FIDO
     - Lib_Magic_FIDO
 
-* 라이브러리 모듈
+#### 라이브러리 모듈
   - magicmrsv2lib
 
 #### Not Used library
