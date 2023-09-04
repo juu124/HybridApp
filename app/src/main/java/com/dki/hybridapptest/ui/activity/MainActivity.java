@@ -16,6 +16,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
@@ -25,6 +26,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -33,7 +35,9 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -98,6 +102,10 @@ public class MainActivity extends AppCompatActivity {
     private String id;
     private String pwd;
     private boolean isLoginCheck;
+
+    // 햄버거 버튼
+    private ActionBar actionBar;
+    private ImageButton imageButton;
 
     // push
     private BroadcastReceiver mMainBroadcastReceiver;
@@ -202,6 +210,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        MenuInflater menuInflater = new MenuInflater(this);
+//        menuInflater.inflate(R.menu., item);
+        GLog.d();
+        switch (item.getItemId()) {
+            case R.id.menu1:
+                Toast.makeText(this, "select menu1", Toast.LENGTH_SHORT).show();
+//                toast.setText("Select Menu1");
+                break;
+            case R.id.menu2:
+                Toast.makeText(this, "select menu2", Toast.LENGTH_SHORT).show();
+//                toast.setText("Select Menu2");
+                break;
+            case R.id.menu3:
+                Toast.makeText(this, "select menu3", Toast.LENGTH_SHORT).show();
+//                toast.setText("Select Menu3");
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 화면 캡쳐 방지
@@ -209,6 +239,24 @@ public class MainActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         }
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        imageButton = findViewById(R.id.back_btn);
+        imageButton.setVisibility(View.GONE);
+        actionBar = getSupportActionBar();
+//        DrawerLayout drawer = findViewById(R.id.draw)
+
+        // 툴바 활성화 (isVisible과 관련되어 있을 듯)
+        actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setDisplayHomeAsUpEnabled(androidBridge.);
+
+        // 햄버거 버튼 이미지 불러오기
+        actionBar.setHomeAsUpIndicator(R.drawable.baseline_dehaze_24);
+
+        // 툴바 제목
+        actionBar.setTitle("제목");
+        actionBar.setHomeButtonEnabled(false);
 
         mWebView = findViewById(R.id.webview);
         mProgressBar = findViewById(R.id.dialog_user_info_progressbar);

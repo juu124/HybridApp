@@ -236,6 +236,30 @@ public class AndroidBridge {
         }
     }
 
+    // 타이틀 UI 표시 (타이틀, 뒤로가기, 햄버거 메뉴 등 UI)
+    @JavascriptInterface
+    public void displayHeader(String strJsonObject) {
+        GLog.d();
+        JSONObject jsonObject = null;
+        try {
+            if (!TextUtils.isEmpty(strJsonObject)) {
+                jsonObject = new JSONObject(strJsonObject);
+                jsonObject.getString("callback");
+                jsonObject.getString("isVisible");
+                jsonObject.getString("title");
+
+//                SharedPreferencesAPI.getInstance(mActivity).setHeader(jsonObject.getBoolean("isVisible"));
+                GLog.d("callback ==== " + jsonObject.getString("callback"));
+                GLog.d("isVisible ==== " + jsonObject.getBoolean("isVisible"));
+                GLog.d("title ==== " + jsonObject.getString("title"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     // 인증서 가져오기
     @JavascriptInterface
     public void importCert(String strJsonObject) {
