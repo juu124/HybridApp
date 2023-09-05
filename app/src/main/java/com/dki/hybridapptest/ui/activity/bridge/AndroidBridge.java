@@ -244,11 +244,11 @@ public class AndroidBridge {
         try {
             if (!TextUtils.isEmpty(strJsonObject)) {
                 jsonObject = new JSONObject(strJsonObject);
-                jsonObject.getString("callback");
-                jsonObject.getString("isVisible");
-                jsonObject.getString("title");
+//                jsonObject.getString("callback");
+//                jsonObject.getString("isVisible");
+//                jsonObject.getString("title");
 
-//                SharedPreferencesAPI.getInstance(mActivity).setHeader(jsonObject.getBoolean("isVisible"));
+//                SharedPreferencesAPI.getInstance(mActivity).setHeaderIsVisible(jsonObject.getBoolean("isVisible"));
                 GLog.d("callback ==== " + jsonObject.getString("callback"));
                 GLog.d("isVisible ==== " + jsonObject.getBoolean("isVisible"));
                 GLog.d("title ==== " + jsonObject.getString("title"));

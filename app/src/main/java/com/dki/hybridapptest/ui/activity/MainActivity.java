@@ -16,6 +16,8 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,7 +28,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -39,6 +40,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
@@ -105,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 햄버거 버튼
     private ActionBar actionBar;
-    private ImageButton imageButton;
+    private DrawerLayout drawerLayout;
 
     // push
     private BroadcastReceiver mMainBroadcastReceiver;
@@ -211,24 +213,29 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//        MenuInflater menuInflater = new MenuInflater(this);
-//        menuInflater.inflate(R.menu., item);
         GLog.d();
         switch (item.getItemId()) {
-            case R.id.menu1:
-                Toast.makeText(this, "select menu1", Toast.LENGTH_SHORT).show();
-//                toast.setText("Select Menu1");
+            case R.id.menu:
+                drawerLayout = findViewById(R.id.drawer);
+                if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                    drawerLayout.closeDrawer(Gravity.RIGHT);
+                } else {
+                    drawerLayout.openDrawer(Gravity.RIGHT);
+                }
                 break;
-            case R.id.menu2:
-                Toast.makeText(this, "select menu2", Toast.LENGTH_SHORT).show();
-//                toast.setText("Select Menu2");
-                break;
-            case R.id.menu3:
-                Toast.makeText(this, "select menu3", Toast.LENGTH_SHORT).show();
-//                toast.setText("Select Menu3");
+            case android.R.id.home:
+                if (mWebView.canGoBack()) {
+                    mWebView.goBack();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
     }
 
     @Override
@@ -242,17 +249,13 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        imageButton = findViewById(R.id.back_btn);
-        imageButton.setVisibility(View.GONE);
         actionBar = getSupportActionBar();
-//        DrawerLayout drawer = findViewById(R.id.draw)
 
-        // 툴바 활성화 (isVisible과 관련되어 있을 듯)
+        // 툴바 활성화 (뒤로가기)
         actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setDisplayHomeAsUpEnabled(androidBridge.);
 
-        // 햄버거 버튼 이미지 불러오기
-        actionBar.setHomeAsUpIndicator(R.drawable.baseline_dehaze_24);
+        // 뒤로가기 버튼 이미지 불러오기
+        actionBar.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_aos_new_24);
 
         // 툴바 제목
         actionBar.setTitle("제목");
@@ -521,13 +524,24 @@ public class MainActivity extends AppCompatActivity {
     // 웹 뷰에서 뒤로 가기
     @Override
     public void onBackPressed() {
-        if (TextUtils.equals(mWebView.getUrl(), Constant.WEB_VIEW_MAIN_URL)) {
-            super.onBackPressed();
+        // 햄버거 메뉴 뒤로 가기
+        if (drawerLayout != null && drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+            drawerLayout.closeDrawer(Gravity.RIGHT);
         } else if (mWebView.canGoBack()) {
             mWebView.goBack();
         } else {
             super.onBackPressed();
         }
+
+        //        if (drawerLayout != null && drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+//            drawerLayout.closeDrawer(Gravity.RIGHT);
+//        } else if (TextUtils.equals(mWebView.getUrl(), Constant.WEB_VIEW_MAIN_URL)) {
+//            super.onBackPressed();
+//        } else if (mWebView.canGoBack()) {
+//            mWebView.goBack();
+//        } else {
+//            super.onBackPressed();
+//        }
     }
 
     // push 토큰 확인
