@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.dki.hybridapptest.BuildConfig;
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
+import com.dki.hybridapptest.Interface.IsHeaderVisibleListener;
 import com.dki.hybridapptest.Interface.ProgressBarListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.CustomDialog;
@@ -125,6 +126,9 @@ public class AndroidBridge {
     // 자동 로그인
     private ProgressBarListener progressBarListener;
 
+    // 타이틀 UI 노출
+    private IsHeaderVisibleListener isHeaderVisibleListener;
+
     public void setCallbakckFuction(String callbakckFuction) {
         mCallbackFuntion = callbakckFuction;
     }
@@ -186,11 +190,22 @@ public class AndroidBridge {
         }
     }
 
-    // 생성자 (프로그래스 바 리스너)
-    public AndroidBridge(WebView webView, Activity activity, ProgressBarListener progressBarListener) {
+    // 생성자 (프로그래스 바 리스너 - 로딩)
+//    public AndroidBridge(WebView webView, Activity activity, ProgressBarListener progressBarListener) {
+//        this.mWebView = webView;
+//        this.mActivity = activity;
+//        this.progressBarListener = progressBarListener;
+//
+//        if (Constant.USE_XSIGN_DREAM) {
+//            init();  // 인증서 관련 처리
+//        }
+//    }
+
+    // 생성자 (타이틀 UI 노출 리스너)
+    public AndroidBridge(WebView webView, Activity activity, IsHeaderVisibleListener isHeaderVisibleListener) {
         this.mWebView = webView;
         this.mActivity = activity;
-        this.progressBarListener = progressBarListener;
+        this.isHeaderVisibleListener = isHeaderVisibleListener;
 
         if (Constant.USE_XSIGN_DREAM) {
             init();  // 인증서 관련 처리
@@ -237,28 +252,48 @@ public class AndroidBridge {
     }
 
     // 타이틀 UI 표시 (타이틀, 뒤로가기, 햄버거 메뉴 등 UI)
+
+    /**
+     * 네이티브 헤더 표시 여부 버튼을 누를 때마다 boolean 값이 변경되는 것로 정한다. (true일 때 누르면 false로 false일 때 누르면 true로)
+     */
     @JavascriptInterface
     public void displayHeader(String strJsonObject) {
-        GLog.d();
         JSONObject jsonObject = null;
         try {
             if (!TextUtils.isEmpty(strJsonObject)) {
                 jsonObject = new JSONObject(strJsonObject);
-//                jsonObject.getString("callback");
-//                jsonObject.getString("isVisible");
-//                jsonObject.getString("title");
+                String callback = jsonObject.getString("callback");
+                boolean isVisible = jsonObject.getBoolean("isVisible");
+                String title = jsonObject.getString("title");
 
-//                SharedPreferencesAPI.getInstance(mActivity).setHeaderIsVisible(jsonObject.getBoolean("isVisible"));
-                GLog.d("callback ==== " + jsonObject.getString("callback"));
-                GLog.d("isVisible ==== " + jsonObject.getBoolean("isVisible"));
-                GLog.d("title ==== " + jsonObject.getString("title"));
+                if (jsonObject.getBoolean("isVisible")) {
+                    Toast.makeText(mActivity, "타이틀 UI 노출", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(mActivity, "타이틀 UI 비노출", Toast.LENGTH_SHORT).show();
+                }
+                GLog.d("callback ==== " + callback);
+                GLog.d("isVisible ==== " + isVisible);
+                GLog.d("title ==== " + title);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadHeader(isVisible, title);
+                    }
+                });
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    // 타이틀 UI 노출 리스너
+    private void loadHeader(boolean mIsInvisible, String title) {
+        GLog.d();
+        if (isHeaderVisibleListener == null) {
+            return;
+        }
+        isHeaderVisibleListener.isVisible(mIsInvisible, title);
+    }
 
     // 인증서 가져오기
     @JavascriptInterface

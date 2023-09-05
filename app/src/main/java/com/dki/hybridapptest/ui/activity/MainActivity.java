@@ -44,7 +44,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
-import com.dki.hybridapptest.Interface.ProgressBarListener;
+import com.dki.hybridapptest.Interface.IsHeaderVisibleListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.CustomDialog;
 import com.dki.hybridapptest.dto.LoginResponse;
@@ -105,9 +105,10 @@ public class MainActivity extends AppCompatActivity {
     private String pwd;
     private boolean isLoginCheck;
 
-    // 햄버거 버튼
+    // 타이틀 UI
     private ActionBar actionBar;
     private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
 
     // push
     private BroadcastReceiver mMainBroadcastReceiver;
@@ -247,24 +248,47 @@ public class MainActivity extends AppCompatActivity {
         }
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-
-        // 툴바 활성화 (뒤로가기)
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        // 뒤로가기 버튼 이미지 불러오기
-        actionBar.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_aos_new_24);
-
-        // 툴바 제목
-        actionBar.setTitle("제목");
-        actionBar.setHomeButtonEnabled(false);
-
         mWebView = findViewById(R.id.webview);
         mProgressBar = findViewById(R.id.dialog_user_info_progressbar);
+        toolbar = findViewById(R.id.toolbar);
         mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
+
+        androidBridge = new AndroidBridge(mWebView, MainActivity.this, new IsHeaderVisibleListener() {
+            @Override
+            public void isVisible(boolean isHeaderVisible, String title) {
+                if (isHeaderVisible) {
+                    toolbar.setVisibility(View.VISIBLE);
+                    setSupportActionBar(toolbar);
+                    actionBar = getSupportActionBar();
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+
+                    // 툴바 활성화 (뒤로가기)
+//                    setSupportActionBar(toolbar);
+//                    getSupportActionBar().setDisplayShowTitleEnabled(false);
+//                    actionBar.setDisplayHomeAsUpEnabled(isHeaderVisible);
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+
+                    // 뒤로가기 버튼 이미지 불러오기
+                    actionBar.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_aos_new_24);
+
+                    // 툴바 제목
+                    String toolBarTitle;
+                    if (title != null) {
+                        toolBarTitle = title;
+                    } else {
+                        toolBarTitle = "제목";
+                    }
+
+                    actionBar.setTitle(toolBarTitle);
+                    actionBar.setHomeButtonEnabled(false);
+                    GLog.d("toolbar VISIBLE =====");
+                } else {
+                    GLog.d("toolbar GONE =====");
+                    toolbar.setVisibility(View.GONE);
+                }
+            }
+        });
 
         mWebView.clearCache(true);
         mWebView.clearHistory();
@@ -274,28 +298,28 @@ public class MainActivity extends AppCompatActivity {
             getFCMToken();
         }
 
-        // 로그인 화면 프로그래스 바
-        androidBridge = new AndroidBridge(mWebView, MainActivity.this, new ProgressBarListener() {
-            @Override
-            public void showProgressBar() {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mProgressBar.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
-
-            @Override
-            public void unShownProgressBar() {
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mProgressBar.setVisibility(View.GONE);
-                    }
-                });
-            }
-        });
+        // 로그인 화면 프로그래스 바 (로딩)
+//        androidBridge = new AndroidBridge(mWebView, MainActivity.this, new ProgressBarListener() {
+//            @Override
+//            public void showProgressBar() {
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mProgressBar.setVisibility(View.VISIBLE);
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void unShownProgressBar() {
+//                handler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        mProgressBar.setVisibility(View.GONE);
+//                    }
+//                });
+//            }
+//        });
 
         mWebSettings.setDefaultTextEncodingName("utf-8");
         mWebView.addJavascriptInterface(androidBridge, "DKITec");
