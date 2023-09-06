@@ -224,8 +224,10 @@ public class MainActivity extends AppCompatActivity {
                     drawerLayout.openDrawer(Gravity.RIGHT);
                 }
                 break;
-            case android.R.id.home:
-                if (mWebView.canGoBack()) {
+            case android.R.id.home: // 타이틀 back 버튼
+                if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
+                    drawerLayout.closeDrawer(Gravity.RIGHT);
+                } else if (mWebView.canGoBack()) {
                     mWebView.goBack();
                 }
                 break;

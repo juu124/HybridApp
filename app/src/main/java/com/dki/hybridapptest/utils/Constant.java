@@ -27,6 +27,8 @@ public class Constant {
     //true: 화면 캡쳐 fasle: 화면 캡쳐 기능 사용 불가
     public static boolean USE_SCREEN_SHOT = false;
 
+    //true: 프로그래스 바 fasle: 프로그래스 바 사용 불가
+    public static boolean USE_PROGRESS_BAR = false;
 
     /********************* 웹 URL ************************/
     // 메인 서버 주소
@@ -42,10 +44,10 @@ public class Constant {
     public static final String WEB_SIGN_DISITAL_URL = "file:///android_asset/index.html";
 
     // 로그인 주소
-    //    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/login";
+//    public static final String WEB_VIEW_MAIN_URL = "http://10.112.58.208/login";
     public static final String WEB_VIEW_LOGIN_URL = "http://10.112.58.208/login";
 
-    //    public static String BASE_URL ="https://devpds.mydatacenter.or.kr:9443";
+    //    public static String BASE_URL = "https://devpds.mydatacenter.or.kr:9443";
     public static String BASE_URL = "https://pds.mydatacenter.or.kr:9443";
     public static String TUTORIAL_URL = "/membership/identification.do";
     public static String HOST_URL = "/auth/index.do";

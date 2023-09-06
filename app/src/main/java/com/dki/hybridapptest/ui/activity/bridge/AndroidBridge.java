@@ -112,7 +112,6 @@ public class AndroidBridge {
 
     // 보안 키패드
     private String RSAEncryptData = "";
-    private String charResultData = "";
     private String AESEncData = "";
     private String AESDecData = "";
     private MagicVKeypad magicVKeypad;
@@ -121,9 +120,9 @@ public class AndroidBridge {
 
     // 웹뷰 move
     private String url;
-    private boolean fullMode = true;
+//    private boolean fullMode = true;
 
-    // 자동 로그인
+    // 프로그래스 바
     private ProgressBarListener progressBarListener;
 
     // 타이틀 UI 노출
@@ -267,9 +266,11 @@ public class AndroidBridge {
                 String title = jsonObject.getString("title");
 
                 if (jsonObject.getBoolean("isVisible")) {
-                    Toast.makeText(mActivity, "타이틀 UI 노출", Toast.LENGTH_SHORT).show();
+                    showToast("타이틀 UI 노출");
+//                    Toast.makeText(mActivity, "타이틀 UI 노출", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(mActivity, "타이틀 UI 비노출", Toast.LENGTH_SHORT).show();
+                    showToast("타이틀 UI 비노출");
+//                    Toast.makeText(mActivity, "타이틀 UI 비노출", Toast.LENGTH_SHORT).show();
                 }
                 GLog.d("callback ==== " + callback);
                 GLog.d("isVisible ==== " + isVisible);
@@ -686,7 +687,9 @@ public class AndroidBridge {
         mWebView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                showProgressBarListener(showProgressBarListener);  // 프로그래스 바 비노출
+                if (Constant.USE_PROGRESS_BAR) {
+                    showProgressBarListener(showProgressBarListener);  // 프로그래스 바 비노출
+                }
                 if (!TextUtils.isEmpty(url)) {
                     mWebView.loadUrl(url);
                 }
@@ -1374,12 +1377,6 @@ public class AndroidBridge {
                     decData = magicVKeypad.getDecryptData(magicVKeypadResult.getEncryptData());
                 }
 
-                if (magicVKeypad.getEncryptData() != null) {
-                    if (magicVKeypadResult.getEncryptData() != null) {
-                        RSAEncryptData = new String(magicVKeypadResult.getEncryptData());
-                    }
-                }
-
                 if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_OK_BUTTON) { // 확인
                     if (!MagicVKeyPadSettings.bUseE2E) {
                         if (decData != null) {
@@ -1411,6 +1408,7 @@ public class AndroidBridge {
 
                 if (magicVKeypad.getEncryptData() != null) {
                     RSAEncryptData = new String(magicVKeypad.getEncryptData());
+                    GLog.d("확인 RSAEncryptData ==== " + RSAEncryptData);
                 }
 
                 if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_CANCEL_BUTTON) { // 취소
@@ -1424,13 +1422,16 @@ public class AndroidBridge {
                             GLog.d("확인 AESEncData ==== " + AESEncData);
                         } else {
                             RSAEncryptData = new String(magicVKeypad.getEncryptData());
+                            GLog.d("확인 RSAEncryptData ==== " + RSAEncryptData);
                         }
                     }
                     magicVKeypad.closeKeypad();
                 } else if (magicVKeypadResult.getButtonType() == MagicVKeypadType.MAGICVKEYPAD_TYPE_CHAR_NUM_BUTTON) {
                     if (MagicVKeyPadSettings.bUseE2E) {
-                        if (magicVKeypad.getEncryptData() != null)
+                        if (magicVKeypad.getEncryptData() != null) {
                             RSAEncryptData = new String(magicVKeypad.getEncryptData());
+                            GLog.d("확인 RSAEncryptData ==== " + RSAEncryptData);
+                        }
                     } else {
                         if (decData != null) {
                             strPlaintext = "";
