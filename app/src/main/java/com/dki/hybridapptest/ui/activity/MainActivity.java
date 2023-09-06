@@ -216,10 +216,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        GLog.d();
         switch (item.getItemId()) {
             case R.id.menu:
-                drawerLayout = findViewById(R.id.drawer);
                 if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
                     drawerLayout.closeDrawer(Gravity.RIGHT);
                 } else {
@@ -254,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.dialog_user_info_progressbar);
         toolbar = findViewById(R.id.toolbar);
         mTitle = toolbar.findViewById(R.id.toolbar_title);
+        drawerLayout = findViewById(R.id.drawer);
 
         mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
@@ -282,11 +281,13 @@ public class MainActivity extends AppCompatActivity {
                         toolBarTitle = "제목";
                     }
 
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
                     mTitle.setText(toolBarTitle);
                     GLog.d("toolbar VISIBLE =====");
                 } else {
-                    GLog.d("toolbar GONE =====");
                     toolbar.setVisibility(View.GONE);
+                    drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+                    GLog.d("toolbar GONE =====");
                 }
             }
         });
