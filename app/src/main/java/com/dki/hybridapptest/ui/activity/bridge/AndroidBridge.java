@@ -40,7 +40,7 @@ import com.dki.hybridapptest.ui.activity.HelloWorldActivity;
 import com.dki.hybridapptest.ui.activity.HybridModeActivity;
 import com.dki.hybridapptest.ui.activity.MoveWebViewActivity;
 import com.dki.hybridapptest.ui.activity.UserListActivity;
-import com.dki.hybridapptest.ui.activity.XSignMainActivity;
+import com.dki.hybridapptest.ui.activity.XSign.XSignMainActivity;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.DeviceInfo;
 import com.dki.hybridapptest.utils.GLog;
@@ -421,6 +421,13 @@ public class AndroidBridge {
         serverPort = Constant.PDS_MRS_SERVER_PORT;
 
         mMagicMRS.setURL(serverIp, serverPort);
+    }
+
+    //인증서 내보내기 취소
+    @JavascriptInterface
+    public void exportCertCancel(String strJsonObject) {
+        GLog.d("exportCertCancel - strJsonObject : " + strJsonObject);
+        mMagicMRS.cancelMagicMRS();
     }
 
     // 구간 암호화
@@ -1099,7 +1106,7 @@ public class AndroidBridge {
         inputDialog.show();
     }
 
-    // show User Information 선택
+    // show User Information 선택 (사용안하는 중)
     @JavascriptInterface
     public void showUserList() {
         mIntent = new Intent(mActivity, UserListActivity.class);

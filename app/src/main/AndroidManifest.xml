@@ -106,7 +106,7 @@
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.XSignMainActivity"
+            android:name=".ui.activity.XSign.XSignMainActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
@@ -114,31 +114,31 @@
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.XSignBaseActivity"
+            android:name=".ui.activity.XSign.XSignBaseActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.XSignCertDetailActivity"
+            android:name=".ui.activity.XSign.XSignCertDetailActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.XSignCertListActivity"
+            android:name=".ui.activity.XSign.XSignCertListActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.XSignProcessResultActivity"
+            android:name=".ui.activity.XSign.XSignProcessResultActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.XSignSettingActivity"
+            android:name=".ui.activity.XSign.XSignSettingActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.XSignUcpidActivity"
+            android:name=".ui.activity.XSign.XSignUcpidActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity
-            android:name=".ui.activity.XSignXMLActivity"
+            android:name=".ui.activity.XSign.XSignXMLActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
         <activity

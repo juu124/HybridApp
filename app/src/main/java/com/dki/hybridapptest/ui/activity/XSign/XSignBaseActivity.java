@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.ui.activity;
+package com.dki.hybridapptest.ui.activity.XSign;
 
 import android.app.Activity;
 import android.content.Context;

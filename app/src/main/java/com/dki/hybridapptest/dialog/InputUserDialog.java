@@ -20,7 +20,6 @@ import com.dki.hybridapptest.utils.GLog;
 
 import java.util.regex.Pattern;
 
-
 public class InputUserDialog extends Dialog {
     private Context mContext;
     private EditText editUserID;
