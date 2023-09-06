@@ -10,24 +10,24 @@
         android:id="@+id/tool_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!--        <include-->
-        <!--            android:id="@+id/toolbar"-->
-        <!--            layout="@layout/tool_bar"-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:visibility="gone" />-->
-
-        <androidx.appcompat.widget.Toolbar
+        <include
             android:id="@+id/toolbar"
+            layout="@layout/tool_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:visibility="gone"
-            app:titleTextColor="@color/black" />
+            android:visibility="gone" />
+
+        <!--        <androidx.appcompat.widget.Toolbar-->
+        <!--            android:id="@+id/toolbar"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--                    android:background="#ffffff"-->
+        <!--                    app:titleTextColor="@color/black" />-->
     </LinearLayout>
 
 
@@ -56,14 +56,6 @@
             android:textSize="48sp"
             app:menu="@menu/nav_menu" />
 
-        <!--        <TextView-->
-        <!--            android:layout_width="300dp"-->
-        <!--            android:layout_height="match_parent"-->
-        <!--            android:layout_gravity="right"-->
-        <!--            android:background="#ffffff"-->
-        <!--            android:gravity="center"-->
-        <!--            android:text="DRAWER"-->
-        <!--            android:textSize="48sp" />-->
     </androidx.drawerlayout.widget.DrawerLayout>
 
     <include

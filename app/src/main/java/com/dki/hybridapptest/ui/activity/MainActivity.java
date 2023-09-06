@@ -29,6 +29,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -109,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
     private ActionBar actionBar;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
+    private TextView mTitle;
 
     // push
     private BroadcastReceiver mMainBroadcastReceiver;
@@ -251,8 +253,13 @@ public class MainActivity extends AppCompatActivity {
         mWebView = findViewById(R.id.webview);
         mProgressBar = findViewById(R.id.dialog_user_info_progressbar);
         toolbar = findViewById(R.id.toolbar);
+        mTitle = toolbar.findViewById(R.id.toolbar_title);
+
         mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
+
+        // 타이틀 UI displayHeader값 들어오기 전 초기화
+        titleBarInit();
 
         androidBridge = new AndroidBridge(mWebView, MainActivity.this, new IsHeaderVisibleListener() {
             @Override
@@ -262,17 +269,12 @@ public class MainActivity extends AppCompatActivity {
                     setSupportActionBar(toolbar);
                     actionBar = getSupportActionBar();
                     actionBar.setDisplayHomeAsUpEnabled(true);
-
-                    // 툴바 활성화 (뒤로가기)
-//                    setSupportActionBar(toolbar);
-//                    getSupportActionBar().setDisplayShowTitleEnabled(false);
-//                    actionBar.setDisplayHomeAsUpEnabled(isHeaderVisible);
-                    actionBar.setDisplayHomeAsUpEnabled(true);
+                    actionBar.setDisplayShowTitleEnabled(false); // 커스텀 타이틀을 사용하면 기본 타이틀은 사용하지 말아야한다.
 
                     // 뒤로가기 버튼 이미지 불러오기
                     actionBar.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_aos_new_24);
 
-                    // 툴바 제목
+                    // 타이틀 UI 제목
                     String toolBarTitle;
                     if (title != null) {
                         toolBarTitle = title;
@@ -280,8 +282,7 @@ public class MainActivity extends AppCompatActivity {
                         toolBarTitle = "제목";
                     }
 
-                    actionBar.setTitle(toolBarTitle);
-                    actionBar.setHomeButtonEnabled(false);
+                    mTitle.setText(toolBarTitle);
                     GLog.d("toolbar VISIBLE =====");
                 } else {
                     GLog.d("toolbar GONE =====");
@@ -676,6 +677,25 @@ public class MainActivity extends AppCompatActivity {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(mMainBroadcastReceiver);
             mMainBroadcastReceiver = null;
         }
+    }
+
+    // 타이틀 UI 초기화
+    public void titleBarInit() {
+        GLog.d();
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setVisibility(View.VISIBLE);
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false); // 커스텀 타이틀을 사용하면 기본 타이틀은 사용하지 말아야한다.
+
+        // 뒤로가기 버튼 이미지 불러오기
+        actionBar.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_aos_new_24);
+        String toolBarTitle = "HybridApp";
+        mTitle.setText(toolBarTitle);
     }
 
     // web 플러그 인 초기화
