@@ -87,7 +87,7 @@ public class HybridModeActivity extends Activity {
             tv_AESDecryptData = findViewById(R.id.DecryptData);
             tv_RSAEncryptData = findViewById(R.id.RSAEncryptData);
 
-            mWebview.loadUrl("file:///android_asset/MagicVKeypad_Sample.html?option=" + postData);
+            mWebview.loadUrl(Constant.WEB_MAGIC_KEYPAD_URL + postData);
 
             if (!HybridResult.strScript.equals("")) {
                 mWebview.loadUrl(HybridResult.strScript);
@@ -161,7 +161,6 @@ public class HybridModeActivity extends Activity {
                             }
                         }
                     }.start();
-
                 }
             });
         }

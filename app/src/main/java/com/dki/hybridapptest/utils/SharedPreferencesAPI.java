@@ -42,10 +42,15 @@ public class SharedPreferencesAPI {
     private static final String PREF_KEY_LOGIN_ID = "PREF_KEY_LOGIN_ID";
     private static final String PREF_KEY_LOGIN_PW = "PREF_KEY_LOGIN_PW";
     private static final String PREF_KEY_AUTO_LOGIN_CHECK = "PREF_KEY_AUTO_LOGIN_CHECK";
+    private static final String PREF_KEY_SEARCH_URL = "PREF_KEY_SEARCH_URL";
 
     /**
      * Get Template Function
      */
+    public String getUrl() {
+        return getString(PREF_KEY_SEARCH_URL);
+    }
+
     public String getTest() {
         return getString(PREF_KEY_TEST);
     }
@@ -65,6 +70,9 @@ public class SharedPreferencesAPI {
     /**
      * Set Template Function
      */
+    public void setUrl(String value) {
+        set(PREF_KEY_SEARCH_URL, value);
+    }
 
     public void setTest(String value) {
         set(PREF_KEY_TEST, value);

@@ -16,6 +16,7 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -48,6 +50,7 @@ import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.Interface.IsHeaderVisibleListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.CustomDialog;
+import com.dki.hybridapptest.dialog.InputDialog;
 import com.dki.hybridapptest.dto.LoginResponse;
 import com.dki.hybridapptest.retrofit.RetrofitApiManager;
 import com.dki.hybridapptest.retrofit.RetrofitInterface;
@@ -65,6 +68,7 @@ import com.dreamsecurity.magicxsign.MagicXSign_Type;
 import com.dreamsecurity.xsignweb.XSignWebPlugin;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
@@ -84,10 +88,10 @@ import m.client.push.library.common.PushConstantsEx;
 import m.client.push.library.utils.PushUtils;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private WebView mWebView;
     private WebSettings mWebSettings;
-    private Intent mAction;
+    private Intent mIntent;
     private AndroidBridge androidBridge = null;
     private Handler handler = new Handler(Looper.getMainLooper());
 
@@ -111,6 +115,15 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private TextView mTitle;
+
+    // 햄버거 메뉴
+    private NavigationView navigationView;
+    private InputDialog inputDialog;
+    private boolean fullMode;
+    private String url;
+
+    // 화면 크기
+    private DisplayMetrics displayMetrics;
 
     // push
     private BroadcastReceiver mMainBroadcastReceiver;
@@ -256,11 +269,21 @@ public class MainActivity extends AppCompatActivity {
         mTitle = toolbar.findViewById(R.id.toolbar_title);
         drawerLayout = findViewById(R.id.drawer);
 
+        id = SharedPreferencesAPI.getInstance(MainActivity.this).getLoginId();
+        pwd = SharedPreferencesAPI.getInstance(MainActivity.this).getLoginPw();
+        isLoginCheck = SharedPreferencesAPI.getInstance(this).getAutoLogin();
+        url = SharedPreferencesAPI.getInstance(MainActivity.this).getUrl();
+
         mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
+
+        // 네비게이션 뷰 이벤트 받기 위한 리스너
+        navigationView = (NavigationView) findViewById(R.id.nv_main_navigation_root);
+        navigationView.setNavigationItemSelectedListener(this);
+        displayMetrics = getApplicationContext().getResources().getDisplayMetrics();   // 해당 기기 화면 사이즈
 
         androidBridge = new AndroidBridge(mWebView, MainActivity.this, new IsHeaderVisibleListener() {
             @Override
@@ -325,8 +348,10 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
+
         mWebSettings.setDefaultTextEncodingName("utf-8");
         mWebView.addJavascriptInterface(androidBridge, "DKITec");
+        loginChck(); // 자동 로그인 체크 여부 화면 이동
         webPlugin_Init(MainActivity.this);
 
         // 파일 업로드 (카메라, 내 파일)
@@ -386,46 +411,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        id = SharedPreferencesAPI.getInstance(MainActivity.this).getLoginId();
-        pwd = SharedPreferencesAPI.getInstance(MainActivity.this).getLoginPw();
-        isLoginCheck = SharedPreferencesAPI.getInstance(this).getAutoLogin();
-
-        if (isLoginCheck) {
-            RetrofitApiManager.getInstance().requestPostLogin(id, pwd, new RetrofitInterface() {
-                @Override
-                public void onResponse(Response response) {
-                    try {
-                        if (response.isSuccessful() && response.body() != null) {
-                            LoginResponse loginResponse = (LoginResponse) response.body();
-                            GLog.d("data == " + loginResponse.getData());
-                            GLog.d("resultCode == " + loginResponse.getResultCode());
-                            GLog.d("isLoginCheck == " + loginResponse.getData().getIsLoginCheck());
-
-                            // 자동 로그인 여부에 따른 웹뷰 화면
-                            if (loginResponse.getData().getIsLoginCheck()) {
-                                mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
-                            } else {
-                                mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
-                            }
-
-                        } else {
-                            GLog.d("오류 메세지 == " + response.errorBody().toString());
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    GLog.d("오류 메세지 == " + t.toString());
-                }
-            });
-        } else {
-            mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
-        }
-
         // webView 화면 (전화, e-mail, 외부 url 링크)
         mWebView.setWebViewClient(new WebViewClient() {
             public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -480,18 +465,18 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     // 전화
                     if (url.startsWith("tel:")) {
-                        mAction = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
-                        startActivity(mAction);
+                        mIntent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+                        startActivity(mIntent);
                     }
                     // 이메일
                     else if (url.startsWith("mailto:")) {
-                        mAction = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
-                        startActivity(mAction);
+                        mIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+                        startActivity(mIntent);
                     }
                     // 외부 url 링크
                     else if (url.startsWith("https:")) {
-                        mAction = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                        startActivity(mAction);
+                        mIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                        startActivity(mIntent);
                     }
                     // SMS 보내기
                     else if (url.startsWith("smsto:")) {
@@ -512,9 +497,9 @@ public class MainActivity extends AppCompatActivity {
                             GLog.d("phone == " + phone);
                             GLog.d("msg1 == " + msg1);
 
-                            mAction = new Intent(Intent.ACTION_SENDTO, phone);
-                            mAction.putExtra("sms_body", msg1);
-                            startActivity(mAction);
+                            mIntent = new Intent(Intent.ACTION_SENDTO, phone);
+                            mIntent.putExtra("sms_body", msg1);
+                            startActivity(mIntent);
                         } else {
                             Toast.makeText(MainActivity.this, "SMS 형식이 아닙니다.", Toast.LENGTH_SHORT).show();
                             GLog.d("SMS 형식이 아닙니다.");
@@ -535,6 +520,63 @@ public class MainActivity extends AppCompatActivity {
         };
 
         mMagicMRS = new MagicMRS(this, callback);
+    }
+
+    // 자동 로그인 체크 여부 화면 이동
+    public void loginChck() {
+        if (isLoginCheck) { // 자동 로그인 true - 메인 화면으로 이동
+            RetrofitApiManager.getInstance().requestPostLogin(id, pwd, new RetrofitInterface() {
+                @Override
+                public void onResponse(Response response) {
+                    try {
+                        if (response.isSuccessful() && response.body() != null) {
+                            LoginResponse loginResponse = (LoginResponse) response.body();
+//                            GLog.d("data == " + loginResponse.getData());
+//                            GLog.d("resultCode == " + loginResponse.getResultCode());
+//                            GLog.d("isLoginCheck == " + loginResponse.getData().getIsLoginCheck());
+
+                            // 자동 로그인 여부에 따른 웹뷰 화면
+                            if (loginResponse.getData().getIsLoginCheck()) {
+                                if (!TextUtils.isEmpty(url)) {
+                                    mWebView.loadUrl(url);
+                                    GLog.d("url 화면");
+                                } else {
+                                    mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
+                                    GLog.d("메인 화면");
+                                }
+                            } else {
+                                if (!TextUtils.isEmpty(url)) {
+                                    mWebView.loadUrl(url);
+                                    GLog.d("url 화면");
+                                } else {
+                                    GLog.d("로그인 화면");
+                                    mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
+                                }
+                            }
+
+                        } else {
+                            GLog.d("오류 메세지 == " + response.errorBody().toString());
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Throwable t) {
+                    GLog.d("오류 메세지 == " + t.toString());
+                }
+            });
+        } else { // 자동 로그인 false - 로그인 화면으로 이동
+            if (!TextUtils.isEmpty(url)) {
+                mWebView.loadUrl(url);
+                GLog.d("url 화면");
+            } else {
+                mWebView.loadUrl(Constant.WEB_VIEW_LOGIN_URL);
+                GLog.d("메인 화면");
+            }
+        }
     }
 
     @Override
@@ -560,16 +602,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
-
-        //        if (drawerLayout != null && drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-//            drawerLayout.closeDrawer(Gravity.RIGHT);
-//        } else if (TextUtils.equals(mWebView.getUrl(), Constant.WEB_VIEW_MAIN_URL)) {
-//            super.onBackPressed();
-//        } else if (mWebView.canGoBack()) {
-//            mWebView.goBack();
-//        } else {
-//            super.onBackPressed();
-//        }
     }
 
     // push 토큰 확인
@@ -744,5 +776,99 @@ public class MainActivity extends AppCompatActivity {
                 GLog.d("webPlugin_Init ====== " + e);
             }
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.go_to_home) {
+            loginChck();
+            mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
+            SharedPreferencesAPI.getInstance(MainActivity.this).setUrl("");
+            Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
+            drawerLayout.closeDrawer(Gravity.RIGHT);
+
+        } else if (id == R.id.insert_url) {
+
+            mIntent = getIntent();
+            url = mIntent.getStringExtra("url");
+            fullMode = mIntent.getBooleanExtra("displaySize", true);
+
+            inputDialog = new InputDialog(this, new CustomDialogClickListener() {
+                @Override
+                public void onPositiveClick(String text) {
+                    if (TextUtils.isEmpty(text)) {
+                        Toast.makeText(MainActivity.this, "url을 다시 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                int width;
+                                int height;
+                                GLog.d("fullmode === " + fullMode);
+                                if (fullMode) { // fullMode의 default 값이 true라서 선택 안할 때도 full-mode로 설정됨
+                                    GLog.d("full mode ======");
+                                    width = displayMetrics.widthPixels;
+                                    height = displayMetrics.heightPixels;
+                                } else { // half 모드일 때
+                                    GLog.d("half mode ======");
+                                    width = (int) (displayMetrics.widthPixels * 0.7);
+                                    height = (int) (displayMetrics.heightPixels * 0.8);
+                                }
+
+                                SharedPreferencesAPI.getInstance(MainActivity.this).setUrl(text);
+                                getWindow().getAttributes().width = width;
+                                getWindow().getAttributes().height = height;
+                                mWebView.loadUrl(text);
+                                drawerLayout.closeDrawer(Gravity.RIGHT);
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onNegativeClick() {
+                }
+            });
+            inputDialog.show();
+            Toast.makeText(this, "url 입력", Toast.LENGTH_SHORT).show();
+        }
+//        else if (id == R.id.screen_size) {
+//            if (fullMode) {
+//                item.setTitle("풀 모드");
+//                int width = (int) (displayMetrics.widthPixels * 0.7);
+//                int height = (int) (displayMetrics.heightPixels * 0.8);
+//                GLog.d("하프 width == " + width);
+//                GLog.d("하프 height == " + height);
+//                getWindow().getAttributes().width = width;
+//                getWindow().getAttributes().height = height;
+//                fullMode = false;
+//                Toast.makeText(this, "현재 하프 모드", Toast.LENGTH_SHORT).show();
+//            } else {
+//                item.setTitle("하프 모드");
+//                fullMode = true;
+//                Toast.makeText(this, " 현재 풀 모드", Toast.LENGTH_SHORT).show();
+//            }
+//        }
+        else if (id == R.id.quit) {
+            CustomDialog customDialog = new CustomDialog(MainActivity.this, new CustomDialogClickListener() {
+                @Override
+                public void onPositiveClick(String text) {
+                    ActivityCompat.finishAffinity(MainActivity.this);
+                }
+
+                @Override
+                public void onNegativeClick() {
+                    Toast.makeText(MainActivity.this, "취소", Toast.LENGTH_SHORT).show();
+                }
+            }, "안내", getResources().getString(R.string.close_app_message), Constant.TWO_BUTTON, true);
+            customDialog.setCancelable(false);
+            customDialog.show();
+            customDialog.setTwoButtonText("취소", "종료");
+        }
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
+//        drawerLayout.closeDrawer(Gravity.RIGHT);
+        return true;
     }
 }

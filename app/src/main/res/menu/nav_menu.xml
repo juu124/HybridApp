@@ -2,27 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/test1"
-        android:title="테스트 1" />
+        android:id="@+id/go_to_home"
+        android:title="홈" />
 
     <item
-        android:id="@+id/test2"
-        android:title="테스트 2" />
+        android:id="@+id/insert_url"
+        android:title="url 입력" />
 
     <item
-        android:id="@+id/test3"
-        android:title="테스트 3" />
+        android:id="@+id/quit"
+        android:title="종료" />
 
-    <item
-        android:id="@+id/test4"
-        android:title="테스트 4" />
+    <!--    <item-->
+    <!--        android:id="@+id/screen_size"-->
+    <!--        android:title="풀 모드" />-->
 
-    <item
-        android:id="@+id/test5"
-        android:title="테스트 5" />
 
-    <item
-        android:id="@+id/test6"
-        android:title="테스트 6" />
+    <!--    <item-->
+    <!--        android:id="@+id/test5"-->
+    <!--        android:title="테스트 5" />-->
+
+    <!--    <item-->
+    <!--        android:id="@+id/test6"-->
+    <!--        android:title="테스트 6" />-->
 
 </menu>

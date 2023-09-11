@@ -1,36 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="270dp"
-    android:layout_height="150dp"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:orientation="vertical">
 
     <TextView
+        android:id="@id/dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="15dp"
         android:layout_marginTop="15dp"
-        android:text="Insert"
-        android:textStyle="bold" />
+        android:text="Insert url"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/dialog_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="13dp"
-        android:layout_marginBottom="5dp"
-        android:paddingHorizontal="5dp"
         android:layout_above="@+id/dialog_btn_layout"
-        android:singleLine="true" />
+        android:layout_marginHorizontal="13dp"
+        android:layout_marginTop="5dp"
+        android:paddingHorizontal="5dp"
+        android:singleLine="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_title" />
+
+    <RadioGroup
+        android:id="@+id/radio_btn_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_edit">
+
+        <RadioButton
+            android:id="@+id/radio_btn_full_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/full_mode"
+            android:textSize="15sp" />
+
+        <RadioButton
+            android:id="@+id/radio_btn_half_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/half_mode"
+            android:textSize="15sp" />
+
+    </RadioGroup>
 
     <LinearLayout
         android:id="@+id/dialog_btn_layout"
         android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="13dp"
         android:layout_marginBottom="5dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radio_btn_layout">
 
         <Button
             android:id="@+id/dialog_user_info_no_button"
@@ -58,4 +92,4 @@
         android:layout_height="wrap_content"
         android:visibility="gone" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

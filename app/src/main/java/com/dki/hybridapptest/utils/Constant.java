@@ -37,6 +37,9 @@ public class Constant {
     // sample.html 주소
 //    public static final String WEB_VIEW_MAIN_URL = "file:///android_asset/sample.html";
 
+    // MagicVKeypad_Sample.html 주소
+    public static final String WEB_MAGIC_KEYPAD_URL = "file:///android_asset/MagicVKeypad_Sample.html?option=";
+
     // 파일 업로드 주소
     public static final String WEB_FILE_UPLOAD_URL = "http://10.112.58.208/upload";
 
@@ -67,6 +70,9 @@ public class Constant {
 //    public static String SERVER_URL_VERITY = "https://devpds.mydatacenter.or.kr:9443/trustapp_svr/trustapp_server_demo.jsp";
     public static String SERVER_URL_VERITY = "https://pds.mydatacenter.or.kr:9443/trustapp_svr/trustapp_server_demo.jsp";
 
+    // 테스트 주소
+    public static String TEST_URL_NAVER = "https://m.naver.com/";
+    public static String TEST_URL_GOOGLE = "https://www.google.com/";
 
     /*********************  API URL ************************/
     // user List 주소
