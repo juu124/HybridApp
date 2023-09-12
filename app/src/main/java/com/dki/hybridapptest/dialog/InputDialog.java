@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.ui.activity.MainActivity;
 import com.dki.hybridapptest.utils.GLog;
 import com.dki.hybridapptest.utils.SharedPreferencesAPI;
 
@@ -81,9 +80,9 @@ public class InputDialog extends Dialog {
             } else {
                 Toast.makeText(mContext, "화면 모드를 선택해주세요.", Toast.LENGTH_SHORT).show();
             }
-            mIntent = new Intent(mContext, MainActivity.class);
-            mIntent.putExtra("url", url);
-            mContext.startActivity(mIntent);
+//            mIntent = new Intent(mContext, MainActivity.class);
+//            mIntent.putExtra("url", url);
+//            mContext.startActivity(mIntent);
         } else { // url 값 없음
             Toast.makeText(mContext, "url 값을 입력해주세요.", Toast.LENGTH_SHORT).show();
         }

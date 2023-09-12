@@ -17,7 +17,6 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +42,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // 화면 크기
     private DisplayMetrics displayMetrics;
+    private boolean isDisplaySizeMode = true;
 
     // push
     private BroadcastReceiver mMainBroadcastReceiver;
@@ -230,15 +231,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu:
-                if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    drawerLayout.closeDrawer(Gravity.RIGHT);
+                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    drawerLayout.closeDrawer(GravityCompat.END);
                 } else {
-                    drawerLayout.openDrawer(Gravity.RIGHT);
+                    drawerLayout.openDrawer(GravityCompat.END);
                 }
                 break;
             case android.R.id.home: // 타이틀 back 버튼
-                if (drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-                    drawerLayout.closeDrawer(Gravity.RIGHT);
+                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    drawerLayout.closeDrawer(GravityCompat.END);
                 } else if (mWebView.canGoBack()) {
                     mWebView.goBack();
                 }
@@ -272,6 +273,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         pwd = SharedPreferencesAPI.getInstance(MainActivity.this).getLoginPw();
         isLoginCheck = SharedPreferencesAPI.getInstance(this).getAutoLogin();
 //        url = SharedPreferencesAPI.getInstance(MainActivity.this).getUrl();
+
+        GLog.d("isDisplaySizeMode === " + isDisplaySizeMode);
+//        changeDisplaySize(isDisplaySizeMode);
 
         mWebSettings = mWebView.getSettings();
         mWebSettings.setJavaScriptEnabled(true);
@@ -348,7 +352,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mWebSettings.setDefaultTextEncodingName("utf-8");
         mWebView.addJavascriptInterface(androidBridge, "DKITec");
-        loginChck(); // 자동 로그인 체크 여부 화면 이동
+        loginCheck(""); // 자동 로그인 체크 여부 화면 이동
         webPlugin_Init(MainActivity.this);
 
         // 파일 업로드 (카메라, 내 파일)
@@ -519,19 +523,46 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mMagicMRS = new MagicMRS(this, callback);
     }
 
-    // 자동 로그인 체크 여부 화면 이동
-    public void loginChck() {
-        String url = SharedPreferencesAPI.getInstance(MainActivity.this).getUrl();
-        boolean isfullMdoe = SharedPreferencesAPI.getInstance(MainActivity.this).getDisplayFullMode();
+    // url 검색 화면 크기 조절
+    public void changeDisplaySize(boolean isfullMode) {
+        GLog.d();
         displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
+//        String url = SharedPreferencesAPI.getInstance(MainActivity.this).getUrl();
+//        boolean isfullMdoe = SharedPreferencesAPI.getInstance(MainActivity.this).getDisplayFullMode();
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+        GLog.d("width === " + displayMetrics.widthPixels);
+        GLog.d("height === " + displayMetrics.heightPixels);
+        int width;
+        int height;
 
-        if (!isfullMdoe) {
-            int width = (int) (displayMetrics.widthPixels * 0.7);
-            int height = (int) (displayMetrics.heightPixels * 0.8);
-            getWindow().getAttributes().width = width;
+        if (!isfullMode) {
+            GLog.d("isfullMode false");
+            width = (int) (displayMetrics.widthPixels * 0.9);
+            height = (int) (displayMetrics.heightPixels * 0.9);
+//            width = (int) (displayMetrics.widthPixels * 0.9);
+//            height = (int) (displayMetrics.heightPixels * 0.9);
             getWindow().getAttributes().height = height;
+            getWindow().getAttributes().width = width;
+            GLog.d("width === " + width);
+            GLog.d("height === " + height);
+            getWindow().setAttributes(getWindow().getAttributes());
+        } else {
+            GLog.d("isfullMode true");
+            width = (int) displayMetrics.widthPixels;
+            height = (int) displayMetrics.heightPixels;
+//            width = (int) (displayMetrics.widthPixels * 1.0);
+//            height = (int) (displayMetrics.heightPixels * 1.1);
+            getWindow().getAttributes().height = height;
+            getWindow().getAttributes().width = width;
+            GLog.d("width === " + width);
+            GLog.d("height === " + height);
+            getWindow().setAttributes(getWindow().getAttributes());
         }
+    }
 
+    // 자동 로그인 체크 여부 화면 이동
+    public void loginCheck(String url) {
+//        changeDisplaySize(isDisplaySizeMode);
         if (isLoginCheck) { // 자동 로그인 true - 메인 화면으로 이동
             RetrofitApiManager.getInstance().requestPostLogin(id, pwd, new RetrofitInterface() {
                 @Override
@@ -590,12 +621,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
+        GLog.d();
         registerReceiver();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        GLog.d();
         unregisterReceiver();
     }
 
@@ -603,8 +636,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         // 햄버거 메뉴 뒤로 가기
-        if (drawerLayout != null && drawerLayout.isDrawerOpen(Gravity.RIGHT)) {
-            drawerLayout.closeDrawer(Gravity.RIGHT);
+        if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            drawerLayout.closeDrawer(GravityCompat.END);
         } else if (mWebView.canGoBack()) {
             mWebView.goBack();
         } else {
@@ -793,16 +826,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // 홈 버튼
         if (id == R.id.go_to_home) {
             // 홈 버튼 누를 시 url, isfullmode 초기화
-            SharedPreferencesAPI.getInstance(MainActivity.this).setUrl("");
-            SharedPreferencesAPI.getInstance(MainActivity.this).setDisplayFullMode(true);
-            loginChck();
+            changeDisplaySize(true);
+            mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
             Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
-//            mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
-            drawerLayout.closeDrawer(Gravity.RIGHT);
+            drawerLayout.closeDrawer(GravityCompat.END);
         }
         // url 입력
         else if (id == R.id.insert_url) {
-            mIntent = new Intent();
             inputDialog = new InputDialog(this, new CustomDialogClickListener() {
                 @Override
                 public void onPositiveClick(String text, boolean isFullMode) {
@@ -812,14 +842,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
-                                if (isFullMode) { // fullMode의 default 값이 true라서 선택 안할 때도 full-mode로 설정됨
-                                    SharedPreferencesAPI.getInstance(MainActivity.this).setDisplayFullMode(true);
-                                } else { // half 모드일 때
-                                    SharedPreferencesAPI.getInstance(MainActivity.this).setDisplayFullMode(false);
-                                }
+                                GLog.d("isfullmode ==== " + isFullMode);
+                                isDisplaySizeMode = isFullMode;
+                                changeDisplaySize(isDisplaySizeMode);
                                 SharedPreferencesAPI.getInstance(MainActivity.this).setUrl(text);
                                 mWebView.loadUrl(text);
-                                drawerLayout.closeDrawer(Gravity.RIGHT);
+                                drawerLayout.closeDrawer(GravityCompat.END);
                             }
                         });
                     }
@@ -848,8 +876,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             customDialog.show();
             customDialog.setTwoButtonText("취소", "종료");
         }
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer);
-//        drawerLayout.closeDrawer(Gravity.RIGHT);
         return true;
     }
 }

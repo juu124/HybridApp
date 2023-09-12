@@ -49,9 +49,9 @@
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nv_main_navigation_root"
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:background="#ffffff"
             android:gravity="center"
             android:textSize="48sp"
