@@ -136,7 +136,7 @@ public class VaccineCallback implements MagicmVaccineListener {
                 customDialog = new CustomDialog(context, new CustomDialogClickListener() {
 
                     @Override
-                    public void onPositiveClick(String text) {
+                    public void onPositiveClick(String text, boolean value) {
 
                     }
 
@@ -157,7 +157,7 @@ public class VaccineCallback implements MagicmVaccineListener {
                 // 악성코드 검출
                 customDialog = new CustomDialog(context, new CustomDialogClickListener() {
                     @Override
-                    public void onPositiveClick(String text) {
+                    public void onPositiveClick(String text, boolean value) {
                         try {
                             MagicmVaccine.getInstance().deleteScanData(scanData);
                         } catch (MagicNullInstance magicNullInstance) {

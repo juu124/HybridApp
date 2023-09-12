@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,7 +27,7 @@ public class InputDialog extends Dialog {
     private CustomDialogClickListener mCustomDialogClickListener;
     private RadioButton radioBtnFullMode;
     private RadioButton radioBtnHalfMode;
-    private RadioGroup radioGroup;
+//    private RadioGroup radioGroup;
 
     private String url;
     private boolean isFullMode;
@@ -48,7 +47,7 @@ public class InputDialog extends Dialog {
         dialogEditText = findViewById(R.id.dialog_edit);
         dialogNoBtn = findViewById(R.id.dialog_user_info_no_button);
         dialogYesBtn = findViewById(R.id.dialog_user_info_yes_button);
-        radioGroup = findViewById(R.id.radio_btn_layout);
+//        radioGroup = findViewById(R.id.radio_btn_layout);
         radioBtnFullMode = findViewById(R.id.radio_btn_full_mode);
         radioBtnHalfMode = findViewById(R.id.radio_btn_half_mode);
         dialogEditText.setText(SharedPreferencesAPI.getInstance(mContext).getUrl());
@@ -56,9 +55,9 @@ public class InputDialog extends Dialog {
         dialogYesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCustomDialogClickListener.onPositiveClick(dialogEditText.getText().toString());
                 url = dialogEditText.getText().toString();
                 moveWebView();
+                mCustomDialogClickListener.onPositiveClick(dialogEditText.getText().toString(), isFullMode);
                 dismiss();
             }
         });
@@ -84,7 +83,6 @@ public class InputDialog extends Dialog {
             }
             mIntent = new Intent(mContext, MainActivity.class);
             mIntent.putExtra("url", url);
-            mIntent.putExtra("displaySize", isFullMode);
             mContext.startActivity(mIntent);
         } else { // url 값 없음
             Toast.makeText(mContext, "url 값을 입력해주세요.", Toast.LENGTH_SHORT).show();

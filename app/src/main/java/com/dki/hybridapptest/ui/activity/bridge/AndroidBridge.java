@@ -890,7 +890,7 @@ public class AndroidBridge {
                 // 작업 처리
                 CustomDialog customDialog = new CustomDialog(mActivity, new CustomDialogClickListener() {
                     @Override
-                    public void onPositiveClick(String text) {
+                    public void onPositiveClick(String text, boolean value) {
                         ActivityCompat.finishAffinity(mActivity);
                     }
 
@@ -1090,7 +1090,7 @@ public class AndroidBridge {
     public void showInputDialog() {
         inputDialog = new InputDialog(mActivity, new CustomDialogClickListener() {
             @Override
-            public void onPositiveClick(String text) {
+            public void onPositiveClick(String text, boolean value) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
