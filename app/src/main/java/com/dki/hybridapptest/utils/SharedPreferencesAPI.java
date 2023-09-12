@@ -43,6 +43,7 @@ public class SharedPreferencesAPI {
     private static final String PREF_KEY_LOGIN_PW = "PREF_KEY_LOGIN_PW";
     private static final String PREF_KEY_AUTO_LOGIN_CHECK = "PREF_KEY_AUTO_LOGIN_CHECK";
     private static final String PREF_KEY_SEARCH_URL = "PREF_KEY_SEARCH_URL";
+    private static final String PREF_KEY_DISPLAY_FULL_MODE = "PREF_KEY_DISPLAY_FULL_MODE";
 
     /**
      * Get Template Function
@@ -65,6 +66,10 @@ public class SharedPreferencesAPI {
 
     public boolean getAutoLogin() {
         return getBoolean(PREF_KEY_AUTO_LOGIN_CHECK);
+    }
+
+    public boolean getDisplayFullMode() {
+        return getBoolean(PREF_KEY_DISPLAY_FULL_MODE);
     }
 
     /**
@@ -90,6 +95,9 @@ public class SharedPreferencesAPI {
         set(PREF_KEY_AUTO_LOGIN_CHECK, value);
     }
 
+    public void setDisplayFullMode(boolean value) {
+        set(PREF_KEY_DISPLAY_FULL_MODE, value);
+    }
 
     public <T> T getTest(Class<T> classOfT) {
         return getObject(PREF_KEY_OBJECT_TEST, classOfT);
