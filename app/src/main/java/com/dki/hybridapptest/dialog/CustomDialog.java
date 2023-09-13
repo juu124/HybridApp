@@ -55,7 +55,7 @@ public class CustomDialog extends Dialog {
                 @Override
                 public void onClick(View v) {
                     if (mCustomDialogClickListener != null) {
-                        mCustomDialogClickListener.onPositiveClick("", true);
+                        mCustomDialogClickListener.onPositiveClick("");
                         if (isAutoDissmiss) {
                             dismiss();
                         }
@@ -70,7 +70,7 @@ public class CustomDialog extends Dialog {
                 @Override
                 public void onClick(View v) {
                     if (mCustomDialogClickListener != null) {
-                        mCustomDialogClickListener.onPositiveClick("", true);
+                        mCustomDialogClickListener.onPositiveClick("");
                         if (isAutoDissmiss) {
                             dismiss();
                         }

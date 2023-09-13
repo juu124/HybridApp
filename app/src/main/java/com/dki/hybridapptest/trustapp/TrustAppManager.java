@@ -161,7 +161,7 @@ public class TrustAppManager {
         if (!Utils.getNetworkStatus(ctx)) {
             CustomDialog customDialog = new CustomDialog(ctx, new CustomDialogClickListener() {
                 @Override
-                public void onPositiveClick(String text, boolean value) {
+                public void onPositiveClick(String text) {
                     android.os.Process.killProcess(android.os.Process.myPid());
                 }
 
@@ -184,7 +184,7 @@ public class TrustAppManager {
         } else {
             CustomDialog customDialog = new CustomDialog(ctx, new CustomDialogClickListener() {
                 @Override
-                public void onPositiveClick(String text, boolean value) {
+                public void onPositiveClick(String text) {
                     android.os.Process.killProcess(android.os.Process.myPid());
                 }
 

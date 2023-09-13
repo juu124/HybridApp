@@ -443,7 +443,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         view.loadUrl("about:blank"); // 빈페이지 출력
                         CustomDialog customDialog = new CustomDialog(MainActivity.this, new CustomDialogClickListener() {
                             @Override
-                            public void onPositiveClick(String text, boolean value) {
+                            public void onPositiveClick(String text) {
                                 // 확인시 클릭 이벤트
                                 finish();
                             }
@@ -831,16 +831,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        // 홈 버튼
+        // url 입력
         if (id == R.id.insert_url) {
             inputDialog = new InputDialog(this, new CustomDialogClickListener() {
                 @Override
-                public void onPositiveClick(String text, boolean isFullMode) {
+                public void onPositiveClick(String text) {
                     if (TextUtils.isEmpty(text)) {
                         Toast.makeText(MainActivity.this, "url을 다시 입력해주세요.", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(MainActivity.this, "웹뷰 이동", Toast.LENGTH_SHORT).show();
-                        SharedPreferencesAPI.getInstance(MainActivity.this).setUrl(text);
                         drawerLayout.closeDrawer(GravityCompat.END);
 //                        handler.post(new Runnable() {
 //                            @Override
@@ -861,48 +860,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
             inputDialog.show();
         }
-
-//        if (id == R.id.go_to_home) {
-//            // 홈 버튼 누를 시 url, isfullmode 초기화
-////            changeDisplaySize(true);
-//            mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
-//            Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
-//            drawerLayout.closeDrawer(GravityCompat.END);
-//        }
-//        // url 입력
-//        else if (id == R.id.insert_url) {
-//            inputDialog = new InputDialog(this, new CustomDialogClickListener() {
-//                @Override
-//                public void onPositiveClick(String text, boolean isFullMode) {
-//                    if (TextUtils.isEmpty(text)) {
-//                        Toast.makeText(MainActivity.this, "url을 다시 입력해주세요.", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(MainActivity.this, "웹뷰 이동", Toast.LENGTH_SHORT).show();
-//                        drawerLayout.closeDrawer(GravityCompat.END);
-////                        handler.post(new Runnable() {
-////                            @Override
-////                            public void run() {
-////                                GLog.d("isfullmode ==== " + isFullMode);
-////                                isDisplaySizeMode = isFullMode;
-//////                                changeDisplaySize(isDisplaySizeMode);
-////                                SharedPreferencesAPI.getInstance(MainActivity.this).setUrl(text);
-////                                drawerLayout.closeDrawer(GravityCompat.END);
-////                            }
-////                        });
-//                    }
-//                }
-//
-//                @Override
-//                public void onNegativeClick() {
-//                }
-//            });
-//            inputDialog.show();
-//        }
         // 종료
         else if (id == R.id.quit) {
             CustomDialog customDialog = new CustomDialog(MainActivity.this, new CustomDialogClickListener() {
                 @Override
-                public void onPositiveClick(String text, boolean value) {
+                public void onPositiveClick(String text) {
                     ActivityCompat.finishAffinity(MainActivity.this);
                 }
 

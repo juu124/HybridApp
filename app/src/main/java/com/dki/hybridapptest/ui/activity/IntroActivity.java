@@ -99,7 +99,7 @@ public class IntroActivity extends AppCompatActivity {
                 Toast.makeText(this, "필수 권한을 설정해주세요.", Toast.LENGTH_SHORT).show();
                 CustomDialog customDialog = new CustomDialog(this, new CustomDialogClickListener() {
                     @Override
-                    public void onPositiveClick(String text, boolean value) {
+                    public void onPositiveClick(String text) {
                         moveToPermissionSetting();
                     }
 
@@ -141,7 +141,7 @@ public class IntroActivity extends AppCompatActivity {
             if (!IntroActivity.this.isFinishing()) {
                 CustomDialog customDialog = new CustomDialog(IntroActivity.this, new CustomDialogClickListener() {
                     @Override
-                    public void onPositiveClick(String text, boolean value) {
+                    public void onPositiveClick(String text) {
                         android.os.Process.killProcess(android.os.Process.myPid());
                     }
 

@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
+import com.dki.hybridapptest.utils.SharedPreferencesAPI;
 
 public class WebViewSizeChangeActivity extends AppCompatActivity {
     private WebView mWebView;
@@ -41,7 +42,8 @@ public class WebViewSizeChangeActivity extends AppCompatActivity {
         displayMetrics = getApplicationContext().getResources().getDisplayMetrics();   // 해당 기기 화면 사이즈
 
         mIntent = getIntent();
-        url = mIntent.getStringExtra("url");
+//        url = mIntent.getStringExtra("url");
+        url = SharedPreferencesAPI.getInstance(WebViewSizeChangeActivity.this).getUrl();
         fullMode = mIntent.getBooleanExtra("isFullMode", true);
         displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
         WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
@@ -62,7 +64,6 @@ public class WebViewSizeChangeActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "url을 입력해주세요.", Toast.LENGTH_SHORT).show();
         }
-        GLog.d("url === " + url);
         mWebSettings.setJavaScriptEnabled(true);
         mWebView.loadUrl(url);
     }

@@ -49,7 +49,7 @@ public class VaccineManager {
                 public void run() {
                     CustomDialog customDialog = new CustomDialog(mActivity, new CustomDialogClickListener() {
                         @Override
-                        public void onPositiveClick(String text, boolean value) {
+                        public void onPositiveClick(String text) {
                             android.os.Process.killProcess(android.os.Process.myPid());
                         }
 
