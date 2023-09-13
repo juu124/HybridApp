@@ -64,10 +64,12 @@ public class VaccineCallback implements MagicmVaccineListener {
         switch (magicResult) {
             case RESULT_OK:
                 GLog.d("검사완료 - 악성코드 없음");
+                Toast.makeText(context, "백신 검사 완료 악성 코드 없음", Toast.LENGTH_SHORT).show();
                 // 악성코드 검출되지 않음
                 break;
             case MALWARE_DELETE_SUCCESS:
                 GLog.d("검사완료 - 악성코드 삭제 성공");
+                Toast.makeText(context, "백신 검사 완료 악성 코드 삭제 성공", Toast.LENGTH_SHORT).show();
                 // 악성코드 삭제 성공
                 break;
         }

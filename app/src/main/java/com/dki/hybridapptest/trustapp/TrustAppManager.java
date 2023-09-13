@@ -3,6 +3,7 @@ package com.dki.hybridapptest.trustapp;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.widget.Toast;
 
 import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.dialog.CustomDialog;
@@ -87,6 +88,7 @@ public class TrustAppManager {
             if (msg.what == 0) {
                 GLog.d("txtData : " + txtData);
                 ((IntroActivity) IntroActivity.mContext).trustAppResult(isSuccess);
+                Toast.makeText(ctx, "앱 위변조 성공", Toast.LENGTH_SHORT).show();
             }
         }
     };
