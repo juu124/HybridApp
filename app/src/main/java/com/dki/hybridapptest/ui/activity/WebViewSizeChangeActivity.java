@@ -42,23 +42,28 @@ public class WebViewSizeChangeActivity extends AppCompatActivity {
 
         mIntent = getIntent();
         url = mIntent.getStringExtra("url");
-        fullMode = mIntent.getBooleanExtra("displaySize", true);
+        fullMode = mIntent.getBooleanExtra("isFullMode", true);
+        displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
+        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+//        GLog.d("width === " + displayMetrics.widthPixels);
+//        GLog.d("height === " + displayMetrics.heightPixels);
 
-        // fullMode 값에 따른 화면 크기 조정
         if (!TextUtils.isEmpty(url)) {
-            if (!fullMode) { // 하프 모드
+            if (!fullMode) {
+                GLog.d("isfullMode false");
                 int width = (int) (displayMetrics.widthPixels * 0.7);
                 int height = (int) (displayMetrics.heightPixels * 0.8);
-                getWindow().getAttributes().width = width;
-                getWindow().getAttributes().height = height;
+                layoutParams.height = height;
+                layoutParams.width = width;
+                GLog.d("width === " + width);
+                GLog.d("height === " + height);
+                getWindow().setAttributes(layoutParams);
             }
         } else {
             Toast.makeText(this, "url을 입력해주세요.", Toast.LENGTH_SHORT).show();
         }
-
         GLog.d("url === " + url);
         mWebSettings.setJavaScriptEnabled(true);
-//        url = "https://www.google.com/webhp?hl=ko&sa=X&ved=0ahUKEwiMqPnqkKuAAxWMc3AKHecBAjUQPAgI";
         mWebView.loadUrl(url);
     }
 }

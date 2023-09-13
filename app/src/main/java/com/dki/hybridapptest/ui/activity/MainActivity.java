@@ -524,41 +524,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     // url 검색 화면 크기 조절
-    public void changeDisplaySize(boolean isfullMode) {
-        GLog.d();
-        displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
-//        String url = SharedPreferencesAPI.getInstance(MainActivity.this).getUrl();
-//        boolean isfullMdoe = SharedPreferencesAPI.getInstance(MainActivity.this).getDisplayFullMode();
-        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
-        GLog.d("width === " + displayMetrics.widthPixels);
-        GLog.d("height === " + displayMetrics.heightPixels);
-        int width;
-        int height;
-
-        if (!isfullMode) {
-            GLog.d("isfullMode false");
-            width = (int) (displayMetrics.widthPixels * 0.9);
-            height = (int) (displayMetrics.heightPixels * 0.9);
-//            width = (int) (displayMetrics.widthPixels * 0.9);
-//            height = (int) (displayMetrics.heightPixels * 0.9);
-            getWindow().getAttributes().height = height;
-            getWindow().getAttributes().width = width;
-            GLog.d("width === " + width);
-            GLog.d("height === " + height);
-            getWindow().setAttributes(getWindow().getAttributes());
-        } else {
-            GLog.d("isfullMode true");
-            width = (int) displayMetrics.widthPixels;
-            height = (int) displayMetrics.heightPixels;
-//            width = (int) (displayMetrics.widthPixels * 1.0);
-//            height = (int) (displayMetrics.heightPixels * 1.1);
-            getWindow().getAttributes().height = height;
-            getWindow().getAttributes().width = width;
-            GLog.d("width === " + width);
-            GLog.d("height === " + height);
-            getWindow().setAttributes(getWindow().getAttributes());
-        }
-    }
+//    public void changeDisplaySize(boolean isfullMode) {
+//        GLog.d();
+//        displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
+////        String url = SharedPreferencesAPI.getInstance(MainActivity.this).getUrl();
+////        boolean isfullMdoe = SharedPreferencesAPI.getInstance(MainActivity.this).getDisplayFullMode();
+//        WindowManager.LayoutParams layoutParams = getWindow().getAttributes();
+////        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, 260 * 5);
+//        GLog.d("width === " + displayMetrics.widthPixels);
+//        GLog.d("height === " + displayMetrics.heightPixels);
+//        int width;
+//        int height;
+//
+//        if (!isfullMode) {
+//            GLog.d("isfullMode false");
+//            width = (int) (displayMetrics.widthPixels * 0.7);
+//            height = (int) (displayMetrics.heightPixels * 0.8);
+////            width = (int) (displayMetrics.widthPixels * 0.9);
+////            height = (int) (displayMetrics.heightPixels * 0.9);
+//            layoutParams.height = height;
+//            layoutParams.width = width;
+////            getWindow().getAttributes().height = height;
+////            getWindow().getAttributes().width = width;
+//            GLog.d("width === " + width);
+//            GLog.d("height === " + height);
+//            getWindow().setAttributes(layoutParams);
+//        }
+//        else {
+//            GLog.d("isfullMode true");
+//            width = (int) displayMetrics.widthPixels;
+//            height = (int) displayMetrics.heightPixels;
+//
+////            width = (int) (displayMetrics.widthPixels * 1.0);
+////            height = (int) (displayMetrics.heightPixels * 1.1);
+//            layoutParams.height = height;
+//            layoutParams.width = width;
+////            getWindow().getAttributes().height = height;
+////            getWindow().getAttributes().width = width;
+//            GLog.d("width === " + width);
+//            GLog.d("height === " + height);
+////            getWindow().setAttributes(getWindow().getAttributes());
+//            getWindow().setAttributes(layoutParams);
+//        }
+//    }
 
     // 자동 로그인 체크 여부 화면 이동
     public void loginCheck(String url) {
@@ -824,32 +832,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         // 홈 버튼
-        if (id == R.id.go_to_home) {
-            // 홈 버튼 누를 시 url, isfullmode 초기화
-            changeDisplaySize(true);
-            mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
-            Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
-            drawerLayout.closeDrawer(GravityCompat.END);
-        }
-        // url 입력
-        else if (id == R.id.insert_url) {
+        if (id == R.id.insert_url) {
             inputDialog = new InputDialog(this, new CustomDialogClickListener() {
                 @Override
                 public void onPositiveClick(String text, boolean isFullMode) {
                     if (TextUtils.isEmpty(text)) {
                         Toast.makeText(MainActivity.this, "url을 다시 입력해주세요.", Toast.LENGTH_SHORT).show();
                     } else {
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                GLog.d("isfullmode ==== " + isFullMode);
-                                isDisplaySizeMode = isFullMode;
-                                changeDisplaySize(isDisplaySizeMode);
-                                SharedPreferencesAPI.getInstance(MainActivity.this).setUrl(text);
-                                mWebView.loadUrl(text);
-                                drawerLayout.closeDrawer(GravityCompat.END);
-                            }
-                        });
+                        Toast.makeText(MainActivity.this, "웹뷰 이동", Toast.LENGTH_SHORT).show();
+                        SharedPreferencesAPI.getInstance(MainActivity.this).setUrl(text);
+                        drawerLayout.closeDrawer(GravityCompat.END);
+//                        handler.post(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                GLog.d("isfullmode ==== " + isFullMode);
+////                                isDisplaySizeMode = isFullMode;
+////                                changeDisplaySize(isDisplaySizeMode);
+//                                SharedPreferencesAPI.getInstance(MainActivity.this).setUrl(text);
+//                                drawerLayout.closeDrawer(GravityCompat.END);
+//                            }
+//                        });
                     }
                 }
 
@@ -859,6 +861,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
             inputDialog.show();
         }
+
+//        if (id == R.id.go_to_home) {
+//            // 홈 버튼 누를 시 url, isfullmode 초기화
+////            changeDisplaySize(true);
+//            mWebView.loadUrl(Constant.WEB_VIEW_MAIN_URL);
+//            Toast.makeText(this, "home", Toast.LENGTH_SHORT).show();
+//            drawerLayout.closeDrawer(GravityCompat.END);
+//        }
+//        // url 입력
+//        else if (id == R.id.insert_url) {
+//            inputDialog = new InputDialog(this, new CustomDialogClickListener() {
+//                @Override
+//                public void onPositiveClick(String text, boolean isFullMode) {
+//                    if (TextUtils.isEmpty(text)) {
+//                        Toast.makeText(MainActivity.this, "url을 다시 입력해주세요.", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(MainActivity.this, "웹뷰 이동", Toast.LENGTH_SHORT).show();
+//                        drawerLayout.closeDrawer(GravityCompat.END);
+////                        handler.post(new Runnable() {
+////                            @Override
+////                            public void run() {
+////                                GLog.d("isfullmode ==== " + isFullMode);
+////                                isDisplaySizeMode = isFullMode;
+//////                                changeDisplaySize(isDisplaySizeMode);
+////                                SharedPreferencesAPI.getInstance(MainActivity.this).setUrl(text);
+////                                drawerLayout.closeDrawer(GravityCompat.END);
+////                            }
+////                        });
+//                    }
+//                }
+//
+//                @Override
+//                public void onNegativeClick() {
+//                }
+//            });
+//            inputDialog.show();
+//        }
         // 종료
         else if (id == R.id.quit) {
             CustomDialog customDialog = new CustomDialog(MainActivity.this, new CustomDialogClickListener() {
