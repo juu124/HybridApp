@@ -82,7 +82,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import m.client.push.library.PushHandler;
-import m.client.push.library.common.Logger;
 import m.client.push.library.common.PushConstants;
 import m.client.push.library.common.PushConstantsEx;
 import m.client.push.library.utils.PushUtils;
@@ -630,7 +629,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         GLog.d();
-        registerReceiver();
+//        registerReceiver();
     }
 
     @Override
@@ -686,6 +685,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onReceive(Context context, Intent intent) {
+
+                //intent 정보가 정상적인지 판단
+                String result = intent.getExtras().getString(PushConstants.KEY_RESULT);
+                String bundle = intent.getExtras().getString(PushConstantsEx.KEY_BUNDLE);  // 액션 타입
+
                 // 수신된 인텐트(결과값 응답) 의 정상 데이터 여부 체크 (푸시 타입/액션 타입) - 반드시 구현
                 if (!PushUtils.checkValidationOfCompleted(intent, context)) {
                     return;
@@ -696,20 +700,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String result_code = ""; // 결과 코드
                 String result_msg = ""; // 결과 메세지
                 try {
-                    result_obj = new JSONObject(intent.getExtras().getString(PushConstants.KEY_RESULT));
+                    result_obj = new JSONObject(result);
                     result_code = result_obj.getString(PushConstants.KEY_RESULT_CODE);
                     result_msg = result_obj.getString(PushConstants.KEY_RESULT_MSG);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
-                // 액션 타입
-                String bundle = intent.getStringExtra(PushConstantsEx.KEY_BUNDLE);
-
                 //액션에 따라 분기 (이미 서비스 등록이 완료된 상태인 경우 다음 process 이동)
-                if (bundle.equals(PushConstantsEx.COMPLETE_BUNDLE.IS_REGISTERED_SERVICE)) {
+                if (bundle.equals(PushConstantsEx.COMPLETE_BUNDLE.REG_USER)) {
+                    if (result_code.equals(PushConstants.SUCCESS_RESULT_CODE)) {
+                        Toast.makeText(context, "로그인 성공!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "[LoginActivity] error code: " + result_code + " msg: " + result_msg, Toast.LENGTH_SHORT).show();
+                    }
+                } else if (bundle.equals(PushConstantsEx.COMPLETE_BUNDLE.IS_REGISTERED_SERVICE)) {
                     //mProgressDialog.dismiss();
-                    Logger.e(result_code);
+                    GLog.e(result_code);
                     String resultPushType = intent.getExtras().getString(PushConstants.KEY_PUSH_TYPE);
                     if (resultPushType.equals(PushHandler.getInstance().getPushConfigInfo(getApplicationContext()).getPushType())) {
                         if (result_code.equals(PushConstants.RESULTCODE_OK)) {
@@ -718,9 +725,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     } else {
                         Toast.makeText(MainActivity.this, result_msg, Toast.LENGTH_LONG).show();
                     }
+                } else if (bundle.equals(PushConstantsEx.COMPLETE_BUNDLE.REG_SERVICE_AND_USER)) {
 
-                    // 최초 서비스 등록이 완료된 경우 다음 process 이동
-                } else if (bundle.equals(PushConstantsEx.COMPLETE_BUNDLE.REG_PUSHSERVICE)) {
+                    if (result_code.equals(PushConstants.SUCCESS_RESULT_CODE)) {
+                        Toast.makeText(context, "로그인 성공!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, "[MainActivity] error code: " + result_code + " msg: " + result_msg, Toast.LENGTH_SHORT).show();
+                    }
+                }
+                // 최초 서비스 등록이 완료된 경우 다음 process 이동
+                else if (bundle.equals(PushConstantsEx.COMPLETE_BUNDLE.REG_PUSHSERVICE)) {
 
                     // 등록 성공
                     if (result_code.equals(PushConstants.RESULTCODE_OK)) {

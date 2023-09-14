@@ -62,10 +62,12 @@ public class IntroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_intro);
         mContext = this;
 
+        // 앱 위변조
         if (Constant.USE_TRUST_APP_DREAM) {
             trustApp = new TrustAppManager(IntroActivity.this);
         }
 
+        // 모든 권한
         if (!Utils.isGrantedAllPermission(this)) {
             requestPermissions(Utils.getPermissionListAll().toArray(new String[0]), permissionReqCode);
         } else {
@@ -80,9 +82,10 @@ public class IntroActivity extends AppCompatActivity {
         // push 초기화 (앱 실행시마다 호출)
         // Manifest.xml 설정 파일에서 라이브러리를 초기화하기 위한 정보를 가져온다.
         // Parameters: context (Context) – 현재 Context
-        if (Constant.USE_PUSH_FIREBASE) {
-            PushManager.getInstance().initPushServer(this);
-        }
+//        if (Constant.USE_PUSH_FIREBASE) {
+//            PushManager.getInstance().initPushServer(this);
+//        }
+//        initPush("home", "work"); // Android Bridge에서 로그인 정보로 사용자 등록함 (자동 로그인 설정 눌러야함)
 
         // 설정에서 돌아온 후 권한 확인 (읽기 권한)
         appSettingsLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -287,19 +290,20 @@ public class IntroActivity extends AppCompatActivity {
         finish();
     }
 
-    // push 알림 권한 체크
-    private void initPush() {
+    // push 알림 권한 체크 android bridge에서 사용중
+    private void initPush(String id, String cName) {
         GLog.d("push 알림 권한");
         final JSONObject params = new JSONObject();
         try {
-            params.put(PushConstants.KEY_CUID, "");
-            params.put(PushConstants.KEY_CNAME, "");
+            params.put(PushConstants.KEY_CUID, id);
+            params.put(PushConstants.KEY_CNAME, cName);
+            GLog.d("initPush ===== " + GLog.toJson(params));
         } catch (JSONException e) {
             e.printStackTrace();
         }
         if (PushUtils.checkNetwork(this)) {
             GLog.d("push 권한 설정");
-            PushManager.getInstance().registerServiceAndUser(this, params);
+            PushManager.getInstance().registerServiceAndUser(IntroActivity.this, params);
         } else {
             PushLog.e("MainActivity", "network is not connected.");
             Toast.makeText(this, "[MainActivity] network is not connected.", Toast.LENGTH_SHORT).show();

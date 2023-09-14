@@ -136,3 +136,9 @@
 
 - 풀 모드 보안키보드에서 android.support.v4.app.FragmentActivity를 사용하는데, 오래된 내용이라서 새 라이브러리를 받아야한다.
 - 현재 가상키패드는 '문자 키패드 HALF 모드, 숫자 키패드 HALF 모드'만 지원한다. (나머지 풀모드는 지원하지 않음)
+
+## PUSH
+
+#### PUSH 기능 사용시 준비
+
+- push 기능은 서울헬스케어 라이선스를 사용하기 때문에 해당 패키지를 kr.go.seoul.healthcare로 바꿔야한다.

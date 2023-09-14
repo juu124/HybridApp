@@ -28,13 +28,20 @@
     <!--  카메라 -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <!-- 푸시 BroadCast 수신 권한 용 Permission -->
+    <permission
+        android:name="kr.go.seoul.healthcare.permission.MPUSH_PERMISSION"
+        android:protectionLevel="signature"
+        tools:ignore="ManifestOrder" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="kr.go.seoul.healthcare.permission.MPUSH_PERMISSION" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
 
-    <!-- 안드로이드 8.0이상 필수  라이브러리 버전 4.1.0.7 이상부터 추가된 리시버 등록 시 권한 등록위해 선언 (없으면 앱 디폴트 권한) -->
-    <!-- <permission android:name="${com.dki.hybridapptest}.permission.MPUSH_PERMISSION" android:protectionLevel="signature" /> -->
-    <!-- <uses-permission android:name="${com.dki.hybridapptest}.permission.MPUSH_PERMISSION" /> -->
     <queries>
         <package android:name="kr.or.mydatacenter.pds" /> <!-- 외부 앱 사용 -->
     </queries>
@@ -49,6 +56,7 @@
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.HybridAppTest"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
             android:name=".ui.activity.EncryptionActivity"
@@ -59,9 +67,16 @@
             android:resource="@drawable/ic_launcher_foreground" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/white" /> <!-- <meta-data -->
-        <!-- android:name="com.google.firebase.messaging.default_notification_channel_id" -->
-        <!-- android:value="@string/default_notification_channel_id" /> -->
+            android:resource="@color/white" />
+
+        <!-- 토큰 자동 생성 방지 -->
+        <meta-data
+            android:name="firebase_messaging_auto_init_enabled"
+            android:value="false" />
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.dki.hybridapptest"
@@ -71,13 +86,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <service
-            android:name=".fcm.FirebaseMessagingService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
         <activity
             android:name=".ui.activity.IntroActivity"
@@ -145,6 +153,43 @@
             android:name=".ui.activity.HybridModeActivity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
+
+        <!-- =================== PUSH SERVICE SETTINGS START============= -->
+        <service
+            android:name=".fcm.FirebaseMessagingService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="m.client.push.library.service.FCMIntentService"
+            android:exported="false"
+            tools:ignore="Instantiatable">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- 푸시 payload data 수신 class -->
+        <receiver
+            android:name=".fcm.receiver.MessageArrivedReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="kr.go.seoul.healthcare.GCM_MESSAGE_ARRIVED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- UPMC 서비스 등록 / 해제 등을 위한 class  -->
+        <receiver
+            android:name="m.client.push.library.receiver.FcmActionReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="kr.go.seoul.healthcare.ACTION_GCM" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

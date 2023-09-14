@@ -587,10 +587,19 @@ public class AndroidBridge {
             if (!TextUtils.isEmpty(strJsonObject)) {
                 GLog.d("로그인 정보 ===== " + strJsonObject);
                 jsonObj = new JSONObject(strJsonObject);
+
                 SharedPreferencesAPI.getInstance(mActivity).setLoginId(jsonObj.getString("id"));
                 SharedPreferencesAPI.getInstance(mActivity).setLoginPw(jsonObj.getString("pwd"));
                 SharedPreferencesAPI.getInstance(mActivity).setAutoLogin(jsonObj.getBoolean("isAutoLogin"));
+                String id = SharedPreferencesAPI.getInstance(mActivity).getLoginId();
+                String pw = SharedPreferencesAPI.getInstance(mActivity).getLoginPw();
+
                 Toast.makeText(mActivity, "로그인 성공", Toast.LENGTH_SHORT).show();
+
+                // push 사용자 등록
+                if (Constant.USE_PUSH_FIREBASE) {
+                    initPush(id, pw);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -705,24 +714,23 @@ public class AndroidBridge {
     }
 
     // Push - id와 pw로 User 등록
-    private void initPush(String id, String pw) {
+    private void initPush(String id, String cName) {
         GLog.d();
         final JSONObject params = new JSONObject();
         try {
             params.put(PushConstants.KEY_CUID, id);
-            params.put(PushConstants.KEY_CNAME, pw);
+            params.put(PushConstants.KEY_CNAME, cName);
+            GLog.d("initPush ===== " + GLog.toJson(params));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         if (PushUtils.checkNetwork(mActivity)) {
-            GLog.d();
             handler.post(new Runnable() {
                 @Override
                 public void run() {
                     GLog.d("push checkNetWork true");
                     PushManager.getInstance().registerServiceAndUser(mActivity, params);
-//                    GLog.d("push checkNetWork true ==== " + PushManager.getInstance().getPushJsonData());
                 }
             });
         } else {
@@ -890,7 +898,7 @@ public class AndroidBridge {
                 // 작업 처리
                 CustomDialog customDialog = new CustomDialog(mActivity, new CustomDialogClickListener() {
                     @Override
-                    public void onPositiveClick(String text, boolean value) {
+                    public void onPositiveClick(String text) {
                         ActivityCompat.finishAffinity(mActivity);
                     }
 
@@ -1090,7 +1098,7 @@ public class AndroidBridge {
     public void showInputDialog() {
         inputDialog = new InputDialog(mActivity, new CustomDialogClickListener() {
             @Override
-            public void onPositiveClick(String text, boolean value) {
+            public void onPositiveClick(String text) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
