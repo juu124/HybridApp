@@ -22,7 +22,7 @@ public class Constant {
     public static boolean USE_VACCINE_DREAM = false;
 
     //true: push fasle: push 기능 사용 불가
-    public static boolean USE_PUSH_FIREBASE = false;
+    public static boolean USE_PUSH_FIREBASE = true;
 
     //true: 화면 캡쳐 fasle: 화면 캡쳐 기능 사용 불가
     public static boolean USE_SCREEN_SHOT = false;
@@ -109,6 +109,7 @@ public class Constant {
     // Push 키 값
     public static final String KEY_CUID = "CUID";
     public static final String KEY_CNAME = "CNAME";
+    public static final int NOTIFICATION_ID_FOR_PEDOMETER = 1000;
 
     // 다이얼로그 키 값
     public static String TWO_BUTTON = "TWO_BUTTON";

@@ -54,6 +54,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.core:core:1.6.0"
 
     // 모듈 라이브러리
     implementation project(path: ':Lib_Magic_FIDO')
