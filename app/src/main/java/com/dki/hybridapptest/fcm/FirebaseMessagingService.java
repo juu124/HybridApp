@@ -4,6 +4,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.text.TextUtils;
 
@@ -11,10 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.dto.PushApsAlertData;
 import com.dki.hybridapptest.dto.PushApsData;
-import com.dki.hybridapptest.dto.PushMpsData;
-import com.dki.hybridapptest.dto.PushMpsImgUrl;
 import com.dki.hybridapptest.ui.activity.MainActivity;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
@@ -23,18 +22,19 @@ import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Map;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
     private NotificationChannel mChannel;
     private String msgData;
-    private JSONObject jsonObject;
-
-    @Override
-    public void onNewToken(@NonNull String token) {
-        super.onNewToken(token);
-        GLog.d();
-    }
+    private PushApsData pushApsData;
+    private String imgUrl = null;
+    private String title = null;
+    private String body = null;
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
@@ -43,35 +43,91 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         if (message.getData().size() > 0) {
             Map<String, String> dataMap = message.getData();
             GLog.d("Message data payload: " + dataMap);
-
+            JSONObject jsonObject = null;
             msgData = dataMap.get("message");
             try {
                 if (!TextUtils.isEmpty(msgData)) {
+                    GLog.d("Message data msgData: " + msgData);
                     jsonObject = new JSONObject(msgData);
-                    PushMpsData pushMpsData = (PushMpsData) jsonObject.get("mps");
-                    PushMpsImgUrl pushMpsImgUrl = pushMpsData.getExt();
-                    String imgUrl = pushMpsImgUrl.getImageUrl();
-                    GLog.d("Message appid: " + pushMpsData.getAppId());
-                    GLog.d("Message imgUrl: " + imgUrl);
-                    GLog.d("Message seqno: " + pushMpsData.getSeqNo());
-                    GLog.d("Message sender: " + pushMpsData.getSender());
-                    GLog.d("Message senddate: " + pushMpsData.getSendDate());
-                    GLog.d("Message db_in: " + pushMpsData.getDbIn());
-                    GLog.d("Message pushkey: " + pushMpsData.getPushKey());
-                    GLog.d("Message sms: " + pushMpsData.getSms());
+                    String imgUrl = null;
+                    String title = null;
+                    String body = null;
 
-                    PushApsData pushApsData = (PushApsData) jsonObject.get("aps");
-                    PushApsAlertData pushApsAlertData = pushApsData.getAlert();
-                    String title = pushApsAlertData.getTitle();
-                    String body = pushApsAlertData.getBody();
-                    GLog.d("Message Title: " + title);
-                    GLog.d("Message Body: " + body);
-                    showNotification(title, body);
+//                    String mps = jsonObject.getString("mps");
+//                    String aps = jsonObject.getString("aps");
+//                    JSONObject jsonAps = new JSONObject(aps);
+//                    String alert = jsonAps.getString("alert");
+//                    JSONObject jsonAlert = new JSONObject(alert);
+//                    PushApsData pushApsData = new PushApsData();
+//                    pushApsData.setAlert((PushApsAlertData) jsonAps.get("alert"));
+//                    PushApsAlertData pushApsAlertData = new PushApsAlertData(jsonAlert.getString("title"), jsonAlert.getString("body"));
+//
+//                    title = pushApsAlertData.getTitle();
+//                    body = pushApsAlertData.getBody();
+
+                    // dto 사용 안한 경우
+                    String mps = jsonObject.getString("mps");
+                    JSONObject jsonMps = new JSONObject(mps);
+                    String aps = jsonObject.getString("aps");
+                    JSONObject jsonAps = new JSONObject(aps);
+
+                    GLog.d("Message jsonMps: " + jsonMps);
+                    GLog.d("Message jsonAps: " + jsonAps);
+
+                    if (!TextUtils.isEmpty(jsonMps.getString("ext"))) {
+                        String ext = jsonMps.getString("ext");
+                        JSONObject jsonExt = new JSONObject(ext);
+                        imgUrl = jsonExt.getString("imageUrl");
+                        GLog.d("Message imgUrl: " + imgUrl);
+                    }
+
+                    String alert = jsonAps.getString("alert");
+                    JSONObject jsonAlert = new JSONObject(alert);
+                    title = jsonAlert.getString("title");
+                    body = jsonAlert.getString("body");
+                    GLog.d("Message title: " + title);
+                    GLog.d("Message body: " + body);
+
+                    showNotification(title, body, imgUrl);
                 }
             } catch (JSONException e) {
-                throw new RuntimeException(e);
+                try {
+                    GLog.d("사진 없어서 여기로 옴");
+
+//                    String aps = jsonObject.getString("aps");
+//                    JSONObject jsonAps = new JSONObject(aps);
+//                    String alert = jsonAps.getString("alert");
+//                    JSONObject jsonAlert = new JSONObject(alert);
+//                    PushApsData pushApsData = new PushApsData();
+//                    pushApsData.setAlert((PushApsAlertData) jsonAps.get("alert"));
+//                    PushApsAlertData pushApsAlertData = new PushApsAlertData(jsonAlert.getString("title"), jsonAlert.getString("body"));
+//
+//                    title = pushApsAlertData.getTitle();
+//                    body = pushApsAlertData.getBody();
+
+                    // dto 사용 안한 경우 (사진 없을 때)
+                    String mps = jsonObject.getString("mps");
+                    JSONObject jsonMps = new JSONObject(mps);
+                    String aps = jsonObject.getString("aps");
+                    JSONObject jsonAps = new JSONObject(aps);
+
+                    GLog.d("Message jsonMps: " + jsonMps);
+                    GLog.d("Message jsonAps: " + jsonAps);
+
+                    String alert = jsonAps.getString("alert");
+                    JSONObject jsonAlert = new JSONObject(alert);
+                    String title = jsonAlert.getString("title");
+                    String body = jsonAlert.getString("body");
+                    GLog.d("Message title: " + title);
+                    GLog.d("Message body: " + body);
+
+                    showNotification(title, body, imgUrl);
+                } catch (JSONException ex) {
+                    GLog.d("title, text exception :: " + ex.getMessage());
+//                    throw new RuntimeException(ex);
+                }
+                GLog.d("ext 메세지 :: " + e.getMessage());
             }
-            GLog.d("onReceived msg : " + msgData);
         }
 
         if (message.getNotification() != null) {
@@ -86,7 +142,23 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     }
 
-    private void showNotification(String messageTitle, String messageBody) {
+    // img url -> bitmap
+    private static Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private void showNotification(String messageTitle, String messageBody, String imgUrl) {
         GLog.d("messageTitle === " + messageTitle);
         GLog.d("messageBody === " + messageBody);
 
@@ -97,15 +169,30 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String mChannelName = getString(R.string.default_notification_channel_name);
         String channelId = getString(R.string.default_notification_channel_id);
 
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.ic_notifications)
-                .setContentTitle(messageTitle)
-                .setContentText(messageBody)
-                .setAutoCancel(false)
-                .setContentIntent(pendingIntent);
-
+        NotificationCompat.Builder notificationBuilder;
+        if (imgUrl != null) {
+            GLog.d("imgUrl not null");
+            GLog.d("imgUrl === " + imgUrl);
+            notificationBuilder = new NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(R.drawable.ic_notifications)
+                    .setContentTitle(messageTitle)
+                    .setContentText(messageBody)
+                    .setLargeIcon(getBitmapFromURL(imgUrl))
+                    .setStyle(new NotificationCompat.BigPictureStyle()
+                            .bigPicture(getBitmapFromURL(imgUrl))
+                            .bigLargeIcon(null))
+                    .setAutoCancel(false)
+                    .setContentIntent(pendingIntent);
+        } else {
+            GLog.d("imgUrl null");
+            notificationBuilder = new NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(R.drawable.ic_notifications)
+                    .setContentTitle(messageTitle)
+                    .setContentText(messageBody)
+                    .setAutoCancel(false)
+                    .setContentIntent(pendingIntent);
+        }
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (mChannel == null) {
                 mChannel = new NotificationChannel(channelId, mChannelName, NotificationManager.IMPORTANCE_HIGH);
