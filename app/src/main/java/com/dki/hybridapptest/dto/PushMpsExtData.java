@@ -2,12 +2,15 @@ package com.dki.hybridapptest.dto;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PushMpsData {
+public class PushMpsExtData {
     @SerializedName("appid")
     private String appId;
 
     @SerializedName("seqno")
     private String seqNo;
+
+    @SerializedName("ext")
+    private PushMpsImgUrl ext;
 
     @SerializedName("sender")
     private String sender;
@@ -30,6 +33,14 @@ public class PushMpsData {
 
     public void setAppId(String appId) {
         this.appId = appId;
+    }
+
+    public PushMpsImgUrl getExt() {
+        return ext;
+    }
+
+    public void setExt(PushMpsImgUrl ext) {
+        this.ext = ext;
     }
 
     public String getSeqNo() {

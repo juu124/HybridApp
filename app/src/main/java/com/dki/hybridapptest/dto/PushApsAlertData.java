@@ -1,9 +1,19 @@
 package com.dki.hybridapptest.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 public class PushApsAlertData {
+
+    @SerializedName("title")
     private String title;
 
+    @SerializedName("body")
     private String body;
+
+    public PushApsAlertData(String title, String body) {
+        this.title = title;
+        this.body = body;
+    }
 
     public String getTitle() {
         return title;

@@ -13,7 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.dto.PushApsData;
+import com.dki.hybridapptest.dto.PushApsAlertData;
+import com.dki.hybridapptest.dto.PushMpsImgUrl;
 import com.dki.hybridapptest.ui.activity.MainActivity;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
@@ -29,97 +30,119 @@ import java.net.URL;
 import java.util.Map;
 
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
-    private NotificationChannel mChannel;
-    private String msgData;
-    private PushApsData pushApsData;
-    private String imgUrl = null;
-    private String title = null;
-    private String body = null;
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
         super.onMessageReceived(message);
         GLog.d("message === " + message);
+        JSONObject jsonObject = null;
+        String msgData = null;
+        String mps = null;
+        String aps = null;
+        String ext = null;
+        String imgUrl = null;
+        String title = null;
+        String body = null;
+
         if (message.getData().size() > 0) {
             Map<String, String> dataMap = message.getData();
             GLog.d("Message data payload: " + dataMap);
-            JSONObject jsonObject = null;
+
             msgData = dataMap.get("message");
             try {
                 if (!TextUtils.isEmpty(msgData)) {
                     GLog.d("Message data msgData: " + msgData);
                     jsonObject = new JSONObject(msgData);
-                    String imgUrl = null;
-                    String title = null;
-                    String body = null;
 
-//                    String mps = jsonObject.getString("mps");
-//                    String aps = jsonObject.getString("aps");
-//                    JSONObject jsonAps = new JSONObject(aps);
-//                    String alert = jsonAps.getString("alert");
-//                    JSONObject jsonAlert = new JSONObject(alert);
-//                    PushApsData pushApsData = new PushApsData();
-//                    pushApsData.setAlert((PushApsAlertData) jsonAps.get("alert"));
-//                    PushApsAlertData pushApsAlertData = new PushApsAlertData(jsonAlert.getString("title"), jsonAlert.getString("body"));
-//
-//                    title = pushApsAlertData.getTitle();
-//                    body = pushApsAlertData.getBody();
+                    // ---------------------------------------------------------------------------------------------------------
+                    mps = jsonObject.getString("mps");
+                    aps = jsonObject.getString("aps");
 
-                    // dto 사용 안한 경우
-                    String mps = jsonObject.getString("mps");
+                    // mps
                     JSONObject jsonMps = new JSONObject(mps);
-                    String aps = jsonObject.getString("aps");
+                    ext = jsonMps.getString("ext");
+                    JSONObject jsonExt = new JSONObject(ext);
+                    PushMpsImgUrl pushMpsImgUrl = new PushMpsImgUrl(jsonExt.getString("imageUrl"));
+                    imgUrl = pushMpsImgUrl.getImageUrl();
+
+                    // aps
                     JSONObject jsonAps = new JSONObject(aps);
-
-                    GLog.d("Message jsonMps: " + jsonMps);
-                    GLog.d("Message jsonAps: " + jsonAps);
-
-                    if (!TextUtils.isEmpty(jsonMps.getString("ext"))) {
-                        String ext = jsonMps.getString("ext");
-                        JSONObject jsonExt = new JSONObject(ext);
-                        imgUrl = jsonExt.getString("imageUrl");
-                        GLog.d("Message imgUrl: " + imgUrl);
-                    }
-
                     String alert = jsonAps.getString("alert");
                     JSONObject jsonAlert = new JSONObject(alert);
-                    title = jsonAlert.getString("title");
-                    body = jsonAlert.getString("body");
-                    GLog.d("Message title: " + title);
-                    GLog.d("Message body: " + body);
+                    PushApsAlertData pushApsAlertData = new PushApsAlertData(jsonAlert.getString("title"), jsonAlert.getString("body"));
+                    title = pushApsAlertData.getTitle();
+                    body = pushApsAlertData.getBody();
+                    //-------------------------------------------------------------------------------------------------------
+
+                    // dto cast 오류(org.json.JSONObject cannot be cast to com.dki.hybridapptest.dto.PushMpsExtData)----------
+//                    PushMpsExtData pushMpsExtData = (PushMpsExtData) jsonObject.get("mps");
+//                    PushMpsImgUrl pushMpsImgUrl = pushMpsExtData.getExt();
+//                    imgUrl = pushMpsImgUrl.getImageUrl();
+//
+//                    PushApsData pushApsData = (PushApsData) jsonObject.get("aps");
+//                    PushApsAlertData pushApsAlertData = pushApsData.getAlert();
+//                    title = pushApsAlertData.getTitle();
+//                    body = pushApsAlertData.getBody();
+                    // ----------------------------------------------------------------------------------------------------------
+
+                    // dto 사용 안한 경우-----------------------------------------------------------------------------------------
+//                    String mps = jsonObject.getString("mps");
+//                    JSONObject jsonMps = new JSONObject(mps);
+//                    String aps = jsonObject.getString("aps");
+//                    JSONObject jsonAps = new JSONObject(aps);
+//
+//                    GLog.d("Message jsonMps: " + jsonMps);
+//                    GLog.d("Message jsonAps: " + jsonAps);
+//
+//                    ext = jsonMps.getString("ext");
+//                    JSONObject jsonExt = new JSONObject(ext);
+//                    imgUrl = jsonExt.getString("imageUrl");
+//                    GLog.d("Message imgUrl: " + imgUrl);
+//
+//                    String alert = jsonAps.getString("alert");
+//                    JSONObject jsonAlert = new JSONObject(alert);
+//                    title = jsonAlert.getString("title");
+//                    body = jsonAlert.getString("body");
+//                    GLog.d("Message title: " + title);
+//                    GLog.d("Message body: " + body);
+                    // ----------------------------------------------------------------------------------------------------------
 
                     showNotification(title, body, imgUrl);
                 }
             } catch (JSONException e) {
                 try {
-                    GLog.d("사진 없어서 여기로 옴");
-
-//                    String aps = jsonObject.getString("aps");
-//                    JSONObject jsonAps = new JSONObject(aps);
-//                    String alert = jsonAps.getString("alert");
-//                    JSONObject jsonAlert = new JSONObject(alert);
-//                    PushApsData pushApsData = new PushApsData();
-//                    pushApsData.setAlert((PushApsAlertData) jsonAps.get("alert"));
-//                    PushApsAlertData pushApsAlertData = new PushApsAlertData(jsonAlert.getString("title"), jsonAlert.getString("body"));
-//
-//                    title = pushApsAlertData.getTitle();
-//                    body = pushApsAlertData.getBody();
-
-                    // dto 사용 안한 경우 (사진 없을 때)
-                    String mps = jsonObject.getString("mps");
-                    JSONObject jsonMps = new JSONObject(mps);
-                    String aps = jsonObject.getString("aps");
+                    // aps-------------------------------------------------------------------------------------------------------
                     JSONObject jsonAps = new JSONObject(aps);
-
-                    GLog.d("Message jsonMps: " + jsonMps);
-                    GLog.d("Message jsonAps: " + jsonAps);
-
                     String alert = jsonAps.getString("alert");
                     JSONObject jsonAlert = new JSONObject(alert);
-                    String title = jsonAlert.getString("title");
-                    String body = jsonAlert.getString("body");
-                    GLog.d("Message title: " + title);
-                    GLog.d("Message body: " + body);
+                    PushApsAlertData pushApsAlertData = new PushApsAlertData(jsonAlert.getString("title"), jsonAlert.getString("body"));
+                    title = pushApsAlertData.getTitle();
+                    body = pushApsAlertData.getBody();
+                    // ----------------------------------------------------------------------------------------------------------
+
+                    // dto-------------------------------------------------------------------------------------------------------
+//                    PushApsData pushApsData = (PushApsData) jsonObject.get("aps");
+//                    PushApsAlertData pushApsAlertData = pushApsData.getAlert();
+//                    title = pushApsAlertData.getTitle();
+//                    body = pushApsAlertData.getBody();
+                    //-------------------------------------------------------------------------------------------------------
+
+                    // dto 사용 안한 경우 (사진 없을 때)-------------------------------------------------------------------------
+//                    String mps = jsonObject.getString("mps");
+//                    JSONObject jsonMps = new JSONObject(mps);
+//                    String aps = jsonObject.getString("aps");
+//                    JSONObject jsonAps = new JSONObject(aps);
+//
+//                    GLog.d("Message jsonMps: " + jsonMps);
+//                    GLog.d("Message jsonAps: " + jsonAps);
+//
+//                    String alert = jsonAps.getString("alert");
+//                    JSONObject jsonAlert = new JSONObject(alert);
+//                    title = jsonAlert.getString("title");
+//                    body = jsonAlert.getString("body");
+//                    GLog.d("Message title: " + title);
+//                    GLog.d("Message body: " + body);
+                    //-------------------------------------------------------------------------------------------------------
 
                     showNotification(title, body, imgUrl);
                 } catch (JSONException ex) {
@@ -135,9 +158,6 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
             GLog.d("Message Notification Title: " + message.getNotification().getTitle());
             GLog.d("Message Notification Body: " + message.getNotification().getBody());
             GLog.d("Message Notification getImageUrl: " + message.getNotification().getImageUrl());
-
-        } else {
-            GLog.d("message.getNotification() == null");
         }
 
     }
@@ -170,9 +190,9 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         String channelId = getString(R.string.default_notification_channel_id);
 
         NotificationCompat.Builder notificationBuilder;
-        if (imgUrl != null) {
+        if (!TextUtils.isEmpty(imgUrl)) {
             GLog.d("imgUrl not null");
-            GLog.d("imgUrl === " + imgUrl);
+
             notificationBuilder = new NotificationCompat.Builder(this, channelId)
                     .setSmallIcon(R.drawable.ic_notifications)
                     .setContentTitle(messageTitle)
@@ -181,7 +201,8 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     .setStyle(new NotificationCompat.BigPictureStyle()
                             .bigPicture(getBitmapFromURL(imgUrl))
                             .bigLargeIcon(null))
-                    .setAutoCancel(false)
+                    .setOngoing(false)
+                    .setAutoCancel(true)
                     .setContentIntent(pendingIntent);
         } else {
             GLog.d("imgUrl null");
@@ -189,14 +210,13 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
                     .setSmallIcon(R.drawable.ic_notifications)
                     .setContentTitle(messageTitle)
                     .setContentText(messageBody)
-                    .setAutoCancel(false)
+                    .setAutoCancel(true)
+                    .setOngoing(false)
                     .setContentIntent(pendingIntent);
         }
         NotificationManager notificationManager = (NotificationManager) this.getSystemService(NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (mChannel == null) {
-                mChannel = new NotificationChannel(channelId, mChannelName, NotificationManager.IMPORTANCE_HIGH);
-            }
+            NotificationChannel mChannel = new NotificationChannel(channelId, mChannelName, NotificationManager.IMPORTANCE_HIGH);
             mChannel.setShowBadge(false);
             notificationManager.createNotificationChannel(mChannel);
         }

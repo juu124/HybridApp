@@ -10,6 +10,8 @@
     <!--    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> &lt;!&ndash; 휴대폰 단말기 고유 정보를 읽을 때 요구되는 권한 &ndash;&gt;-->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 악성 앱 진단 즉시 사용자에게 알리기 위해 요구되는 권한 (Android 10 이상) -->
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <!-- 파일 다운로드 : 저장소 파일 접근 권한 (Android 12 이하,  Build.VERSION_CODES.R) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
