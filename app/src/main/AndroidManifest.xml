@@ -7,12 +7,9 @@
     <uses-permission android:name="android.permission.USE_BIOMETRIC" /> <!-- 생체 인증 권한 요청 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- 읽기 권한 요청 -->
     <!-- 백신 권한 -->
-    <!--    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> &lt;!&ndash; 휴대폰 단말기 고유 정보를 읽을 때 요구되는 권한 &ndash;&gt;-->
+    <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> &lt;!&ndash; 휴대폰 단말기 고유 정보를 읽을 때 요구되는 권한 &ndash;&gt; -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- 악성 앱 진단 즉시 사용자에게 알리기 위해 요구되는 권한 (Android 10 이상) -->
-
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
-    <!-- 파일 다운로드 : 저장소 파일 접근 권한 (Android 12 이하,  Build.VERSION_CODES.R) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" /> <!-- 파일 다운로드 : 저장소 파일 접근 권한 (Android 12 이하,  Build.VERSION_CODES.R) -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.READ_MEDIA_IMAGES"
@@ -22,15 +19,9 @@
         android:minSdkVersion="33" />
     <uses-permission
         android:name="android.permission.READ_MEDIA_AUDIO"
-        android:minSdkVersion="33" />
-
-    <!-- SD Card 영역 권한 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <!--  카메라 -->
-    <uses-permission android:name="android.permission.CAMERA" />
-
-    <!-- 푸시 BroadCast 수신 권한 용 Permission -->
+        android:minSdkVersion="33" /> <!-- SD Card 영역 권한 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 카메라 -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 푸시 BroadCast 수신 권한 용 Permission -->
     <permission
         android:name="kr.go.seoul.healthcare.permission.MPUSH_PERMISSION"
         android:protectionLevel="signature"
@@ -61,6 +52,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.activity.PatientInfoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.DeviceSettingsMainActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.activity.FlexibleMedicalCareMainActivity"
+            android:exported="false"
+            android:screenOrientation="landscape" />
+        <activity
             android:name=".ui.activity.EncryptionActivity"
             android:exported="false" />
 
@@ -69,9 +70,7 @@
             android:resource="@drawable/ic_launcher_foreground" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/white" />
-
-        <!-- 토큰 자동 생성 방지 -->
+            android:resource="@color/white" /> <!-- 토큰 자동 생성 방지 -->
         <meta-data
             android:name="firebase_messaging_auto_init_enabled"
             android:value="false" />
@@ -154,9 +153,7 @@
         <activity
             android:name=".ui.activity.HybridModeActivity"
             android:configChanges="orientation|screenSize"
-            android:exported="false" />
-
-        <!-- =================== PUSH SERVICE SETTINGS START============= -->
+            android:exported="false" /> <!-- =================== PUSH SERVICE SETTINGS START============= -->
         <service
             android:name=".fcm.FirebaseMessagingService"
             android:exported="true">
@@ -164,7 +161,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name="m.client.push.library.service.FCMIntentService"
             android:exported="false"
@@ -172,18 +168,14 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-        <!-- 푸시 payload data 수신 class -->
+        </service> <!-- 푸시 payload data 수신 class -->
         <receiver
             android:name=".fcm.receiver.MessageArrivedReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="kr.go.seoul.healthcare.GCM_MESSAGE_ARRIVED" />
             </intent-filter>
-        </receiver>
-
-        <!-- UPMC 서비스 등록 / 해제 등을 위한 class  -->
+        </receiver> <!-- UPMC 서비스 등록 / 해제 등을 위한 class -->
         <receiver
             android:name="m.client.push.library.receiver.FcmActionReceiver"
             android:exported="false">
@@ -191,7 +183,6 @@
                 <action android:name="kr.go.seoul.healthcare.ACTION_GCM" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>

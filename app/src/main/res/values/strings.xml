@@ -53,6 +53,8 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
+    <!-- 유연의료 -->
+    <string name="flexible_medical_care_title">유연의료 건강 측정 Agent</string>
     <!-- Firebase  -->
     <string name="com.google.firebase.crashlytics.mapping_file_id" translatable="false">none</string>
 </resources>

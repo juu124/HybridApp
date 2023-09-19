@@ -264,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mWebView = findViewById(R.id.webview);
         mProgressBar = findViewById(R.id.dialog_user_info_progressbar);
-        toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.medical_tool_bar);
         mTitle = toolbar.findViewById(R.id.toolbar_title);
         drawerLayout = findViewById(R.id.drawer);
 
@@ -874,6 +874,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
             inputDialog.show();
         }
+        // 유연의료
+        else if (id == R.id.flexible_medical_care) {
+            mIntent = new Intent(this, FlexibleMedicalCareMainActivity.class);
+            startActivity(mIntent);
+        }
+
         // 종료
         else if (id == R.id.quit) {
             CustomDialog customDialog = new CustomDialog(MainActivity.this, new CustomDialogClickListener() {

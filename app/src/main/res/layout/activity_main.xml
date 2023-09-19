@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <include
-            android:id="@+id/toolbar"
+            android:id="@+id/medical_tool_bar"
             layout="@layout/custom_tool_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

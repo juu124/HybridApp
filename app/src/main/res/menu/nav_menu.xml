@@ -13,9 +13,9 @@
         android:id="@+id/quit"
         android:title="종료" />
 
-    <!--    <item-->
-    <!--        android:id="@+id/screen_size"-->
-    <!--        android:title="풀 모드" />-->
+    <item
+        android:id="@+id/flexible_medical_care"
+        android:title="유연 의료" />
 
 
     <!--    <item-->
