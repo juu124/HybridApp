@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TableLayout
-            android:id="@+id/patient_info_layout"
+            android:id="@+id/device_info_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#c9c9c9"
@@ -25,7 +25,7 @@
                 android:padding="1dp">
 
                 <TextView
-                    android:id="@+id/date"
+                    android:id="@+id/type"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="1dp"
@@ -34,39 +34,19 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:textColor="@color/black"
-                    tools:text="1" />
+                    tools:text="혈압" />
 
                 <TextView
-                    android:id="@+id/empty"
+                    android:id="@+id/device_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="1dp"
-                    android:layout_weight="1"
-                    android:background="#ffffff"
-                    android:gravity="center"
-                    android:padding="10dp" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:paddingHorizontal="1dp"
-                android:paddingBottom="1dp">
-
-                <TextView
-                    android:id="@+id/patient_health_info"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="1dp"
-                    android:layout_weight="1"
+                    android:layout_weight="3"
                     android:background="#ffffff"
                     android:gravity="center"
                     android:padding="10dp"
                     android:textColor="@color/black"
-                    android:textSize="15sp"
-                    tools:text="이지영 (12345123) 혈압, 혈당, 체중 데이터 전송" />
-
+                    tools:text="AutoCheck" />
             </TableRow>
 
         </TableLayout>

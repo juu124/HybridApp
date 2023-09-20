@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="#c9c9c9"
     android:gravity="center"
     android:textSize="20sp"
@@ -16,6 +17,6 @@
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:text="유연의료 건강 측정 Agent" />
+        tools:text="유연의료 건강 측정 Agent" />
 
 </androidx.appcompat.widget.Toolbar>

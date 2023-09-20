@@ -111,12 +111,12 @@ public class FlexibleMedicalCareMainActivity extends AppCompatActivity {
             mRvSendHistoryListAdapter = new RvSendHistoryListAdapter();
         }
 
-        mRvPatientListAdapter.addArrUser(arrPatientInfo);
+        mRvPatientListAdapter.addArrPatientInfo(arrPatientInfo);
         mRvPatientListAdapter.notifyDataSetChanged();
         mRvPatientList.setAdapter(mRvPatientListAdapter);
 
 
-        mRvSendHistoryListAdapter.addArrUser(arrSendHistory);
+        mRvSendHistoryListAdapter.addArrSendHistory(arrSendHistory);
         mRvSendHistoryListAdapter.notifyDataSetChanged();
         mRvSendHistoryList.setAdapter(mRvSendHistoryListAdapter);
 
@@ -165,6 +165,8 @@ public class FlexibleMedicalCareMainActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false); // 커스텀 타이틀을 사용하면 기본 타이틀은 사용하지 말아야한다.
 
+        // 뒤로가기 버튼 이미지 불러오기
+        actionBar.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_aos_new_24);
         String toolBarTitle = "유연의료 건강 측정";
         mTitle.setText(toolBarTitle);
     }

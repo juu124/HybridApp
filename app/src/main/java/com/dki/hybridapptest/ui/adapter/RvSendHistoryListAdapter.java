@@ -64,7 +64,7 @@ public class RvSendHistoryListAdapter extends RecyclerView.Adapter<RvSendHistory
         return arrSendHistory.size();
     }
 
-    public void addArrUser(ArrayList<SendHistoryDTO> sendHistoryList) {
+    public void addArrSendHistory(ArrayList<SendHistoryDTO> sendHistoryList) {
         GLog.d();
         arrSendHistory.addAll(sendHistoryList);
     }

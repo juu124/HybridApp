@@ -63,7 +63,7 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
         return arrPatientInfo.size();
     }
 
-    public void addArrUser(ArrayList<PatientInfoDTO> userList) {
+    public void addArrPatientInfo(ArrayList<PatientInfoDTO> userList) {
         GLog.d();
         arrPatientInfo.addAll(userList);
     }

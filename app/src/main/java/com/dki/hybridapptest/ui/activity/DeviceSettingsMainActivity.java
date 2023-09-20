@@ -9,14 +9,27 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dki.hybridapptest.R;
+import com.dki.hybridapptest.dto.PatientDeviceDTO;
+import com.dki.hybridapptest.ui.adapter.RvDeviceListAdapter;
 import com.dki.hybridapptest.utils.GLog;
+
+import java.util.ArrayList;
 
 public class DeviceSettingsMainActivity extends AppCompatActivity {
     private ActionBar actionBar;
     private Toolbar toolbar;
     private TextView mTitle;
+
+    // 목록
+    private RvDeviceListAdapter rvDeviceListAdapter;
+    private RecyclerView connDevice;
+    private RecyclerView saveDevice;
+    private PatientDeviceDTO patientDevice;
+    private ArrayList<PatientDeviceDTO> arrPatientDevice = new ArrayList<>();
 
 
     @Override
@@ -26,9 +39,35 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
 
         toolbar = findViewById(R.id.medical_tool_bar);
         mTitle = toolbar.findViewById(R.id.toolbar_title);
+        connDevice = findViewById(R.id.rv_connect_device);
+        saveDevice = findViewById(R.id.rv_save_device);
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
+
+        for (int i = 0; i < 20; i++) {
+            patientDevice = new PatientDeviceDTO();
+            if (i % 2 != 0) {
+                patientDevice.setType("혈압");
+                patientDevice.setDeviceName("AutoCheck");
+            } else {
+                patientDevice.setType("혈당");
+                patientDevice.setDeviceName("CareSens");
+            }
+            arrPatientDevice.add(patientDevice);
+        }
+
+        connDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        saveDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        if (rvDeviceListAdapter != null) {
+            rvDeviceListAdapter = rvDeviceListAdapter;
+        } else {
+            rvDeviceListAdapter = new RvDeviceListAdapter();
+        }
+
+        rvDeviceListAdapter.addArrPatientDevice(arrPatientDevice);
+        rvDeviceListAdapter.notifyDataSetChanged();
+        connDevice.setAdapter(rvDeviceListAdapter);
     }
 
     // 웹 뷰에서 뒤로 가기
