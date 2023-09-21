@@ -31,7 +31,7 @@
                     android:layout_weight="1"
                     android:background="#ffffff"
                     android:gravity="center"
-                    android:padding="20dp"
+                    android:padding="10dp"
                     android:textColor="@color/black"
                     tools:text="1" />
 
@@ -43,7 +43,7 @@
                     android:layout_weight="1"
                     android:background="#ffffff"
                     android:gravity="center"
-                    android:padding="20dp"
+                    android:padding="10dp"
                     android:textColor="@color/black"
                     tools:text="여" />
 
@@ -55,7 +55,7 @@
                     android:layout_weight="1"
                     android:background="#ffffff"
                     android:gravity="center"
-                    android:padding="20dp"
+                    android:padding="10dp"
                     android:textColor="@color/black"
                     tools:text="이지영" />
 
@@ -67,7 +67,7 @@
                     android:layout_weight="1"
                     android:background="#ffffff"
                     android:gravity="center"
-                    android:padding="20dp"
+                    android:padding="10dp"
                     android:textColor="@color/black"
                     tools:text="12345123" />
 
@@ -79,7 +79,7 @@
                     android:layout_weight="1"
                     android:background="#ffffff"
                     android:gravity="center"
-                    android:padding="20dp"
+                    android:padding="10dp"
                     android:textColor="@color/black"
                     tools:text="1953" />
 

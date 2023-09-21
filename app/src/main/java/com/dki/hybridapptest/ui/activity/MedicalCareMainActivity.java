@@ -1,7 +1,6 @@
 package com.dki.hybridapptest.ui.activity;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +25,7 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class FlexibleMedicalCareMainActivity extends AppCompatActivity {
+public class MedicalCareMainActivity extends AppCompatActivity {
     private Intent mIntent;
 
     // top tool bar
@@ -51,71 +50,24 @@ public class FlexibleMedicalCareMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        setContentView(R.layout.activity_flexible_medical_care_main);
+        setContentView(R.layout.activity_medical_care_main);
 
         toolbar = findViewById(R.id.medical_tool_bar);
         mTitle = toolbar.findViewById(R.id.toolbar_title);
         mRvPatientList = findViewById(R.id.rv_patient_list);
         mRvSendHistoryList = findViewById(R.id.rv_send_history);
 
-        // 환자 목록
-        for (int i = 0; i < 20; i++) {
-            patientInfoDTO = new PatientInfoDTO("", "12345123");
-            patientInfoDTO.setNum(String.valueOf(i + 1));
-            if (i % 2 == 0) {
-                patientInfoDTO.setGender("여");
-            } else {
-                patientInfoDTO.setGender("남");
-            }
-            patientInfoDTO.setName("이지영" + i);
-            patientInfoDTO.setBornYear("1953" + i);
-            GLog.d("num == " + patientInfoDTO.getNum());
-            GLog.d("gender == " + patientInfoDTO.getGender());
-            GLog.d("name == " + patientInfoDTO.getName());
-            GLog.d("id == " + patientInfoDTO.getPatientId());
-            GLog.d("bornyear == " + patientInfoDTO.getBornYear());
-            arrPatientInfo.add(patientInfoDTO);
-        }
-
-        // 전송 기록
-        for (int i = 0; i < 20; i++) {
-            long now = System.currentTimeMillis();
-            Date date = new Date(now);
-            simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            time = simpleDate.format(date);
-            GLog.d("time == " + now);
-
-            sendHistoryDTO = new SendHistoryDTO("", "");
-            sendHistoryDTO.setTime(time);
-            sendHistoryDTO.setName("이지영" + i);
-            if (i % 2 == 0) {
-                sendHistoryDTO.setBodyStatus("혈압, 혈당, 체중");
-            } else {
-                sendHistoryDTO.setBodyStatus("혈당, 체중");
-            }
-            arrSendHistory.add(sendHistoryDTO);
-        }
+        // 테스트 샘플 데이터
+        sampleData();
 
         mRvPatientList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        if (mRvPatientListAdapter != null) {
-            mRvPatientListAdapter = mRvPatientListAdapter;
-        } else {
-            mRvPatientListAdapter = new RvPatientListAdapter();
-        }
-
-        mRvSendHistoryList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        if (mRvSendHistoryListAdapter != null) {
-            mRvSendHistoryListAdapter = mRvSendHistoryListAdapter;
-        } else {
-            mRvSendHistoryListAdapter = new RvSendHistoryListAdapter();
-        }
-
+        mRvPatientListAdapter = new RvPatientListAdapter();
         mRvPatientListAdapter.addArrPatientInfo(arrPatientInfo);
         mRvPatientListAdapter.notifyDataSetChanged();
         mRvPatientList.setAdapter(mRvPatientListAdapter);
 
-
+        mRvSendHistoryList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        mRvSendHistoryListAdapter = new RvSendHistoryListAdapter();
         mRvSendHistoryListAdapter.addArrSendHistory(arrSendHistory);
         mRvSendHistoryListAdapter.notifyDataSetChanged();
         mRvSendHistoryList.setAdapter(mRvSendHistoryListAdapter);
@@ -169,5 +121,45 @@ public class FlexibleMedicalCareMainActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_aos_new_24);
         String toolBarTitle = "유연의료 건강 측정";
         mTitle.setText(toolBarTitle);
+    }
+
+    // 테스트 샘플 데이터
+    public void sampleData() {
+        // 환자 목록
+        for (int i = 0; i < 20; i++) {
+            patientInfoDTO = new PatientInfoDTO("", "12345123");
+            patientInfoDTO.setNum(String.valueOf(i + 1));
+            if (i % 2 == 0) {
+                patientInfoDTO.setGender("여");
+            } else {
+                patientInfoDTO.setGender("남");
+            }
+            patientInfoDTO.setName("이지영" + i);
+            patientInfoDTO.setBornYear("1953" + i);
+            GLog.d("num == " + patientInfoDTO.getNum());
+            GLog.d("gender == " + patientInfoDTO.getGender());
+            GLog.d("name == " + patientInfoDTO.getName());
+            GLog.d("id == " + patientInfoDTO.getPatientId());
+            GLog.d("bornyear == " + patientInfoDTO.getBornYear());
+            arrPatientInfo.add(patientInfoDTO);
+        }
+
+        // 전송 기록
+        for (int i = 0; i < 20; i++) {
+            long now = System.currentTimeMillis();
+            Date date = new Date(now);
+            simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            time = simpleDate.format(date);
+
+            sendHistoryDTO = new SendHistoryDTO("", "");
+            sendHistoryDTO.setTime(time);
+            sendHistoryDTO.setName("이지영" + i);
+            if (i % 2 == 0) {
+                sendHistoryDTO.setBodyStatus("혈압, 혈당, 체중");
+            } else {
+                sendHistoryDTO.setBodyStatus("혈당, 체중");
+            }
+            arrSendHistory.add(sendHistoryDTO);
+        }
     }
 }

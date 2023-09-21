@@ -15,7 +15,6 @@ import com.dki.hybridapptest.utils.GLog;
 import java.util.ArrayList;
 
 public class RvDeviceListAdapter extends RecyclerView.Adapter<RvDeviceListAdapter.ViewHolder> {
-    private PatientDeviceDTO patientDeviceDTO;
     private ArrayList<PatientDeviceDTO> arrPatientDeviceList = new ArrayList<>();
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -25,12 +25,11 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
     private TextView mTitle;
 
     // 목록
-    private RvDeviceListAdapter rvDeviceListAdapter;
     private RecyclerView connDevice;
     private RecyclerView saveDevice;
+    private RvDeviceListAdapter rvDeviceListAdapter;
     private PatientDeviceDTO patientDevice;
     private ArrayList<PatientDeviceDTO> arrPatientDevice = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,29 +44,16 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
 
-        for (int i = 0; i < 20; i++) {
-            patientDevice = new PatientDeviceDTO();
-            if (i % 2 != 0) {
-                patientDevice.setType("혈압");
-                patientDevice.setDeviceName("AutoCheck");
-            } else {
-                patientDevice.setType("혈당");
-                patientDevice.setDeviceName("CareSens");
-            }
-            arrPatientDevice.add(patientDevice);
-        }
+        // 테스트 샘플 데이터
+        sampleData();
 
         connDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         saveDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        if (rvDeviceListAdapter != null) {
-            rvDeviceListAdapter = rvDeviceListAdapter;
-        } else {
-            rvDeviceListAdapter = new RvDeviceListAdapter();
-        }
-
+        rvDeviceListAdapter = new RvDeviceListAdapter();
         rvDeviceListAdapter.addArrPatientDevice(arrPatientDevice);
         rvDeviceListAdapter.notifyDataSetChanged();
         connDevice.setAdapter(rvDeviceListAdapter);
+        saveDevice.setAdapter(rvDeviceListAdapter);
     }
 
     // 웹 뷰에서 뒤로 가기
@@ -101,5 +87,19 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
         actionBar.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_aos_new_24);
         String toolBarTitle = "기기 설정";
         mTitle.setText(toolBarTitle);
+    }
+
+    public void sampleData() {
+        for (int i = 0; i < 20; i++) {
+            patientDevice = new PatientDeviceDTO();
+            if (i % 2 != 0) {
+                patientDevice.setType("혈압");
+                patientDevice.setDeviceName("AutoCheck");
+            } else {
+                patientDevice.setType("혈당");
+                patientDevice.setDeviceName("CareSens");
+            }
+            arrPatientDevice.add(patientDevice);
+        }
     }
 }

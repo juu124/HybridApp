@@ -876,7 +876,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         // 유연의료
         else if (id == R.id.flexible_medical_care) {
-            mIntent = new Intent(this, FlexibleMedicalCareMainActivity.class);
+            mIntent = new Intent(this, MedicalCareMainActivity.class);
             startActivity(mIntent);
         }
 
