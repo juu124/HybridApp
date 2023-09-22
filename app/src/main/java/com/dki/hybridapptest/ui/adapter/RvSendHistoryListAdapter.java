@@ -46,7 +46,7 @@ public class RvSendHistoryListAdapter extends RecyclerView.Adapter<RvSendHistory
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        GLog.d("");
+//        GLog.d("");
         holder.date.setText(arrSendHistory.get(position).getTime());
         patientHealthInfoTxt = arrSendHistory.get(position).getName()
                 + " ("
@@ -55,8 +55,8 @@ public class RvSendHistoryListAdapter extends RecyclerView.Adapter<RvSendHistory
                 + arrSendHistory.get(position).getBodyStatus();
         holder.patientHealthInfo.setText(patientHealthInfoTxt);
 
-        GLog.d("date = " + arrSendHistory.get(position).getTime());
-        GLog.d("patientHealthInfoTxt = " + patientHealthInfoTxt);
+//        GLog.d("date = " + arrSendHistory.get(position).getTime());
+//        GLog.d("patientHealthInfoTxt = " + patientHealthInfoTxt);
     }
 
     @Override

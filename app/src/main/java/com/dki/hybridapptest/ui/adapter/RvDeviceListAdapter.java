@@ -36,6 +36,7 @@ public class RvDeviceListAdapter extends RecyclerView.Adapter<RvDeviceListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RvDeviceListAdapter.ViewHolder holder, int position) {
+        GLog.d("position == " + position);
         holder.type.setText(arrPatientDeviceList.get(position).getType());
         holder.deviceName.setText(arrPatientDeviceList.get(position).getDeviceName());
     }
@@ -48,5 +49,12 @@ public class RvDeviceListAdapter extends RecyclerView.Adapter<RvDeviceListAdapte
     public void addArrPatientDevice(ArrayList<PatientDeviceDTO> deviceList) {
         GLog.d();
         arrPatientDeviceList.addAll(deviceList);
+    }
+
+    public void addItem(PatientDeviceDTO device) {
+        GLog.d();
+        if (device != null) {
+            arrPatientDeviceList.add(device);
+        }
     }
 }

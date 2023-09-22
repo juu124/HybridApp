@@ -5,12 +5,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dto.PatientInfoDTO;
+import com.dki.hybridapptest.sorting.SortPatientList;
 import com.dki.hybridapptest.ui.activity.PatientInfoActivity;
 import com.dki.hybridapptest.utils.GLog;
 
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 
 public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdapter.ViewHolder> {
     private ArrayList<PatientInfoDTO> arrPatientInfo = new ArrayList<>();
+    public int selectItem;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView num;
@@ -38,6 +41,11 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
                 @Override
                 public void onClick(View v) {
                     GLog.d("아이템을 클릭했습니다.");
+                    Toast.makeText(v.getContext(), getAbsoluteAdapterPosition() + 1 + "번째 선택", Toast.LENGTH_SHORT).show();
+//                    v.setSelected(true);
+//                    v.setBackgroundColor(Color.parseColor("#ff0000"));
+//                    notifyItemChanged(getAbsoluteAdapterPosition());
+
                     Intent intent = new Intent(v.getContext(), PatientInfoActivity.class);
                     String patientName = name.getText().toString();
                     String patientId = id.getText().toString();
@@ -60,7 +68,7 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
         holder.num.setText(arrPatientInfo.get(position).getNum());
         holder.gender.setText(arrPatientInfo.get(position).getGender());
         holder.name.setText(arrPatientInfo.get(position).getName());
-        holder.id.setText(arrPatientInfo.get(position).getPatientId());
+        holder.id.setText(String.valueOf(arrPatientInfo.get(position).getPatientId()));
         holder.bornYear.setText(arrPatientInfo.get(position).getBornYear());
     }
 
@@ -69,14 +77,36 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
         return arrPatientInfo.size();
     }
 
+    public void sortUser() {
+        arrPatientInfo.sort(new SortPatientList());
+    }
+
     public void addArrPatientInfo(ArrayList<PatientInfoDTO> userList) {
         GLog.d();
         arrPatientInfo.addAll(userList);
     }
 
-//    public void addUser(PatientInfoDTO user) {
-//        if (user != null) {
-//            ArrPatientInfo.add(user);
-//        }
-//    }
+    public void addUser(PatientInfoDTO user) {
+        if (user != null) {
+            GLog.d("item count ==== " + getItemCount());
+            if (getItemCount() == 0) {
+                user.setPatientId(12345123);
+            } else {
+                user.setPatientId(arrPatientInfo.get(getItemCount() - 1).getPatientId() + 1);
+            }
+            user.setNum(String.valueOf(getItemCount() + 1));
+            arrPatientInfo.add(user);
+        }
+    }
+
+    //
+    public int getIndexUser(PatientInfoDTO user) {
+        for (int i = 0; i < arrPatientInfo.size(); i++) {
+            GLog.d("getIndexUser == " + arrPatientInfo.get(i));
+            if (user == arrPatientInfo.get(i)) {
+                return i;
+            }
+        }
+        return 0;
+    }
 }

@@ -3,9 +3,9 @@ package com.dki.hybridapptest.dto;
 public class PatientCommonDTO {
     private String name;
 
-    private String patientId;
+    private int patientId;
 
-    public PatientCommonDTO(String name, String patientId) {
+    public PatientCommonDTO(String name, int patientId) {
         this.name = name;
         this.patientId = patientId;
     }
@@ -18,11 +18,11 @@ public class PatientCommonDTO {
         this.name = name;
     }
 
-    public String getPatientId() {
+    public int getPatientId() {
         return patientId;
     }
 
-    public void setPatientId(String patientId) {
+    public void setPatientId(int patientId) {
         this.patientId = patientId;
     }
 }

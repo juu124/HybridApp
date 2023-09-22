@@ -7,13 +7,12 @@ public class PatientInfoDTO extends PatientCommonDTO {
 
     private String bornYear;
 
-    public PatientInfoDTO(String name, String patientId) {
+    public PatientInfoDTO(String name, int patientId) {
         super(name, patientId);
     }
 
-    public PatientInfoDTO(String num, String gender, String name, String patientId, String bornYear) {
+    public PatientInfoDTO(String gender, String name, int patientId, String bornYear) {
         super(name, patientId);
-        this.num = num;
         this.gender = gender;
         this.bornYear = bornYear;
     }

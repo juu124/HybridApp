@@ -28,8 +28,11 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
     private RecyclerView connDevice;
     private RecyclerView saveDevice;
     private RvDeviceListAdapter rvDeviceListAdapter;
+    private RvDeviceListAdapter rvDeviceListAdapter2;
+
     private PatientDeviceDTO patientDevice;
     private ArrayList<PatientDeviceDTO> arrPatientDevice = new ArrayList<>();
+    private ArrayList<PatientDeviceDTO> arrSaveDevice = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +48,36 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
         titleBarInit();
 
         // 테스트 샘플 데이터
-        sampleData();
-
+        sampleConnetData();
+        sampleSaveData();
         connDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        saveDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rvDeviceListAdapter = new RvDeviceListAdapter();
         rvDeviceListAdapter.addArrPatientDevice(arrPatientDevice);
-        rvDeviceListAdapter.notifyDataSetChanged();
         connDevice.setAdapter(rvDeviceListAdapter);
-        saveDevice.setAdapter(rvDeviceListAdapter);
+        rvDeviceListAdapter.notifyDataSetChanged();
+        GLog.d();
+
+        patientDevice = new PatientDeviceDTO();
+        patientDevice.setType("추가 연결 가능");
+        patientDevice.setDeviceName("add");
+        rvDeviceListAdapter.addItem(patientDevice);
+
+        saveDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        rvDeviceListAdapter2 = new RvDeviceListAdapter();
+        rvDeviceListAdapter2.addArrPatientDevice(arrSaveDevice);
+        saveDevice.setAdapter(rvDeviceListAdapter2);
+        rvDeviceListAdapter2.notifyDataSetChanged();
+
+        patientDevice = new PatientDeviceDTO();
+        patientDevice.setType("추가 등록 기기");
+        patientDevice.setDeviceName("add add");
+        rvDeviceListAdapter2.addItem(patientDevice);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        GLog.d();
     }
 
     // 웹 뷰에서 뒤로 가기
@@ -89,8 +113,8 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
         mTitle.setText(toolBarTitle);
     }
 
-    public void sampleData() {
-        for (int i = 0; i < 20; i++) {
+    public void sampleConnetData() {
+        for (int i = 0; i < 4; i++) {
             patientDevice = new PatientDeviceDTO();
             if (i % 2 != 0) {
                 patientDevice.setType("혈압");
@@ -100,6 +124,20 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
                 patientDevice.setDeviceName("CareSens");
             }
             arrPatientDevice.add(patientDevice);
+        }
+    }
+
+    public void sampleSaveData() {
+        for (int i = 0; i < 1; i++) {
+            patientDevice = new PatientDeviceDTO();
+            if (i % 2 != 0) {
+                patientDevice.setType("혈압");
+                patientDevice.setDeviceName("AutoCheck");
+            } else {
+                patientDevice.setType("혈당");
+                patientDevice.setDeviceName("CareSens");
+            }
+            arrSaveDevice.add(patientDevice);
         }
     }
 }

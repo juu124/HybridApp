@@ -1,4 +1,4 @@
-package com.dki.hybridapptest.model;
+package com.dki.hybridapptest.kfido.model;
 
 import com.dki.hybridapptest.utils.Utils;
 

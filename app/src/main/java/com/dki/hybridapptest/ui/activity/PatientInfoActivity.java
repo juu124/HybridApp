@@ -192,7 +192,7 @@ public class PatientInfoActivity extends AppCompatActivity {
             simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             time = simpleDate.format(date);
 
-            sendHistoryDTO = new SendHistoryDTO("", "");
+            sendHistoryDTO = new SendHistoryDTO("", 0);
             sendHistoryDTO.setTime(time);
             sendHistoryDTO.setName("수축기");
             sendHistoryDTO.setType("");

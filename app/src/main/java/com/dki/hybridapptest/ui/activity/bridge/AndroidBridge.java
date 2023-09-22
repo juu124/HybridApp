@@ -34,7 +34,7 @@ import com.dki.hybridapptest.dialog.CustomDialog;
 import com.dki.hybridapptest.dialog.InputDialog;
 import com.dki.hybridapptest.dto.SMSInfo;
 import com.dki.hybridapptest.kfido.FIDORegistration;
-import com.dki.hybridapptest.model.ContactInfo;
+import com.dki.hybridapptest.kfido.model.ContactInfo;
 import com.dki.hybridapptest.ui.activity.EncryptionActivity;
 import com.dki.hybridapptest.ui.activity.HelloWorldActivity;
 import com.dki.hybridapptest.ui.activity.HybridModeActivity;
