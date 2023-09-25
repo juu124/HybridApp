@@ -15,7 +15,7 @@ public class SendHistoryDTO extends PatientCommonDTO {
         this.type = type;
     }
 
-    public SendHistoryDTO(String name, int patientId) {
+    public SendHistoryDTO(String name, String patientId) {
         super(name, patientId);
     }
 

@@ -67,8 +67,8 @@ public class PatientInfoActivity extends AppCompatActivity {
         mRvConnectDevice = findViewById(R.id.rv_connect_device);
         sendBtn = findViewById(R.id.send_btn);
         mRvSendHistory = findViewById(R.id.rv_recode_device);
-        patientName = findViewById(R.id.patient_name);
-        patientId = findViewById(R.id.patient_id);
+        patientName = findViewById(R.id.tv_patient_name);
+        patientId = findViewById(R.id.tv_patient_id);
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
@@ -192,7 +192,7 @@ public class PatientInfoActivity extends AppCompatActivity {
             simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             time = simpleDate.format(date);
 
-            sendHistoryDTO = new SendHistoryDTO("", 0);
+            sendHistoryDTO = new SendHistoryDTO("", "");
             sendHistoryDTO.setTime(time);
             sendHistoryDTO.setName("수축기");
             sendHistoryDTO.setType("");

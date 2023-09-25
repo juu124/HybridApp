@@ -1,13 +1,15 @@
 package com.dki.hybridapptest.ui.activity;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -46,6 +48,7 @@ public class MedicalCareMainActivity extends AppCompatActivity {
     private SendHistoryDTO sendHistoryDTO;
     private ArrayList<SendHistoryDTO> arrSendHistory = new ArrayList<>();
     private ArrayList<PatientInfoDTO> arrPatientInfo = new ArrayList<>();
+    private TextView patientEmpty;
 
     // 전송 기록 목록
     private SimpleDateFormat simpleDate;
@@ -64,6 +67,7 @@ public class MedicalCareMainActivity extends AppCompatActivity {
         mRvPatientList = findViewById(R.id.rv_patient_list);
         mRvSendHistoryList = findViewById(R.id.rv_send_history);
         patientAddBtn = findViewById(R.id.btn_patient_add);
+        patientEmpty = findViewById(R.id.tv_patient_empty);
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
@@ -77,6 +81,22 @@ public class MedicalCareMainActivity extends AppCompatActivity {
         mRvPatientListAdapter.addArrPatientInfo(arrPatientInfo);
         mRvPatientListAdapter.notifyDataSetChanged();
         mRvPatientList.setAdapter(mRvPatientListAdapter);
+        mRvPatientList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mRvPatientList.setSelected(true);
+            }
+        });
+
+        // 환자 데이터 없을 시 노출 문구
+        if (mRvPatientListAdapter.getItemCount() == 0) {
+            patientEmpty.setVisibility(View.VISIBLE);
+            mRvPatientList.setVisibility(View.GONE);
+        } else {
+            patientEmpty.setVisibility(View.GONE);
+            mRvPatientList.setVisibility(View.VISIBLE);
+        }
+
 
         // 전송 기록
         mRvSendHistoryList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
@@ -95,10 +115,15 @@ public class MedicalCareMainActivity extends AppCompatActivity {
                         mRvPatientListAdapter.addUser(patientInfoDTO);
                         mRvPatientListAdapter.notifyDataSetChanged();
 
+                        if (mRvPatientListAdapter.getItemCount() != 0) {
+                            patientEmpty.setVisibility(View.GONE);
+                            mRvPatientList.setVisibility(View.VISIBLE);
+                        }
+
                         // 환자 추가시 자동 스크롤
                         int position = mRvPatientListAdapter.getIndexUser(patientInfoDTO);
                         mRvPatientList.smoothScrollToPosition(position);
-                        Toast.makeText(MedicalCareMainActivity.this, "추가되었습니다.", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MedicalCareMainActivity.this, "추가되었습니다.", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -107,6 +132,7 @@ public class MedicalCareMainActivity extends AppCompatActivity {
                     }
                 });
                 inputPatientDialog.show();
+                setDialogsize(inputPatientDialog);   // 다이얼로그 사이즈 변경
             }
         });
     }
@@ -138,6 +164,19 @@ public class MedicalCareMainActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setDialogsize(InputPatientDialog inputPatientDialog) {
+        // 다이얼로그 사이즈
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+
+        Window window = inputPatientDialog.getWindow();
+        int x = (int) (size.x * 0.35f);
+        int y = (int) (size.y * 0.6f);
+
+        window.setLayout(x, y);
     }
 
     // 타이틀 UI 초기화
@@ -183,7 +222,7 @@ public class MedicalCareMainActivity extends AppCompatActivity {
             simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             time = simpleDate.format(date);
 
-            sendHistoryDTO = new SendHistoryDTO("", 0);
+            sendHistoryDTO = new SendHistoryDTO("", "");
             sendHistoryDTO.setTime(time);
             sendHistoryDTO.setName("이지영" + i);
             if (i % 2 == 0) {
@@ -193,5 +232,9 @@ public class MedicalCareMainActivity extends AppCompatActivity {
             }
             arrSendHistory.add(sendHistoryDTO);
         }
+    }
+
+    public void setDialogSize() {
+
     }
 }

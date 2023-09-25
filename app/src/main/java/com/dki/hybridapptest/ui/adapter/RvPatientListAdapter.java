@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +19,6 @@ import java.util.ArrayList;
 
 public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdapter.ViewHolder> {
     private ArrayList<PatientInfoDTO> arrPatientInfo = new ArrayList<>();
-    public int selectItem;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView num;
@@ -34,18 +32,13 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
             num = itemView.findViewById(R.id.num);
             gender = itemView.findViewById(R.id.gender);
             name = itemView.findViewById(R.id.name);
-            id = itemView.findViewById(R.id.patient_id);
+            id = itemView.findViewById(R.id.tv_patient_id);
             bornYear = itemView.findViewById(R.id.born_year);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     GLog.d("아이템을 클릭했습니다.");
-                    Toast.makeText(v.getContext(), getAbsoluteAdapterPosition() + 1 + "번째 선택", Toast.LENGTH_SHORT).show();
-//                    v.setSelected(true);
-//                    v.setBackgroundColor(Color.parseColor("#ff0000"));
-//                    notifyItemChanged(getAbsoluteAdapterPosition());
-
                     Intent intent = new Intent(v.getContext(), PatientInfoActivity.class);
                     String patientName = name.getText().toString();
                     String patientId = id.getText().toString();
@@ -68,7 +61,8 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
         holder.num.setText(arrPatientInfo.get(position).getNum());
         holder.gender.setText(arrPatientInfo.get(position).getGender());
         holder.name.setText(arrPatientInfo.get(position).getName());
-        holder.id.setText(String.valueOf(arrPatientInfo.get(position).getPatientId()));
+        holder.id.setText(arrPatientInfo.get(position).getPatientId());
+//        holder.id.setText(String.valueOf(arrPatientInfo.get(position).getPatientId()));
         holder.bornYear.setText(arrPatientInfo.get(position).getBornYear());
     }
 
@@ -89,11 +83,13 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
     public void addUser(PatientInfoDTO user) {
         if (user != null) {
             GLog.d("item count ==== " + getItemCount());
-            if (getItemCount() == 0) {
-                user.setPatientId(12345123);
-            } else {
-                user.setPatientId(arrPatientInfo.get(getItemCount() - 1).getPatientId() + 1);
-            }
+//            if (getItemCount() == 0) {
+//                user.setPatientId(u);
+//            } else {
+////                idNum = Integer.parseInt(arrPatientInfo.get(getItemCount() - 1).getPatientId()) + 1;
+//                user.setPatientId(getRandomString(8));
+////                user.setPatientId(arrPatientInfo.get(getItemCount() - 1).getPatientId() + 1);
+//            }
             user.setNum(String.valueOf(getItemCount() + 1));
             arrPatientInfo.add(user);
         }

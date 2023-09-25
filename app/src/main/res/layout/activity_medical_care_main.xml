@@ -25,51 +25,43 @@
         android:id="@+id/patient_list_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="30dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="30dp"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/health_measure_guide_line"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tool_bar_layout">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/patient_list_title_layout"
-            android:layout_width="match_parent"
+        <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--            android:id="@+id/patient_list_title_layout"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent">-->
+
+        <TextView
+            android:id="@+id/patient_list_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="환자 목록"
+            android:textColor="@color/black"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/patient_list_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="환자 목록"
-                android:textColor="@color/black"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/btn_patient_add"
-                android:layout_width="70dp"
-                android:layout_height="40dp"
-                android:gravity="center_horizontal"
-                android:text="추가"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
         <TableLayout
             android:id="@+id/patient_info_layout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
+            android:layout_marginTop="10dp"
             android:background="#c9c9c9"
             android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/patient_list_title_layout">
+            app:layout_constraintTop_toBottomOf="@id/patient_list_title">
 
             <TableRow
                 android:layout_height="0dp"
@@ -110,7 +102,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/patient_id"
+                    android:id="@+id/tv_patient_id"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginEnd="1dp"
@@ -135,15 +127,41 @@
 
         </TableLayout>
 
+        <TextView
+            android:id="@+id/tv_patient_empty"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="환자 정보가 없습니다."
+            android:textColor="#545454"
+            android:textSize="15sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_patient_add"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/patient_info_layout" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_patient_list"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@id/btn_patient_add"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/patient_info_layout"
-            tools:itemCount="3"
+            tools:itemCount="4"
             tools:listitem="@layout/item_patient_info" />
+
+        <Button
+            android:id="@+id/btn_patient_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="40dp"
+            android:text="환자 추가"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -159,8 +177,7 @@
         android:id="@+id/send_list_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_margin="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_margin="40dp"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

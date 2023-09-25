@@ -3,6 +3,8 @@ package com.dki.hybridapptest.ui.activity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,8 +29,13 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
     // 목록
     private RecyclerView connDevice;
     private RecyclerView saveDevice;
-    private RvDeviceListAdapter rvDeviceListAdapter;
-    private RvDeviceListAdapter rvDeviceListAdapter2;
+    private RvDeviceListAdapter rvConnDeviceAdapter;
+    private RvDeviceListAdapter rvSaveDeviceAdapter;
+
+    // 서버 설정
+    private RadioButton serverSetting1;
+    private RadioButton serverSetting2;
+    private RadioGroup radioGroup;
 
     private PatientDeviceDTO patientDevice;
     private ArrayList<PatientDeviceDTO> arrPatientDevice = new ArrayList<>();
@@ -43,6 +50,12 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
         mTitle = toolbar.findViewById(R.id.toolbar_title);
         connDevice = findViewById(R.id.rv_connect_device);
         saveDevice = findViewById(R.id.rv_save_device);
+        serverSetting1 = findViewById(R.id.radioButton);
+        serverSetting2 = findViewById(R.id.radioButton2);
+        radioGroup = findViewById(R.id.radioGroup);
+
+        // 서버 수신 모드 디폴트
+        radioGroup.check(serverSetting1.getId());
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
@@ -50,28 +63,33 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
         // 테스트 샘플 데이터
         sampleConnetData();
         sampleSaveData();
+
+        // 연결가능 기기 목록
         connDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        rvDeviceListAdapter = new RvDeviceListAdapter();
-        rvDeviceListAdapter.addArrPatientDevice(arrPatientDevice);
-        connDevice.setAdapter(rvDeviceListAdapter);
-        rvDeviceListAdapter.notifyDataSetChanged();
+        rvConnDeviceAdapter = new RvDeviceListAdapter();
+        rvConnDeviceAdapter.addArrPatientDevice(arrPatientDevice);
+        connDevice.setAdapter(rvConnDeviceAdapter);
+        rvConnDeviceAdapter.notifyDataSetChanged();
         GLog.d();
 
-        patientDevice = new PatientDeviceDTO();
-        patientDevice.setType("추가 연결 가능");
-        patientDevice.setDeviceName("add");
-        rvDeviceListAdapter.addItem(patientDevice);
+//        patientDevice = new PatientDeviceDTO();
+//        patientDevice.setType("추가 연결 가능");
+//        patientDevice.setDeviceName("add");
+//        rvConnDeviceAdapter.addItem(patientDevice);
+//        rvConnDeviceAdapter.notifyDataSetChanged();
 
+        // 등록 기기 목록
         saveDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        rvDeviceListAdapter2 = new RvDeviceListAdapter();
-        rvDeviceListAdapter2.addArrPatientDevice(arrSaveDevice);
-        saveDevice.setAdapter(rvDeviceListAdapter2);
-        rvDeviceListAdapter2.notifyDataSetChanged();
+        rvSaveDeviceAdapter = new RvDeviceListAdapter();
+        rvSaveDeviceAdapter.addArrPatientDevice(arrSaveDevice);
+        saveDevice.setAdapter(rvSaveDeviceAdapter);
+        rvSaveDeviceAdapter.notifyDataSetChanged();
 
-        patientDevice = new PatientDeviceDTO();
-        patientDevice.setType("추가 등록 기기");
-        patientDevice.setDeviceName("add add");
-        rvDeviceListAdapter2.addItem(patientDevice);
+//        patientDevice = new PatientDeviceDTO();
+//        patientDevice.setType("추가 등록 기기");
+//        patientDevice.setDeviceName("add add");
+//        rvSaveDeviceAdapter.addItem(patientDevice);
+//        rvSaveDeviceAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -113,8 +131,9 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
         mTitle.setText(toolBarTitle);
     }
 
+    // 샘플 테스트 데이터
     public void sampleConnetData() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 10; i++) {
             patientDevice = new PatientDeviceDTO();
             if (i % 2 != 0) {
                 patientDevice.setType("혈압");

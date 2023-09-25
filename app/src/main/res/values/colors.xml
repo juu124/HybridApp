@@ -11,4 +11,9 @@
     <color name="BLACK">#C6C6C6</color>
     <color name="WHITE">#FFFFFF</color>
     <color name="CacheColor">#00000000</color>
+
+    <color name="dark_gray">#525252</color>
+
+    <drawable name="gray">#c6c6c6</drawable>
+    <drawable name="white">#ffffff</drawable>
 </resources>

@@ -102,7 +102,7 @@ public class RvUserListAdapter extends RecyclerView.Adapter<RvUserListAdapter.Vi
 
     public int getIndexUser(UserResponse user) {
         for (int i = 0; i < mUserList.size(); i++) {
-            GLog.d("getIndexUser == " + mUserList.get(i));
+//            GLog.d("getIndexUser == " + mUserList.get(i));
             if (user == mUserList.get(i)) {
                 return i;
             }
