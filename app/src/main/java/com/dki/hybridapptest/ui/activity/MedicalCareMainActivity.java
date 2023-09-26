@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -53,6 +54,7 @@ public class MedicalCareMainActivity extends AppCompatActivity {
     // 전송 기록 목록
     private SimpleDateFormat simpleDate;
     private String time;
+    private CheckBox checkBox;
 
     // 환자 추가 버튼
     private Button patientAddBtn;
@@ -68,6 +70,9 @@ public class MedicalCareMainActivity extends AppCompatActivity {
         mRvSendHistoryList = findViewById(R.id.rv_send_history);
         patientAddBtn = findViewById(R.id.btn_patient_add);
         patientEmpty = findViewById(R.id.tv_patient_empty);
+        checkBox = findViewById(R.id.check_box);
+
+//        checkBox.
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
@@ -173,8 +178,13 @@ public class MedicalCareMainActivity extends AppCompatActivity {
         display.getSize(size);
 
         Window window = inputPatientDialog.getWindow();
-        int x = (int) (size.x * 0.35f);
-        int y = (int) (size.y * 0.6f);
+        // 생년 numPicker일 때 화면 크기
+//        int x = (int) (size.x * 0.35f);
+//        int y = (int) (size.y * 0.6f);
+
+        // 생년 edit일 때 화면 크기
+        int x = (int) (size.x * 0.33f);
+        int y = (int) (size.y * 0.5f);
 
         window.setLayout(x, y);
     }

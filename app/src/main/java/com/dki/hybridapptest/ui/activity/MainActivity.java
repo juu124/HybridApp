@@ -455,6 +455,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         customDialog.setCancelable(false);
                         customDialog.show();
                         customDialog.setOneButtonText("확인");
+
                 }
             }
 

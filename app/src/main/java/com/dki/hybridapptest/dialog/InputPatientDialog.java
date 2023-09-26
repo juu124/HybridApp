@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -25,13 +24,13 @@ import java.util.Random;
 public class InputPatientDialog extends Dialog {
     private Context mContext;
     private EditText patientName;
-    private EditText patientBornYear;
     private EditText patientAutoId;
 
     // 생년
-    private NumberPicker patientYear;
-    private int minYear;
-    private int maxYear;
+    private EditText patientBornYear;
+//    private NumberPicker patientYear;
+//    private String minYear;
+//    private String maxYear;
 
     private Button dialogNoBtn;
     private Button dialogYesBtn;
@@ -66,8 +65,8 @@ public class InputPatientDialog extends Dialog {
         GLog.d();
         setContentView(R.layout.dialog_patient_add_list_view);
         patientName = findViewById(R.id.edit_patient_name);
-//        patientBornYear = findViewById(R.id.edit_patient_born_year);  // 직접 생년 입력
-        patientYear = findViewById(R.id.picker_patient_born_year);      // numPicker 이용 생년 입력
+        patientBornYear = findViewById(R.id.edit_patient_born_year);      // 직접 생년 입력
+//        patientYear = findViewById(R.id.picker_patient_born_year);      // numPicker 이용 생년 입력
         patientAutoId = findViewById(R.id.edit_patient_id);
 
         manRadioBtn = findViewById(R.id.radioButton);
@@ -81,6 +80,12 @@ public class InputPatientDialog extends Dialog {
         patientAutoId.setClickable(false);
         patientAutoId.setFocusable(false);
         patientAutoId.setText(getRandomString(8));
+        patientAutoId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(mContext, "ID는 수정할 수 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // 성별 디폴트 체크(남성)
         radioGroup.check(manRadioBtn.getId());
@@ -89,21 +94,21 @@ public class InputPatientDialog extends Dialog {
         testClick();
 
         // 환자 생년 설정 (numPicker 사용)
-        patientYear.setWrapSelectorWheel(false);
-        patientYear.setMinValue(1920);
-        patientYear.setMaxValue(2500);
-        patientYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
-        patientYear.setValue(2023);
+//        patientYear.setWrapSelectorWheel(false);
+//        patientYear.setMinValue(1920);
+//        patientYear.setMaxValue(2500);
+//        patientYear.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+//        patientYear.setValue(2000);
 
         dialogYesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 chooseGender();
                 String name = patientName.getText().toString();
-//                String bornYear = patientBornYear.getText().toString();
-                String bornYear = String.valueOf(patientYear.getValue());
+                String bornYear = patientBornYear.getText().toString();  // 생년 edit로 입력
+//                String bornYear = String.valueOf(patientYear.getValue());  // 생년 numPicker로 입력
                 String autoId = patientAutoId.getText().toString();
-//                int autoId = 0;
+//                String autoId = null;
 
                 patientInfoDTO = new PatientInfoDTO(gender, name, autoId, bornYear);
 
@@ -151,7 +156,7 @@ public class InputPatientDialog extends Dialog {
 
     public void testClick() {
         patientName.setText("홍길동");
-//        patientBornYear.setText("1990");
+        patientBornYear.setText("2000");
     }
 
     // 성별 여부 결정

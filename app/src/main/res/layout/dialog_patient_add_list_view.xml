@@ -129,13 +129,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="17dp"
             android:background="@drawable/edit_border"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLength="10"
             android:maxLines="1"
-            android:padding="3dp"
+            android:paddingVertical="5dp"
+            android:paddingStart="10dp"
             android:singleLine="true"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@id/add_info_guide_line2"
@@ -148,13 +149,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="17dp"
             android:background="@drawable/edit_border"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:inputType="number"
             android:maxLines="1"
-            android:padding="3dp"
+            android:paddingVertical="5dp"
+            android:paddingStart="10dp"
             android:singleLine="true"
             android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="@id/add_info_guide_line2"
@@ -190,36 +192,38 @@
                 android:text="여성" />
         </RadioGroup>
 
-        <NumberPicker
-            android:id="@+id/picker_patient_born_year"
-            android:layout_width="0dp"
-            android:layout_height="90dp"
-            android:layout_marginStart="20dp"
-            android:gravity="center_vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/add_info_guide_line2"
-            app:layout_constraintStart_toStartOf="@id/add_info_guide_line"
-            app:layout_constraintTop_toBottomOf="@id/radioGroup" />
-
-        <!--        <EditText-->
-        <!--            android:id="@+id/edit_patient_born_year"-->
+        <!--        <NumberPicker-->
+        <!--            android:id="@+id/picker_patient_born_year"-->
         <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginHorizontal="16dp"-->
-        <!--            android:background="@drawable/edit_border"-->
-        <!--            android:ellipsize="end"-->
+        <!--            android:layout_height="90dp"-->
+        <!--            android:layout_marginStart="20dp"-->
         <!--            android:gravity="center_vertical"-->
-        <!--            android:inputType="number"-->
-        <!--            android:maxLength="4"-->
-        <!--            android:maxLines="1"-->
-        <!--            android:padding="3dp"-->
-        <!--            android:singleLine="true"-->
-        <!--            android:textSize="12sp"-->
         <!--            app:layout_constraintBottom_toBottomOf="parent"-->
         <!--            app:layout_constraintEnd_toEndOf="@id/add_info_guide_line2"-->
         <!--            app:layout_constraintStart_toStartOf="@id/add_info_guide_line"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/radioGroup"-->
-        <!--            tools:text="1900" />-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/radioGroup" />-->
+
+        <EditText
+            android:id="@+id/edit_patient_born_year"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/edit_border"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:inputType="number"
+            android:maxLength="4"
+            android:maxLines="1"
+            android:paddingVertical="5dp"
+            android:paddingStart="10dp"
+            android:singleLine="true"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/add_info_guide_line2"
+            app:layout_constraintStart_toStartOf="@id/add_info_guide_line"
+            app:layout_constraintTop_toBottomOf="@id/radioGroup"
+            tools:text="1900" />
 
 
         <androidx.constraintlayout.widget.Guideline

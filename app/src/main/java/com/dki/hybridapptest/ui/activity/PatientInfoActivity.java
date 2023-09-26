@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,6 +47,7 @@ public class PatientInfoActivity extends AppCompatActivity {
     private RvDeviceListAdapter rvDeviceListAdapter;
     private PatientDeviceDTO patientDevice;
     private ArrayList<PatientDeviceDTO> arrPatientDevice = new ArrayList<>();
+    private CheckBox checkBox;
 
     // 전송 기록 목록
     private RecyclerView mRvSendHistory;
@@ -69,6 +71,7 @@ public class PatientInfoActivity extends AppCompatActivity {
         mRvSendHistory = findViewById(R.id.rv_recode_device);
         patientName = findViewById(R.id.tv_patient_name);
         patientId = findViewById(R.id.tv_patient_id);
+        checkBox = findViewById(R.id.check_box);
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();

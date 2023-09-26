@@ -5,30 +5,34 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="#c9c9c9"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
         <TableLayout
             android:id="@+id/patient_info_layout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="#c9c9c9"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:padding="1dp">
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="1dp"
                     android:layout_weight="1"
                     android:background="@drawable/list_selector"
                     android:gravity="center"
@@ -40,7 +44,6 @@
                     android:id="@+id/empty"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="1dp"
                     android:layout_weight="1"
                     android:background="@drawable/list_selector"
                     android:gravity="center"
@@ -50,15 +53,12 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:paddingHorizontal="1dp"
-                android:paddingBottom="1dp">
+                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/patient_health_info"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="1dp"
                     android:layout_weight="1"
                     android:background="@drawable/list_selector"
                     android:gravity="center"
@@ -71,6 +71,83 @@
 
         </TableLayout>
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="#c9c9c9"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent">-->
+
+    <!--        <CheckBox-->
+    <!--            android:id="@+id/check_box"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="0dp"-->
+    <!--            android:background="@drawable/list_border"-->
+    <!--            android:padding="1dp"-->
+    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--            app:layout_constraintStart_toStartOf="parent"-->
+    <!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--        <TableLayout-->
+    <!--            android:id="@+id/patient_info_layout"-->
+    <!--            android:layout_width="0dp"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:background="#c9c9c9"-->
+    <!--            android:gravity="center_vertical"-->
+    <!--            app:layout_constraintEnd_toEndOf="parent"-->
+    <!--            app:layout_constraintStart_toEndOf="@id/check_box"-->
+    <!--            app:layout_constraintTop_toTopOf="parent">-->
+
+    <!--            <TableRow-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="0dp"-->
+    <!--                android:layout_weight="1">-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/date"-->
+    <!--                    android:layout_width="0dp"-->
+    <!--                    android:layout_height="match_parent"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:background="@drawable/list_selector"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:padding="10dp"-->
+    <!--                    android:textColor="@color/black"-->
+    <!--                    tools:text="1" />-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/empty"-->
+    <!--                    android:layout_width="0dp"-->
+    <!--                    android:layout_height="match_parent"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:background="@drawable/list_selector"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:padding="10dp" />-->
+    <!--            </TableRow>-->
+
+    <!--            <TableRow-->
+    <!--                android:layout_width="match_parent"-->
+    <!--                android:layout_height="0dp"-->
+    <!--                android:layout_weight="1">-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/patient_health_info"-->
+    <!--                    android:layout_width="0dp"-->
+    <!--                    android:layout_height="match_parent"-->
+    <!--                    android:layout_weight="1"-->
+    <!--                    android:background="@drawable/list_selector"-->
+    <!--                    android:gravity="center"-->
+    <!--                    android:padding="10dp"-->
+    <!--                    android:textColor="@color/black"-->
+    <!--                    android:textSize="15sp"-->
+    <!--                    tools:text="이지영 (12345123) 혈압, 혈당, 체중 데이터 전송" />-->
+
+    <!--            </TableRow>-->
+
+    <!--        </TableLayout>-->
+
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

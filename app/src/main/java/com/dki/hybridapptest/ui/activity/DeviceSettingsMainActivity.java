@@ -26,10 +26,13 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView mTitle;
 
-    // 목록
+    // 연결 가능 목록
     private RecyclerView connDevice;
-    private RecyclerView saveDevice;
     private RvDeviceListAdapter rvConnDeviceAdapter;
+    private TextView rvSaveDeviceEmpty;
+
+    // 등록된 기기 목록
+    private RecyclerView saveDevice;
     private RvDeviceListAdapter rvSaveDeviceAdapter;
 
     // 서버 설정
@@ -53,6 +56,7 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
         serverSetting1 = findViewById(R.id.radioButton);
         serverSetting2 = findViewById(R.id.radioButton2);
         radioGroup = findViewById(R.id.radioGroup);
+        rvSaveDeviceEmpty = findViewById(R.id.rv_save_device_empty);
 
         // 서버 수신 모드 디폴트
         radioGroup.check(serverSetting1.getId());
@@ -62,9 +66,9 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
 
         // 테스트 샘플 데이터
         sampleConnetData();
-        sampleSaveData();
+//        sampleSaveData();
 
-        // 연결가능 기기 목록
+        // 연결 가능 기기 목록
         connDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rvConnDeviceAdapter = new RvDeviceListAdapter();
         rvConnDeviceAdapter.addArrPatientDevice(arrPatientDevice);
@@ -90,6 +94,15 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
 //        patientDevice.setDeviceName("add add");
 //        rvSaveDeviceAdapter.addItem(patientDevice);
 //        rvSaveDeviceAdapter.notifyDataSetChanged();
+
+        // 등록 기기 없을 시 노출 문구
+        if (rvSaveDeviceAdapter.getItemCount() == 0) {
+            rvSaveDeviceEmpty.setVisibility(View.VISIBLE);
+            saveDevice.setVisibility(View.GONE);
+        } else {
+            rvSaveDeviceEmpty.setVisibility(View.GONE);
+            saveDevice.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

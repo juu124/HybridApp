@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
         private TextView name;
         private TextView id;
         private TextView bornYear;
+        private CheckBox checkBox;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -34,6 +36,7 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
             name = itemView.findViewById(R.id.name);
             id = itemView.findViewById(R.id.tv_patient_id);
             bornYear = itemView.findViewById(R.id.born_year);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -61,8 +64,8 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
         holder.num.setText(arrPatientInfo.get(position).getNum());
         holder.gender.setText(arrPatientInfo.get(position).getGender());
         holder.name.setText(arrPatientInfo.get(position).getName());
-        holder.id.setText(arrPatientInfo.get(position).getPatientId());
-//        holder.id.setText(String.valueOf(arrPatientInfo.get(position).getPatientId()));
+//        holder.id.setText(arrPatientInfo.get(position).getPatientId());                     // 생년이 numPicker일 때
+        holder.id.setText(String.valueOf(arrPatientInfo.get(position).getPatientId()));   // 생년이 edit일 때
         holder.bornYear.setText(arrPatientInfo.get(position).getBornYear());
     }
 
@@ -83,6 +86,8 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
     public void addUser(PatientInfoDTO user) {
         if (user != null) {
             GLog.d("item count ==== " + getItemCount());
+
+            // InputPatientDialog에서 랜덤 수로 id를 지정했기 때문에 주석 처리
 //            if (getItemCount() == 0) {
 //                user.setPatientId(u);
 //            } else {
@@ -95,10 +100,10 @@ public class RvPatientListAdapter extends RecyclerView.Adapter<RvPatientListAdap
         }
     }
 
-    //
+
     public int getIndexUser(PatientInfoDTO user) {
         for (int i = 0; i < arrPatientInfo.size(); i++) {
-            GLog.d("getIndexUser == " + arrPatientInfo.get(i));
+//            GLog.d("getIndexUser == " + arrPatientInfo.get(i));
             if (user == arrPatientInfo.get(i)) {
                 return i;
             }

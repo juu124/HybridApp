@@ -75,7 +75,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/device_list_layout"
+            android:id="@+id/device_list_layout_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -111,55 +111,84 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TableLayout
-            android:id="@+id/connect_device_list_title_layout"
-            android:layout_width="match_parent"
-            android:layout_height="25dp"
-            android:layout_marginTop="10dp"
-            android:background="#c9c9c9"
-            android:gravity="center_vertical"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/device_list_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/device_list_layout">
+            app:layout_constraintTop_toBottomOf="@id/device_list_layout_title">
 
-            <TableRow
+            <CheckBox
+                android:id="@+id/check_box"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/list_border"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TableLayout
+                android:id="@+id/connect_device_list_title_layout"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:padding="1dp">
+                android:background="@drawable/list_border"
+                app:layout_constraintStart_toEndOf="@id/check_box"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/type"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="1dp"
-                    android:layout_weight="1"
-                    android:background="#ebebeb"
-                    android:gravity="center"
-                    android:text="종류"
-                    android:textStyle="bold" />
+                <TableRow
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/device_name"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="1dp"
-                    android:layout_weight="3"
-                    android:background="#ebebeb"
-                    android:gravity="center"
-                    android:text="기기명"
-                    android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/type"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="종류"
+                        android:background="@drawable/list_border"
+                        android:textStyle="bold" />
 
-            </TableRow>
+                    <TextView
+                        android:id="@+id/device_name"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/list_border"
+                        android:layout_weight="3"
+                        android:gravity="center"
+                        android:text="기기명"
+                        android:textStyle="bold" />
 
-        </TableLayout>
+                </TableRow>
+
+            </TableLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--        <CheckBox-->
+        <!--            android:id="@+id/check_box"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:background="#ffffff"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintEnd_toStartOf="@id/connect_device_list_title_layout"-->
+        <!--            -->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/device_list_layout"-->
+        <!--            android:padding="1dp" />-->
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_connect_device"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/connect_device_list_title_layout"
+            app:layout_constraintTop_toBottomOf="@id/device_list_layout"
             tools:itemCount="10"
             tools:listitem="@layout/item_device" />
 
@@ -215,7 +244,6 @@
         android:id="@+id/send_btn_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
