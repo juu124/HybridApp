@@ -50,10 +50,9 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/connect_device_list_title">
-            dba44bc189
 
             <CheckBox
-                android:id="@+id/check_box"
+                android:id="@+id/conn_device_check_box"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/list_border"
@@ -68,7 +67,7 @@
                 android:gravity="center_vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/check_box"
+                app:layout_constraintStart_toEndOf="@id/conn_device_check_box"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TableRow

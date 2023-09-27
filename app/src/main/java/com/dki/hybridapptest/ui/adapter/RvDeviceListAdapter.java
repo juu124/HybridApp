@@ -1,6 +1,5 @@
 package com.dki.hybridapptest.ui.adapter;
 
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 
 public class RvDeviceListAdapter extends RecyclerView.Adapter<RvDeviceListAdapter.ViewHolder> {
     private ArrayList<PatientDeviceDTO> arrPatientDeviceList = new ArrayList<>();
-    private SparseBooleanArray checkboxStatus = new SparseBooleanArray();
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView type;
@@ -30,28 +28,17 @@ public class RvDeviceListAdapter extends RecyclerView.Adapter<RvDeviceListAdapte
             super(itemView);
             type = itemView.findViewById(R.id.type);
             deviceName = itemView.findViewById(R.id.device_name);
-            checkBox = itemView.findViewById(R.id.check_box);
-            checkBox.setChecked(checkboxStatus.get(getAbsoluteAdapterPosition())); // 현재 Position에 해당하는 값으로 체크 상태 설정
-
-            checkBox.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!checkBox.isChecked()) {
-                        checkboxStatus.put(getAbsoluteAdapterPosition(), false);
-                    } else {
-                        checkboxStatus.put(getAbsoluteAdapterPosition(), true);
-                    }
-                    notifyItemChanged(getAbsoluteAdapterPosition());
-                }
-            });
+            checkBox = itemView.findViewById(R.id.device_check_box);
 
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (checkBox.isChecked()) {
+                        arrPatientDeviceList.get(getBindingAdapterPosition()).setChecked(true);
                         checkBox.setChecked(true);
                         Toast.makeText(v.getContext(), "체크 되었습니다.", Toast.LENGTH_SHORT).show();
                     } else {
+                        arrPatientDeviceList.get(getBindingAdapterPosition()).setChecked(false);
                         checkBox.setChecked(false);
                         Toast.makeText(v.getContext(), "체크가 해제되었습니다.", Toast.LENGTH_SHORT).show();
                     }
@@ -68,9 +55,10 @@ public class RvDeviceListAdapter extends RecyclerView.Adapter<RvDeviceListAdapte
 
     @Override
     public void onBindViewHolder(@NonNull RvDeviceListAdapter.ViewHolder holder, int position) {
-        GLog.d("position == " + position);
+//        GLog.d("position == " + position);
         holder.type.setText(arrPatientDeviceList.get(position).getType());
         holder.deviceName.setText(arrPatientDeviceList.get(position).getDeviceName());
+        holder.checkBox.setChecked(arrPatientDeviceList.get(position).isChecked());
     }
 
     @Override
@@ -83,7 +71,8 @@ public class RvDeviceListAdapter extends RecyclerView.Adapter<RvDeviceListAdapte
         arrPatientDeviceList.addAll(deviceList);
     }
 
-    public void itemChecked() {
+    public void getCheckItem() {
+        GLog.d();
     }
 
     public void addItem(PatientDeviceDTO device) {

@@ -71,7 +71,7 @@ public class PatientInfoActivity extends AppCompatActivity {
         mRvSendHistory = findViewById(R.id.rv_recode_device);
         patientName = findViewById(R.id.tv_patient_name);
         patientId = findViewById(R.id.tv_patient_id);
-        checkBox = findViewById(R.id.check_box);
+        checkBox = findViewById(R.id.device_check_box);  // 리스트 맨위 체크박스
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();

@@ -6,6 +6,8 @@ public class PatientDeviceDTO {
 
     private String deviceName;
 
+    private boolean isChecked;
+
     public String getType() {
         return type;
     }
@@ -20,5 +22,13 @@ public class PatientDeviceDTO {
 
     public void setDeviceName(String deviceName) {
         this.deviceName = deviceName;
+    }
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
     }
 }

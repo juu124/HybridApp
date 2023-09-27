@@ -70,9 +70,7 @@ public class MedicalCareMainActivity extends AppCompatActivity {
         mRvSendHistoryList = findViewById(R.id.rv_send_history);
         patientAddBtn = findViewById(R.id.btn_patient_add);
         patientEmpty = findViewById(R.id.tv_patient_empty);
-        checkBox = findViewById(R.id.check_box);
-
-//        checkBox.
+        checkBox = findViewById(R.id.device_check_box);
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
@@ -101,7 +99,6 @@ public class MedicalCareMainActivity extends AppCompatActivity {
             patientEmpty.setVisibility(View.GONE);
             mRvPatientList.setVisibility(View.VISIBLE);
         }
-
 
         // 전송 기록
         mRvSendHistoryList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));

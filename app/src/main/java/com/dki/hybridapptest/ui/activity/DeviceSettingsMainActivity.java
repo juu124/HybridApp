@@ -146,7 +146,7 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
 
     // 샘플 테스트 데이터
     public void sampleConnetData() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 30; i++) {
             patientDevice = new PatientDeviceDTO();
             if (i % 2 != 0) {
                 patientDevice.setType("혈압");
