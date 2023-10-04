@@ -3,36 +3,47 @@ package com.dki.hybridapptest.ui.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dto.RecodePatientDTO;
-import com.dki.hybridapptest.utils.GLog;
 
 import java.util.ArrayList;
 
 public class RvRecodePatientListAdapter extends RecyclerView.Adapter<RvRecodePatientListAdapter.ViewHolder> {
+    // 측정 기록 리스트
     private ArrayList<RecodePatientDTO> arrRecodePatient = new ArrayList<>();
-    private String patientHealthInfoTxt;
+
+    // 체크한 측정 기록 리스트
+    private ArrayList<RecodePatientDTO> arrCheckedPatient = new ArrayList<>();
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        private CheckBox checkBox;
         private TextView date;
+        private TextView type;
         private TextView patientHealthInfo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            checkBox = itemView.findViewById(R.id.checkbox);
             date = itemView.findViewById(R.id.date);
+            type = itemView.findViewById(R.id.Log_type);
             patientHealthInfo = itemView.findViewById(R.id.patient_health_info);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    GLog.d("아이템을 클릭했습니다.");
-                    Toast.makeText(v.getContext(), "item onclick", Toast.LENGTH_SHORT).show();
+                    if (checkBox.isChecked()) {
+                        arrRecodePatient.get(getBindingAdapterPosition()).setChecked(true);
+                        arrCheckedPatient.add(arrRecodePatient.get(getBindingAdapterPosition()));
+                    } else {
+                        arrCheckedPatient.remove(arrRecodePatient.get(getBindingAdapterPosition()));
+                        arrRecodePatient.get(getBindingAdapterPosition()).setChecked(true);
+                    }
                 }
             });
         }
@@ -46,17 +57,10 @@ public class RvRecodePatientListAdapter extends RecyclerView.Adapter<RvRecodePat
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        GLog.d("");
+        holder.checkBox.setChecked(arrRecodePatient.get(position).isChecked());
         holder.date.setText(arrRecodePatient.get(position).getTime());
-        patientHealthInfoTxt = arrRecodePatient.get(position).getName()
-                + " ("
-                + arrRecodePatient.get(position).getPatientId()
-                + ") "
-                + arrRecodePatient.get(position).getBodyStatus();
-        holder.patientHealthInfo.setText(patientHealthInfoTxt);
-
-        GLog.d("date = " + arrRecodePatient.get(position).getTime());
-        GLog.d("patientHealthInfoTxt = " + patientHealthInfoTxt);
+        holder.type.setText(arrRecodePatient.get(position).getType());
+        holder.patientHealthInfo.setText(arrRecodePatient.get(position).getRecodePatient());
     }
 
     @Override
@@ -65,8 +69,12 @@ public class RvRecodePatientListAdapter extends RecyclerView.Adapter<RvRecodePat
     }
 
     public void addArrSendHistory(ArrayList<RecodePatientDTO> recodePatientList) {
-        GLog.d();
         arrRecodePatient.addAll(recodePatientList);
+    }
+
+    // 체크한 기록
+    public ArrayList<RecodePatientDTO> getCheckedList() {
+        return arrCheckedPatient;
     }
 
 //    public void addUser(PatientInfoDTO user) {
@@ -74,4 +82,5 @@ public class RvRecodePatientListAdapter extends RecyclerView.Adapter<RvRecodePat
 //            ArrPatientInfo.add(user);
 //        }
 //    }
+
 }

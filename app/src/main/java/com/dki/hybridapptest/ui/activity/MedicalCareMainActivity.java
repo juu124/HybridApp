@@ -184,7 +184,6 @@ public class MedicalCareMainActivity extends AppCompatActivity {
 
     // 타이틀 UI 초기화
     public void titleBarInit() {
-        GLog.d();
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);

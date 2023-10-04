@@ -1,11 +1,25 @@
 package com.dki.hybridapptest.dto;
 
 public class RecodePatientDTO extends PatientCommonDTO {
+    private boolean isChecked;
+
     private String time;
 
     private String type;
 
-    private String bodyStatus;
+    private String recodePatient;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
+    public RecodePatientDTO(String name, String patientId) {
+        super(name, patientId);
+    }
 
     public String getType() {
         return type;
@@ -13,10 +27,6 @@ public class RecodePatientDTO extends PatientCommonDTO {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    public RecodePatientDTO(String name, String patientId) {
-        super(name, patientId);
     }
 
     public String getTime() {
@@ -27,11 +37,12 @@ public class RecodePatientDTO extends PatientCommonDTO {
         this.time = time;
     }
 
-    public String getBodyStatus() {
-        return bodyStatus;
+    public String getRecodePatient() {
+        return recodePatient;
     }
 
-    public void setBodyStatus(String bodyStatus) {
-        this.bodyStatus = bodyStatus;
+    public void setRecodePatient(String recodePatient) {
+        this.recodePatient = recodePatient;
     }
+
 }

@@ -115,26 +115,18 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/device_list_layout"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/device_list_layout_title">
 
-            <CheckBox
-                android:id="@+id/device_check_box"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/list_border"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <TableLayout
                 android:id="@+id/connect_device_list_title_layout"
                 android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:background="@drawable/list_border"
-                app:layout_constraintStart_toEndOf="@id/device_check_box"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -168,18 +160,6 @@
 
             </TableLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <!--        <CheckBox-->
-        <!--            android:id="@+id/check_box"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:background="#ffffff"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintEnd_toStartOf="@id/connect_device_list_title_layout"-->
-        <!--            -->
-        <!--            app:layout_constraintTop_toBottomOf="@+id/device_list_layout"-->
-        <!--            android:padding="1dp" />-->
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_connect_device"
@@ -225,6 +205,15 @@
             app:layout_constrainedHeight="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <!--        <CheckBox-->
+        <!--            android:id="@+id/device_check_box"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:background="@drawable/list_border"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <TextView
             android:id="@+id/tv_recode_device_empty"

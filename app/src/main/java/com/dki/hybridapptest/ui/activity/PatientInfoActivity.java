@@ -8,8 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,14 +18,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dki.hybridapptest.Interface.CustomDialogClickListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.CustomDialog;
 import com.dki.hybridapptest.dto.PatientDeviceDTO;
 import com.dki.hybridapptest.dto.RecodePatientDTO;
 import com.dki.hybridapptest.ui.adapter.RvDeviceListAdapter;
 import com.dki.hybridapptest.ui.adapter.RvRecodePatientListAdapter;
-import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
 
 import java.sql.Date;
@@ -47,16 +45,16 @@ public class PatientInfoActivity extends AppCompatActivity {
     private RvDeviceListAdapter rvDeviceListAdapter;
     private PatientDeviceDTO patientDevice;
     private ArrayList<PatientDeviceDTO> arrPatientDevice = new ArrayList<>();
-    private CheckBox checkBox;
 
     // 측정 기록 목록
     private RecyclerView mRvRecodePatient;
+    private RvRecodePatientListAdapter mRvRecodePatientListAdapter;
     private SimpleDateFormat simpleDate;
     private String time;
     private RecodePatientDTO recodePatientDTO;
     private ArrayList<RecodePatientDTO> arrRecodePatient = new ArrayList<>();
-    private RvRecodePatientListAdapter mRvRecodePatientListAdapter;
     private TextView tvRecodeEmpty;
+//    private CheckBox checkBox;
 
     // 측정값 전송
     private Button sendBtn;
@@ -71,7 +69,7 @@ public class PatientInfoActivity extends AppCompatActivity {
         mRvRecodePatient = findViewById(R.id.rv_recode_patient);
         patientName = findViewById(R.id.tv_patient_name);
         patientId = findViewById(R.id.tv_patient_id);
-        checkBox = findViewById(R.id.device_check_box);  // 리스트 맨위 체크박스
+//        checkBox = findViewById(R.id.device_check_box);
         tvRecodeEmpty = findViewById(R.id.tv_recode_device_empty);
         sendBtn = findViewById(R.id.send_btn);
 
@@ -91,7 +89,7 @@ public class PatientInfoActivity extends AppCompatActivity {
         sampleDataDevice();
 
         // 테스트 샘플 데이터 (측정기록)
-//        sampleDataPatient();
+        sampleDataPatient();
 
         // 기기목록
         mRvConnectDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
@@ -108,39 +106,35 @@ public class PatientInfoActivity extends AppCompatActivity {
         mRvRecodePatient.setAdapter(mRvRecodePatientListAdapter);
 
         // 기기 목록 전체 체크
-        checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkBox.isChecked()) {
-                    rvDeviceListAdapter.getCheckItem(true);
-                } else {
-                    rvDeviceListAdapter.getCheckItem(false);
-                }
-            }
-        });
+//        checkBox.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (checkBox.isChecked()) {
+//                    rvDeviceListAdapter.getCheckItem(true);
+//                } else {
+//                    rvDeviceListAdapter.getCheckItem(false);
+//                }
+//            }
+//        });
 
         // 측정값 전송 버튼
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomDialog customDialog = new CustomDialog(PatientInfoActivity.this, new CustomDialogClickListener() {
-                    @Override
-                    public void onPositiveClick(String text) {
-                        if (mRvRecodePatientListAdapter.getItemCount() != 0) {
-                            tvRecodeEmpty.setVisibility(View.GONE);
-                            mRvRecodePatient.setVisibility(View.VISIBLE);
+                if (mRvRecodePatientListAdapter.getItemCount() != 0) {
+                    if (mRvRecodePatientListAdapter.getCheckedList().size() != 0) {
+                        ArrayList<RecodePatientDTO> arrRecodePatient = mRvRecodePatientListAdapter.getCheckedList();
+                        mIntent.putExtra("sendLog", arrRecodePatient);
+                        for (int i = 0; i < arrRecodePatient.size(); i++) {
+                            mIntent = new Intent(PatientInfoActivity.this, MedicalCareMainActivity.class);
+                            Toast.makeText(PatientInfoActivity.this, "타입 : " + arrRecodePatient.get(i).getType() + "\n" + "기록 : " + arrRecodePatient.get(i).getRecodePatient(), Toast.LENGTH_SHORT).show();
+                            GLog.d("측정 기록 타입 == " + arrRecodePatient.get(i).getType());
+                            GLog.d("측정 기록 기록 == " + arrRecodePatient.get(i).getRecodePatient());
                         }
+                    } else {
+                        Toast.makeText(PatientInfoActivity.this, "측정값을 선택해주세요.", Toast.LENGTH_SHORT).show();
                     }
-
-                    @Override
-                    public void onNegativeClick() {
-
-                    }
-                }, "안내", "혈압 값을 수신중 입니다.", Constant.ONE_BUTTON, true);
-                customDialog.setCancelable(false);
-                customDialog.show();
-                customDialog.setOneButtonText("취소");
-                setDisplay(customDialog);
+                }
             }
         });
     }
@@ -197,13 +191,13 @@ public class PatientInfoActivity extends AppCompatActivity {
     public void sampleDataDevice() {
         for (int i = 0; i < 4; i++) {
             patientDevice = new PatientDeviceDTO();
-            if (i == 1) {
+            if (i == 0) {
                 patientDevice.setType("혈압");
                 patientDevice.setDeviceName("AutoCheck");
-            } else if (i == 2) {
+            } else if (i == 1) {
                 patientDevice.setType("혈당");
                 patientDevice.setDeviceName("CareSens");
-            } else if (i == 3) {
+            } else if (i == 2) {
                 patientDevice.setType("혈당");
                 patientDevice.setDeviceName("11073 Accuckeck");
             } else {
@@ -228,7 +222,7 @@ public class PatientInfoActivity extends AppCompatActivity {
 
     // 테스트 샘플 데이터(측정 기록)
     public void sampleDataPatient() {
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 3; i++) {
             long now = System.currentTimeMillis();
             Date date = new Date(now);
             simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -236,17 +230,27 @@ public class PatientInfoActivity extends AppCompatActivity {
 
             recodePatientDTO = new RecodePatientDTO("", "");
             recodePatientDTO.setTime(time);
-            recodePatientDTO.setName("수축기");
-            recodePatientDTO.setType("");
 
-            if (i % 2 == 0) {
+            if (i == 0) {
                 recodePatientDTO.setType("혈압");
-                recodePatientDTO.setBodyStatus("혈압, 혈당, 체중");
-            } else {
+                recodePatientDTO.setRecodePatient("수축기 (156.0), 이완기 (87.3), 맥박수 (80.0)");
+            } else if (i == 1) {
                 recodePatientDTO.setType("혈당");
-                recodePatientDTO.setBodyStatus("혈당, 체중");
+                recodePatientDTO.setRecodePatient("-");
+            } else {
+                recodePatientDTO.setType("체중");
+                recodePatientDTO.setRecodePatient("-");
             }
             arrRecodePatient.add(recodePatientDTO);
+
+//            if (i % 2 == 0) {
+//                recodePatientDTO.setType("혈압");
+//                recodePatientDTO.setRecodePatient("혈압, 혈당, 체중");
+//            } else {
+//                recodePatientDTO.setType("혈당");
+//                recodePatientDTO.setRecodePatient("혈당, 체중");
+//            }
+//            arrRecodePatient.add(recodePatientDTO);
         }
     }
 }
