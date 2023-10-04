@@ -10,13 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dki.hybridapptest.R;
-import com.dki.hybridapptest.dto.SendHistoryDTO;
+import com.dki.hybridapptest.dto.SendLogDTO;
 import com.dki.hybridapptest.utils.GLog;
 
 import java.util.ArrayList;
 
-public class RvSendHistoryListAdapter extends RecyclerView.Adapter<RvSendHistoryListAdapter.ViewHolder> {
-    private ArrayList<SendHistoryDTO> arrSendHistory = new ArrayList<>();
+public class RvSendLogAdapter extends RecyclerView.Adapter<RvSendLogAdapter.ViewHolder> {
+    private ArrayList<SendLogDTO> arrSendHistory = new ArrayList<>();
     private String patientHealthInfoTxt;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -64,7 +64,7 @@ public class RvSendHistoryListAdapter extends RecyclerView.Adapter<RvSendHistory
         return arrSendHistory.size();
     }
 
-    public void addArrSendHistory(ArrayList<SendHistoryDTO> sendHistoryList) {
+    public void addArrSendHistory(ArrayList<SendLogDTO> sendHistoryList) {
         GLog.d();
         arrSendHistory.addAll(sendHistoryList);
     }

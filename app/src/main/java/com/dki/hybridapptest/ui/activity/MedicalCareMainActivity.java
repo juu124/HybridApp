@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,9 +22,9 @@ import com.dki.hybridapptest.Interface.InputPatientInfoListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.InputPatientDialog;
 import com.dki.hybridapptest.dto.PatientInfoDTO;
-import com.dki.hybridapptest.dto.SendHistoryDTO;
+import com.dki.hybridapptest.dto.SendLogDTO;
 import com.dki.hybridapptest.ui.adapter.RvPatientListAdapter;
-import com.dki.hybridapptest.ui.adapter.RvSendHistoryListAdapter;
+import com.dki.hybridapptest.ui.adapter.RvSendLogAdapter;
 import com.dki.hybridapptest.utils.GLog;
 
 import java.sql.Date;
@@ -42,19 +41,18 @@ public class MedicalCareMainActivity extends AppCompatActivity {
 
     // 환자 목록
     private RecyclerView mRvPatientList;
-    private RecyclerView mRvSendHistoryList;
     private RvPatientListAdapter mRvPatientListAdapter;
-    private RvSendHistoryListAdapter mRvSendHistoryListAdapter;
     private PatientInfoDTO patientInfoDTO;
-    private SendHistoryDTO sendHistoryDTO;
-    private ArrayList<SendHistoryDTO> arrSendHistory = new ArrayList<>();
     private ArrayList<PatientInfoDTO> arrPatientInfo = new ArrayList<>();
     private TextView patientEmpty;
 
     // 전송 기록 목록
+    private RecyclerView mRvSendLogList;
+    private RvSendLogAdapter mRvSendLogAdapter;
+    private SendLogDTO sendHistoryDTO;
+    private ArrayList<SendLogDTO> arrSendLog = new ArrayList<>();
     private SimpleDateFormat simpleDate;
     private String time;
-    private CheckBox checkBox;
 
     // 환자 추가 버튼
     private Button patientAddBtn;
@@ -67,10 +65,9 @@ public class MedicalCareMainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.medical_tool_bar);
         mTitle = toolbar.findViewById(R.id.toolbar_title);
         mRvPatientList = findViewById(R.id.rv_patient_list);
-        mRvSendHistoryList = findViewById(R.id.rv_send_history);
+        mRvSendLogList = findViewById(R.id.rv_send_history);
         patientAddBtn = findViewById(R.id.btn_patient_add);
         patientEmpty = findViewById(R.id.tv_patient_empty);
-        checkBox = findViewById(R.id.device_check_box);
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
@@ -101,11 +98,11 @@ public class MedicalCareMainActivity extends AppCompatActivity {
         }
 
         // 전송 기록
-        mRvSendHistoryList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        mRvSendHistoryListAdapter = new RvSendHistoryListAdapter();
-        mRvSendHistoryListAdapter.addArrSendHistory(arrSendHistory);
-        mRvSendHistoryListAdapter.notifyDataSetChanged();
-        mRvSendHistoryList.setAdapter(mRvSendHistoryListAdapter);
+        mRvSendLogList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        mRvSendLogAdapter = new RvSendLogAdapter();
+        mRvSendLogAdapter.addArrSendHistory(arrSendLog);
+        mRvSendLogAdapter.notifyDataSetChanged();
+        mRvSendLogList.setAdapter(mRvSendLogAdapter);
 
         // 환자 추가 버튼 클릭
         patientAddBtn.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +122,6 @@ public class MedicalCareMainActivity extends AppCompatActivity {
                         // 환자 추가시 자동 스크롤
                         int position = mRvPatientListAdapter.getIndexUser(patientInfoDTO);
                         mRvPatientList.smoothScrollToPosition(position);
-//                        Toast.makeText(MedicalCareMainActivity.this, "추가되었습니다.", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -229,7 +225,7 @@ public class MedicalCareMainActivity extends AppCompatActivity {
             simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
             time = simpleDate.format(date);
 
-            sendHistoryDTO = new SendHistoryDTO("", "");
+            sendHistoryDTO = new SendLogDTO("", "");
             sendHistoryDTO.setTime(time);
             sendHistoryDTO.setName("이지영" + i);
             if (i % 2 == 0) {
@@ -237,11 +233,8 @@ public class MedicalCareMainActivity extends AppCompatActivity {
             } else {
                 sendHistoryDTO.setBodyStatus("혈당, 체중");
             }
-            arrSendHistory.add(sendHistoryDTO);
+            arrSendLog.add(sendHistoryDTO);
         }
     }
 
-    public void setDialogSize() {
-
-    }
 }

@@ -1,6 +1,6 @@
 package com.dki.hybridapptest.dto;
 
-public class SendHistoryDTO extends PatientCommonDTO {
+public class SendLogDTO extends PatientCommonDTO {
     private String time;
 
     private String type;
@@ -15,7 +15,7 @@ public class SendHistoryDTO extends PatientCommonDTO {
         this.type = type;
     }
 
-    public SendHistoryDTO(String name, String patientId) {
+    public SendLogDTO(String name, String patientId) {
         super(name, patientId);
     }
 

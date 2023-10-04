@@ -144,21 +144,28 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
         mTitle.setText(toolBarTitle);
     }
 
-    // 샘플 테스트 데이터
+    // 샘플 테스트 데이터 (연결 가능 기기 목록)
     public void sampleConnetData() {
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < 4; i++) {
             patientDevice = new PatientDeviceDTO();
-            if (i % 2 != 0) {
+            if (i == 1) {
                 patientDevice.setType("혈압");
                 patientDevice.setDeviceName("AutoCheck");
-            } else {
+            } else if (i == 2) {
                 patientDevice.setType("혈당");
                 patientDevice.setDeviceName("CareSens");
+            } else if (i == 3) {
+                patientDevice.setType("혈당");
+                patientDevice.setDeviceName("11073 Accuckeck");
+            } else {
+                patientDevice.setType("혈압");
+                patientDevice.setDeviceName("11073 And");
             }
             arrPatientDevice.add(patientDevice);
         }
     }
 
+    // 샘플 테스트 데이터 (등록 기기 목록)
     public void sampleSaveData() {
         for (int i = 0; i < 1; i++) {
             patientDevice = new PatientDeviceDTO();

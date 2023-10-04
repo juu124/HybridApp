@@ -13,7 +13,7 @@
     <color name="CacheColor">#00000000</color>
 
     <color name="dark_gray">#525252</color>
-
+    <color name="list_empty_tv_dark_gray">#545454</color>
     <drawable name="gray">#c6c6c6</drawable>
     <drawable name="white">#ffffff</drawable>
 </resources>
