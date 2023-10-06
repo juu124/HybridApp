@@ -1,6 +1,6 @@
 package com.dki.hybridapptest.dto;
 
-public class RecodePatientDTO extends PatientCommonDTO {
+public class RecodePatientDTO {
     private boolean isChecked;
 
     private String time;
@@ -15,10 +15,6 @@ public class RecodePatientDTO extends PatientCommonDTO {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
-    }
-
-    public RecodePatientDTO(String name, String patientId) {
-        super(name, patientId);
     }
 
     public String getType() {

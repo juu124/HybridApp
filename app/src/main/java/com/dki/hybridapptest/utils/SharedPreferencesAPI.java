@@ -44,6 +44,8 @@ public class SharedPreferencesAPI {
     private static final String PREF_KEY_AUTO_LOGIN_CHECK = "PREF_KEY_AUTO_LOGIN_CHECK";
     private static final String PREF_KEY_SEARCH_URL = "PREF_KEY_SEARCH_URL";
     private static final String PREF_KEY_DISPLAY_FULL_MODE = "PREF_KEY_DISPLAY_FULL_MODE";
+    private static final String PREF_KEY_HEALTH_RECODE_PATIENT = "PREF_KEY_HEALTH_RECODE_PATIENT";
+    private static final String PREF_KEY_HEALTH_DEVICE_TYPE = "PREF_KEY_HEALTH_DEVICE_TYPE";
 
     /**
      * Get Template Function
@@ -72,6 +74,14 @@ public class SharedPreferencesAPI {
         return getBoolean(PREF_KEY_DISPLAY_FULL_MODE);
     }
 
+    public String getRecodePatient() {
+        return getString(PREF_KEY_HEALTH_RECODE_PATIENT);
+    }
+
+    public String getDeviceType() {
+        return getString(PREF_KEY_HEALTH_DEVICE_TYPE);
+    }
+
     /**
      * Set Template Function
      */
@@ -97,6 +107,14 @@ public class SharedPreferencesAPI {
 
     public void setDisplayFullMode(boolean value) {
         set(PREF_KEY_DISPLAY_FULL_MODE, value);
+    }
+
+    public void setRecodePatient(String value) {
+        set(PREF_KEY_HEALTH_RECODE_PATIENT, value);
+    }
+
+    public void setDeviceType(String value) {
+        set(PREF_KEY_HEALTH_DEVICE_TYPE, value);
     }
 
     public <T> T getTest(Class<T> classOfT) {

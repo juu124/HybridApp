@@ -72,6 +72,13 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="(12345123)" />
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_begin="20dp" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -100,8 +107,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 android:text="* 측정기기를 선택하세요."
                 android:textColor="@color/dark_gray"
                 android:textSize="10sp"
@@ -116,6 +121,7 @@
             android:id="@+id/device_list_layout"
             android:layout_width="0dp"
             android:layout_height="50dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/device_list_layout_title">
@@ -126,11 +132,11 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/list_border"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:gravity="center_vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:gravity="center_vertical">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TableRow
                     android:layout_height="0dp"
@@ -141,17 +147,17 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:background="@drawable/list_border"
                         android:gravity="center"
                         android:text="종류"
-                        android:background="@drawable/list_border"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/device_name"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:background="@drawable/list_border"
                         android:layout_weight="3"
+                        android:background="@drawable/list_border"
                         android:gravity="center"
                         android:text="기기명"
                         android:textStyle="bold" />
@@ -186,7 +192,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="71dp"
+        android:layout_marginTop="91dp"
         android:layout_marginBottom="20dp"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toTopOf="@id/send_btn_layout"
@@ -219,6 +225,7 @@
             android:id="@+id/tv_recode_device_empty"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="측정된 기록이 없습니다."
             android:textColor="@color/list_empty_tv_dark_gray"
@@ -272,5 +279,19 @@
             app:layout_constraintTop_toBottomOf="@id/send_guide_text" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="180dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="171dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

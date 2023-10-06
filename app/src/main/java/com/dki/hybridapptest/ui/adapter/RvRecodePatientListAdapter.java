@@ -5,12 +5,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dto.RecodePatientDTO;
+import com.dki.hybridapptest.utils.GLog;
+import com.dki.hybridapptest.utils.SharedPreferencesAPI;
 
 import java.util.ArrayList;
 
@@ -34,13 +37,27 @@ public class RvRecodePatientListAdapter extends RecyclerView.Adapter<RvRecodePat
             type = itemView.findViewById(R.id.Log_type);
             patientHealthInfo = itemView.findViewById(R.id.patient_health_info);
 
+            GLog.d("type == " + SharedPreferencesAPI.getInstance(itemView.getContext()).getDeviceType());
+
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (checkBox.isChecked()) {
+                    if (type.getText() == SharedPreferencesAPI.getInstance(v.getContext()).getDeviceType()) {
+                        // 선택한 측정 기록과 최근에 추가한 값이 같음 (이전 기록이 선택되면 안된다.)
+                        if (checkBox.isChecked()) { // 체크가 되었습니다.
+                            arrRecodePatient.get(getBindingAdapterPosition()).setChecked(true);
+                            arrCheckedPatient.add(arrRecodePatient.get(getBindingAdapterPosition()));
+                        } else { // 체크가 되지 않았습니다.
+                            Toast.makeText(v.getContext(), "체크X", Toast.LENGTH_SHORT).show();
+                            arrCheckedPatient.remove(arrRecodePatient.get(getBindingAdapterPosition()));
+                            arrRecodePatient.get(getBindingAdapterPosition()).setChecked(true);
+                        }
+                    }
+                    if (checkBox.isChecked()) { // 체크가 되었습니다.
                         arrRecodePatient.get(getBindingAdapterPosition()).setChecked(true);
                         arrCheckedPatient.add(arrRecodePatient.get(getBindingAdapterPosition()));
-                    } else {
+                    } else { // 체크가 되지 않았습니다.
+                        Toast.makeText(v.getContext(), "체크X", Toast.LENGTH_SHORT).show();
                         arrCheckedPatient.remove(arrRecodePatient.get(getBindingAdapterPosition()));
                         arrRecodePatient.get(getBindingAdapterPosition()).setChecked(true);
                     }
@@ -52,7 +69,7 @@ public class RvRecodePatientListAdapter extends RecyclerView.Adapter<RvRecodePat
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_send_history, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recode_patient, parent, false));
     }
 
     @Override

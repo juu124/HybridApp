@@ -41,7 +41,7 @@ public class RvSendLogAdapter extends RecyclerView.Adapter<RvSendLogAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_recode_patient, parent, false));
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_send_history, parent, false));
     }
 
     @Override
@@ -52,7 +52,8 @@ public class RvSendLogAdapter extends RecyclerView.Adapter<RvSendLogAdapter.View
                 + " ("
                 + arrSendHistory.get(position).getPatientId()
                 + ") "
-                + arrSendHistory.get(position).getBodyStatus();
+                + arrSendHistory.get(position).getSendLog()
+                + " 데이터 전송완료";
         holder.patientHealthInfo.setText(patientHealthInfoTxt);
 
         GLog.d("date = " + arrSendHistory.get(position).getTime());
@@ -64,9 +65,10 @@ public class RvSendLogAdapter extends RecyclerView.Adapter<RvSendLogAdapter.View
         return arrSendHistory.size();
     }
 
-    public void addArrSendHistory(ArrayList<SendLogDTO> sendHistoryList) {
+    public void setArrSendHistory(ArrayList<SendLogDTO> sendHistoryList) {
         GLog.d();
-        arrSendHistory.addAll(sendHistoryList);
+//        arrSendHistory.addAll(sendHistoryList);
+        arrSendHistory = sendHistoryList;
     }
 
 //    public void addUser(PatientInfoDTO user) {

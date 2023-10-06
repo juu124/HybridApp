@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dto.PatientDeviceDTO;
-import com.dki.hybridapptest.ui.adapter.RvDeviceListAdapter;
+import com.dki.hybridapptest.ui.adapter.RvSettingDeviceListAdapter;
 import com.dki.hybridapptest.utils.GLog;
 
 import java.util.ArrayList;
@@ -28,12 +28,12 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
 
     // 연결 가능 목록
     private RecyclerView connDevice;
-    private RvDeviceListAdapter rvConnDeviceAdapter;
+    private RvSettingDeviceListAdapter rvSettingDeviceAdapter;
     private TextView rvSaveDeviceEmpty;
 
     // 등록된 기기 목록
     private RecyclerView saveDevice;
-    private RvDeviceListAdapter rvSaveDeviceAdapter;
+    private RvSettingDeviceListAdapter rvSaveDeviceAdapter;
 
     // 서버 설정
     private RadioButton serverSetting1;
@@ -70,10 +70,10 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
 
         // 연결 가능 기기 목록
         connDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        rvConnDeviceAdapter = new RvDeviceListAdapter();
-        rvConnDeviceAdapter.addArrPatientDevice(arrPatientDevice);
-        connDevice.setAdapter(rvConnDeviceAdapter);
-        rvConnDeviceAdapter.notifyDataSetChanged();
+        rvSettingDeviceAdapter = new RvSettingDeviceListAdapter();
+        rvSettingDeviceAdapter.addArrPatientDevice(arrPatientDevice);
+        connDevice.setAdapter(rvSettingDeviceAdapter);
+        rvSettingDeviceAdapter.notifyDataSetChanged();
         GLog.d();
 
 //        patientDevice = new PatientDeviceDTO();
@@ -84,7 +84,7 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
 
         // 등록 기기 목록
         saveDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        rvSaveDeviceAdapter = new RvDeviceListAdapter();
+        rvSaveDeviceAdapter = new RvSettingDeviceListAdapter();
         rvSaveDeviceAdapter.addArrPatientDevice(arrSaveDevice);
         saveDevice.setAdapter(rvSaveDeviceAdapter);
         rvSaveDeviceAdapter.notifyDataSetChanged();

@@ -13,6 +13,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="@drawable/list_border"
+            android:padding="1dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TableLayout
             android:id="@+id/patient_info_layout"
             android:layout_width="0dp"
@@ -20,7 +30,7 @@
             android:background="#c9c9c9"
             android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/checkbox"
             app:layout_constraintTop_toTopOf="parent">
 
             <TableRow
@@ -40,14 +50,14 @@
                     tools:text="2013-09-12 10:10:10" />
 
                 <TextView
-                    android:id="@+id/empty"
+                    android:id="@+id/Log_type"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/list_selector"
                     android:gravity="center"
-                    android:text="혈압 (Autockeck)"
-                    android:padding="10dp" />
+                    android:padding="10dp"
+                    android:text="혈압 (Autockeck)" />
             </TableRow>
 
             <TableRow

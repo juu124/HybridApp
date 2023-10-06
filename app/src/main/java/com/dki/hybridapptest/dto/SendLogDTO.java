@@ -1,22 +1,25 @@
 package com.dki.hybridapptest.dto;
 
-public class SendLogDTO extends PatientCommonDTO {
+import java.io.Serializable;
+
+public class SendLogDTO extends PatientCommonDTO implements Serializable {
     private String time;
 
-    private String type;
-
-    private String bodyStatus;
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    private String sendLog;
 
     public SendLogDTO(String name, String patientId) {
         super(name, patientId);
+    }
+
+    public SendLogDTO(String name, String patientId, String sendLog) {
+        super(name, patientId);
+        this.sendLog = sendLog;
+    }
+
+    public SendLogDTO(String time, String name, String patientId, String sendLog) {
+        super(name, patientId);
+        this.time = time;
+        this.sendLog = sendLog;
     }
 
     public String getTime() {
@@ -27,11 +30,11 @@ public class SendLogDTO extends PatientCommonDTO {
         this.time = time;
     }
 
-    public String getBodyStatus() {
-        return bodyStatus;
+    public String getSendLog() {
+        return sendLog;
     }
 
-    public void setBodyStatus(String bodyStatus) {
-        this.bodyStatus = bodyStatus;
+    public void setSendLog(String sendLog) {
+        this.sendLog = sendLog;
     }
 }

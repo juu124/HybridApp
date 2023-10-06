@@ -187,6 +187,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/rv_send_history_empty"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="전송된 기록이 없습니다."
+            android:textColor="@color/list_empty_tv_dark_gray"
+            android:textSize="15sp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/send_history_layout" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_send_history"
             android:layout_width="match_parent"

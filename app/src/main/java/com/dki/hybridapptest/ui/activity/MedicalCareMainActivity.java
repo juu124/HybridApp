@@ -3,6 +3,7 @@ package com.dki.hybridapptest.ui.activity;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,8 +27,12 @@ import com.dki.hybridapptest.dto.SendLogDTO;
 import com.dki.hybridapptest.ui.adapter.RvPatientListAdapter;
 import com.dki.hybridapptest.ui.adapter.RvSendLogAdapter;
 import com.dki.hybridapptest.utils.GLog;
+import com.dki.hybridapptest.utils.SharedPreferencesAPI;
 
-import java.sql.Date;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -49,10 +54,11 @@ public class MedicalCareMainActivity extends AppCompatActivity {
     // 전송 기록 목록
     private RecyclerView mRvSendLogList;
     private RvSendLogAdapter mRvSendLogAdapter;
-    private SendLogDTO sendHistoryDTO;
+    private SendLogDTO sendLogDTO;
     private ArrayList<SendLogDTO> arrSendLog = new ArrayList<>();
     private SimpleDateFormat simpleDate;
     private String time;
+    private TextView sendLogEmpty;
 
     // 환자 추가 버튼
     private Button patientAddBtn;
@@ -60,7 +66,13 @@ public class MedicalCareMainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        GLog.d("");
         setContentView(R.layout.activity_medical_care_main);
+
+        if (!TextUtils.isEmpty(SharedPreferencesAPI.getInstance(MedicalCareMainActivity.this).getRecodePatient())) {
+            // null로 초기화하기
+            SharedPreferencesAPI.getInstance(MedicalCareMainActivity.this).setRecodePatient("");
+        }
 
         toolbar = findViewById(R.id.medical_tool_bar);
         mTitle = toolbar.findViewById(R.id.toolbar_title);
@@ -68,6 +80,7 @@ public class MedicalCareMainActivity extends AppCompatActivity {
         mRvSendLogList = findViewById(R.id.rv_send_history);
         patientAddBtn = findViewById(R.id.btn_patient_add);
         patientEmpty = findViewById(R.id.tv_patient_empty);
+        sendLogEmpty = findViewById(R.id.rv_send_history_empty);
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
@@ -97,21 +110,14 @@ public class MedicalCareMainActivity extends AppCompatActivity {
             mRvPatientList.setVisibility(View.VISIBLE);
         }
 
-        // 전송 기록
-        mRvSendLogList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        mRvSendLogAdapter = new RvSendLogAdapter();
-        mRvSendLogAdapter.addArrSendHistory(arrSendLog);
-        mRvSendLogAdapter.notifyDataSetChanged();
-        mRvSendLogList.setAdapter(mRvSendLogAdapter);
-
         // 환자 추가 버튼 클릭
         patientAddBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 InputPatientDialog inputPatientDialog = new InputPatientDialog(MedicalCareMainActivity.this, new InputPatientInfoListener() {
                     @Override
-                    public void onInputPositiveClick(PatientInfoDTO patientInfoDTO) {
-                        mRvPatientListAdapter.addUser(patientInfoDTO);
+                    public void onInputPositiveClick(Object patientInfoDTO) {
+                        mRvPatientListAdapter.addUser((PatientInfoDTO) patientInfoDTO);
                         mRvPatientListAdapter.notifyDataSetChanged();
 
                         if (mRvPatientListAdapter.getItemCount() != 0) {
@@ -120,7 +126,7 @@ public class MedicalCareMainActivity extends AppCompatActivity {
                         }
 
                         // 환자 추가시 자동 스크롤
-                        int position = mRvPatientListAdapter.getIndexUser(patientInfoDTO);
+                        int position = mRvPatientListAdapter.getIndexUser((PatientInfoDTO) patientInfoDTO);
                         mRvPatientList.smoothScrollToPosition(position);
                     }
 
@@ -131,8 +137,32 @@ public class MedicalCareMainActivity extends AppCompatActivity {
                 });
                 inputPatientDialog.show();
                 setDialogsize(inputPatientDialog);   // 다이얼로그 사이즈 변경
+                mRvSendLogList.setAdapter(mRvSendLogAdapter);
             }
         });
+
+        // 전송 기록
+        mRvSendLogList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        mRvSendLogAdapter = new RvSendLogAdapter();
+//        getSendLogData();
+//        mRvSendLogAdapter.addArrSendHistory(arrSendLog);
+//        mRvSendLogAdapter.notifyDataSetChanged();
+//        mRvSendLogList.setAdapter(mRvSendLogAdapter);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getSendLogData();
+
+        // 환자 데이터 없을 시 노출 문구
+        if (mRvSendLogAdapter.getItemCount() == 0) {
+            sendLogEmpty.setVisibility(View.VISIBLE);
+            mRvSendLogList.setVisibility(View.GONE);
+        } else {
+            sendLogEmpty.setVisibility(View.GONE);
+            mRvSendLogList.setVisibility(View.VISIBLE);
+        }
     }
 
     // 기기 설정 버튼
@@ -200,6 +230,42 @@ public class MedicalCareMainActivity extends AppCompatActivity {
         mTitle.setText(toolBarTitle);
     }
 
+    // 전송 기록 테스트 데이터
+    public void getSendLogData() {
+        String sendLogStr = SharedPreferencesAPI.getInstance(MedicalCareMainActivity.this).getRecodePatient();
+        GLog.d("sendLogStr == " + sendLogStr);
+
+        if (!TextUtils.isEmpty(sendLogStr)) {
+            try {
+                JSONObject json = new JSONObject(sendLogStr);
+                JSONArray itemJsonArray = new JSONArray(json.getString("item"));
+
+                GLog.d("jsonArray length == " + itemJsonArray.length());
+
+                for (int i = 0; i < itemJsonArray.length(); i++) {
+                    GLog.d("itemJsonArray [" + i + "] == " + itemJsonArray.get(i));
+//                                    GLog.d("item " + item);
+                    JSONObject jsonObject = new JSONObject(itemJsonArray.get(i).toString());
+//                    JSONObject sendLogJson = new JSONObject();
+
+                    SendLogDTO sendLogDTO1 = new SendLogDTO(jsonObject.getString("time"), jsonObject.getString("name"), jsonObject.getString("id"), jsonObject.getString("sendLog"));
+//                    sendLogJson.put("name", jsonObject.getString("name"));
+//                    sendLogJson.put("id", jsonObject.getString("id"));
+//                    sendLogJson.put("sendLog", jsonObject.getString("sendLog"));
+//                    jArray.put(sendLogJson);
+//                    GLog.d("jArray  == " + jArray);
+                    arrSendLog.add(sendLogDTO1);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            mRvSendLogAdapter.setArrSendHistory(arrSendLog);
+            mRvSendLogAdapter.notifyDataSetChanged();
+        }
+        GLog.d();
+    }
+
     // 테스트 샘플 데이터
     public void sampleData() {
         // 환자 목록
@@ -218,22 +284,22 @@ public class MedicalCareMainActivity extends AppCompatActivity {
 //        }
 
         // 전송 기록
-        for (int i = 0; i < 20; i++) {
-            long now = System.currentTimeMillis();
-            Date date = new Date(now);
-            simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            time = simpleDate.format(date);
-
-            sendHistoryDTO = new SendLogDTO("", "");
-            sendHistoryDTO.setTime(time);
-            sendHistoryDTO.setName("이지영" + i);
-            if (i % 2 == 0) {
-                sendHistoryDTO.setBodyStatus("혈압, 혈당, 체중");
-            } else {
-                sendHistoryDTO.setBodyStatus("혈당, 체중");
-            }
-            arrSendLog.add(sendHistoryDTO);
-        }
+//        for (int i = 0; i < 20; i++) {
+//            long now = System.currentTimeMillis();
+//            Date date = new Date(now);
+//            simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+//            time = simpleDate.format(date);
+//
+//            sendLogDTO = new SendLogDTO("", "");
+//            sendLogDTO.setTime(time);
+//            sendLogDTO.setName("이지영" + i);
+//            if (i % 2 == 0) {
+//                sendLogDTO.setSendLog("혈압, 혈당, 체중");
+//            } else {
+//                sendLogDTO.setSendLog("혈당, 체중");
+//            }
+//            arrSendLog.add(sendLogDTO);
+//        }
     }
 
 }
