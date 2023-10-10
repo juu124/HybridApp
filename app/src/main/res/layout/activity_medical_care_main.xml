@@ -121,7 +121,7 @@
         </TableLayout>
 
         <TextView
-            android:id="@+id/tv_patient_empty"
+            android:id="@+id/tv_patient_list_empty"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="20dp"

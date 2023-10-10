@@ -167,8 +167,21 @@
             </TableLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <TextView
+            android:id="@+id/tv_conn_device_empty"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:text="기기 정보가 없습니다."
+            android:textColor="#545454"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/device_list_layout" />
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_connect_device"
+            android:id="@+id/rv_conn_device"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

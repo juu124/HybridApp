@@ -18,6 +18,7 @@ import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dto.PatientDeviceDTO;
 import com.dki.hybridapptest.ui.adapter.RvSettingDeviceListAdapter;
 import com.dki.hybridapptest.utils.GLog;
+import com.dki.hybridapptest.utils.SharedPreferencesAPI;
 
 import java.util.ArrayList;
 
@@ -49,6 +50,9 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_device_settings_main);
 
+        // null로 초기화하기 (설정 > 메인화면 이동시 전송 리스트 초기화)
+        SharedPreferencesAPI.getInstance(DeviceSettingsMainActivity.this).setRecodePatient("");
+
         toolbar = findViewById(R.id.medical_tool_bar);
         mTitle = toolbar.findViewById(R.id.toolbar_title);
         connDevice = findViewById(R.id.rv_connect_device);
@@ -75,6 +79,15 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
         connDevice.setAdapter(rvSettingDeviceAdapter);
         rvSettingDeviceAdapter.notifyDataSetChanged();
         GLog.d();
+
+        // 연결 가능 기기 없을 시 노출 문구
+        if (rvSettingDeviceAdapter.getItemCount() == 0) {
+            rvSaveDeviceEmpty.setVisibility(View.VISIBLE);
+            connDevice.setVisibility(View.GONE);
+        } else {
+            rvSaveDeviceEmpty.setVisibility(View.GONE);
+            connDevice.setVisibility(View.VISIBLE);
+        }
 
 //        patientDevice = new PatientDeviceDTO();
 //        patientDevice.setType("추가 연결 가능");

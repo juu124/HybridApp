@@ -79,7 +79,7 @@ public class MedicalCareMainActivity extends AppCompatActivity {
         mRvPatientList = findViewById(R.id.rv_patient_list);
         mRvSendLogList = findViewById(R.id.rv_send_history);
         patientAddBtn = findViewById(R.id.btn_patient_add);
-        patientEmpty = findViewById(R.id.tv_patient_empty);
+        patientEmpty = findViewById(R.id.tv_patient_list_empty);
         sendLogEmpty = findViewById(R.id.rv_send_history_empty);
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화

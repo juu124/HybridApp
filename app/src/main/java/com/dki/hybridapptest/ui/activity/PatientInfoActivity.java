@@ -51,6 +51,7 @@ public class PatientInfoActivity extends AppCompatActivity {
     private String id;
 
     // 기기 목록
+    private TextView tvDeviceEmpty;
     private RecyclerView mRvConnectDevice;
     private RvDeviceListAdapter rvDeviceListAdapter;
     private PatientDeviceDTO patientDevice;
@@ -77,18 +78,18 @@ public class PatientInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_info);
 
-        // null로 초기화하기
+        // null로 초기화하기 (환자 > 메인화면 이동시 전송 리스트 초기화)
         SharedPreferencesAPI.getInstance(PatientInfoActivity.this).setRecodePatient("");
 
         toolbar = findViewById(R.id.medical_tool_bar);
         mTitle = toolbar.findViewById(R.id.toolbar_title);
-        mRvConnectDevice = findViewById(R.id.rv_connect_device);
+        mRvConnectDevice = findViewById(R.id.rv_conn_device);
         mRvRecodePatient = findViewById(R.id.rv_recode_patient);
         patientName = findViewById(R.id.tv_patient_name);
         patientId = findViewById(R.id.tv_patient_id);
-//        checkBox = findViewById(R.id.device_check_box);
-        tvRecodeEmpty = findViewById(R.id.tv_recode_device_empty);
         sendBtn = findViewById(R.id.send_btn);
+        tvDeviceEmpty = findViewById(R.id.tv_conn_device_empty);
+        tvRecodeEmpty = findViewById(R.id.tv_recode_device_empty);
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
@@ -134,6 +135,16 @@ public class PatientInfoActivity extends AppCompatActivity {
         rvDeviceListAdapter.addArrPatientDevice(arrPatientDevice);
         rvDeviceListAdapter.notifyDataSetChanged();
         mRvConnectDevice.setAdapter(rvDeviceListAdapter);
+
+
+        // 환자 데이터 없을 시 노출 문구
+        if (rvDeviceListAdapter.getItemCount() == 0) {
+            tvDeviceEmpty.setVisibility(View.VISIBLE);
+            mRvConnectDevice.setVisibility(View.GONE);
+        } else {
+            tvDeviceEmpty.setVisibility(View.GONE);
+            mRvConnectDevice.setVisibility(View.VISIBLE);
+        }
 
         // 측정 기록
         mRvRecodePatient.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
@@ -197,6 +208,7 @@ public class PatientInfoActivity extends AppCompatActivity {
             // 종류에 따른 샘플 데이터 추가
             recodePatientDTO = new RecodePatientDTO();
             recodePatientDTO.setTime(time);
+
             if (TextUtils.equals(patientDeviceType, "혈압")) {
                 GLog.d("혈압");
                 recodePatientDTO.setType("혈압");
@@ -210,6 +222,19 @@ public class PatientInfoActivity extends AppCompatActivity {
                 recodePatientDTO.setType("체중");
                 recodePatientDTO.setRecodePatient("-");
             }
+
+            // 중복된 type 기록은 덮어씌우기
+//            if (mRvRecodePatientListAdapter.getItemCount() > 1) {
+//                GLog.d("size == " + mRvRecodePatientListAdapter.getItemCount());
+//                for (int i = 0; i < mRvRecodePatientListAdapter.getItemCount(); i++) {
+//                    if (TextUtils.equals(mRvRecodePatientListAdapter.getArrRecodePatient().get(i).getType(), patientDeviceType)) {
+//                        mRvRecodePatientListAdapter.changArrRecodePatient(i, recodePatientDTO);
+//                        Toast.makeText(this, patientDeviceType + " 기록이 업데이트 되었습니다.", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            } else {
+//                arrRecodePatient.add(recodePatientDTO);
+//            }
 
             arrRecodePatient.add(recodePatientDTO);
             mRvRecodePatientListAdapter.addArrSendHistory(arrRecodePatient);

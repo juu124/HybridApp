@@ -41,44 +41,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/device_front_layout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <TableLayout
+            android:id="@+id/connect_device_list_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
             android:layout_marginTop="20dp"
-            app:layout_constraintBottom_toTopOf="@id/rv_connect_device"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/connect_device_list_title">
 
-            <CheckBox
-                android:id="@+id/conn_device_check_box"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/list_border"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TableLayout
-                android:id="@+id/connect_device_list_title_layout"
-                android:layout_width="0dp"
+            <TableRow
                 android:layout_height="0dp"
-                android:gravity="center_vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/conn_device_check_box"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_weight="1">
 
-                <TableRow
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-
-                    <TextView
-                        android:id="@+id/type"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
+                <TextView
+                    android:id="@+id/type"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
                         android:background="@drawable/list_border"
                         android:gravity="center"
                         android:text="종류"
@@ -94,20 +75,32 @@
                         android:text="기기명"
                         android:textStyle="bold" />
 
-                </TableRow>
+            </TableRow>
 
-            </TableLayout>
+        </TableLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+        <TextView
+            android:id="@+id/tv_patient_list_empty"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="기기 정보가 없습니다."
+            android:textColor="#545454"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/connect_device_list_title_layout" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_connect_device"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/device_front_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/connect_device_list_title_layout"
             tools:itemCount="3"
             tools:listitem="@layout/item_device" />
 

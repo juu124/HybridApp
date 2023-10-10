@@ -20,7 +20,6 @@ import com.dki.hybridapptest.dto.PatientDeviceDTO;
 import com.dki.hybridapptest.dto.RecodePatientDTO;
 import com.dki.hybridapptest.utils.Constant;
 import com.dki.hybridapptest.utils.GLog;
-import com.dki.hybridapptest.utils.SharedPreferencesAPI;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -60,7 +59,6 @@ public class RvDeviceListAdapter extends RecyclerView.Adapter<RvDeviceListAdapte
                         @Override
                         public void onPositiveClick(String text) {
                             inputRecodePatientInfoListener.onInputPositiveClick(arrPatientDeviceList.get(getBindingAdapterPosition()).getType());
-                            SharedPreferencesAPI.getInstance(v.getContext()).setDeviceType(arrPatientDeviceList.get(getBindingAdapterPosition()).getType());
                         }
 
                         @Override
