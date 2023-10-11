@@ -34,6 +34,7 @@ public class RvDeviceListAdapter extends RecyclerView.Adapter<RvDeviceListAdapte
     private String typeTxt;
     private RecodePatientDTO recodePatientDTO;
     private InputRecodePatientInfoListener inputRecodePatientInfoListener;
+    private CustomDialog customDialog;
 
     public RvDeviceListAdapter(InputRecodePatientInfoListener inputRecodePatientInfoListener) {
         GLog.d("리스너 생성 되었습니다.");
@@ -55,10 +56,21 @@ public class RvDeviceListAdapter extends RecyclerView.Adapter<RvDeviceListAdapte
                 public void onClick(View v) {
 //                    recode = true;
                     typeTxt = arrPatientDeviceList.get(getBindingAdapterPosition()).getType();
-                    CustomDialog customDialog = new CustomDialog(v.getContext(), new CustomDialogClickListener() {
+
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            inputRecodePatientInfoListener.onInputPositiveClick(arrPatientDeviceList.get(getBindingAdapterPosition()).getType());
+                            customDialog.dismiss();
+                        }
+                    }, 1000);
+
+                    customDialog = new CustomDialog(v.getContext(), new CustomDialogClickListener() {
                         @Override
                         public void onPositiveClick(String text) {
-                            inputRecodePatientInfoListener.onInputPositiveClick(arrPatientDeviceList.get(getBindingAdapterPosition()).getType());
+                            customDialog.dismiss();
+                            handler.removeCallbacksAndMessages(null);
+//                            inputRecodePatientInfoListener.onInputPositiveClick(arrPatientDeviceList.get(getBindingAdapterPosition()).getType());
                         }
 
                         @Override
@@ -67,10 +79,11 @@ public class RvDeviceListAdapter extends RecyclerView.Adapter<RvDeviceListAdapte
                     }, "안내", typeTxt + " 값을 수신중 입니다.", Constant.ONE_BUTTON, true);
                     customDialog.setCancelable(false);
                     customDialog.show();
-                    customDialog.setOneButtonText("확인");
+                    customDialog.setOneButtonText("취소");
 //                    setDisplay(customDialog);
 //                    GLog.d("클릭 후 recode == " + recode);
                 }
+
             });
 //            checkBox = itemView.findViewById(R.id.device_check_box);
 

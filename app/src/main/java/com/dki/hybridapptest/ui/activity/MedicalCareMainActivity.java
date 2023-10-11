@@ -234,6 +234,7 @@ public class MedicalCareMainActivity extends AppCompatActivity {
     public void getSendLogData() {
         String sendLogStr = SharedPreferencesAPI.getInstance(MedicalCareMainActivity.this).getRecodePatient();
         GLog.d("sendLogStr == " + sendLogStr);
+        SendLogDTO sendLogDTO1 = null;
 
         if (!TextUtils.isEmpty(sendLogStr)) {
             try {
@@ -244,23 +245,24 @@ public class MedicalCareMainActivity extends AppCompatActivity {
 
                 for (int i = 0; i < itemJsonArray.length(); i++) {
                     GLog.d("itemJsonArray [" + i + "] == " + itemJsonArray.get(i));
-//                                    GLog.d("item " + item);
                     JSONObject jsonObject = new JSONObject(itemJsonArray.get(i).toString());
-//                    JSONObject sendLogJson = new JSONObject();
 
-                    SendLogDTO sendLogDTO1 = new SendLogDTO(jsonObject.getString("time"), jsonObject.getString("name"), jsonObject.getString("id"), jsonObject.getString("sendLog"));
-//                    sendLogJson.put("name", jsonObject.getString("name"));
-//                    sendLogJson.put("id", jsonObject.getString("id"));
-//                    sendLogJson.put("sendLog", jsonObject.getString("sendLog"));
-//                    jArray.put(sendLogJson);
-//                    GLog.d("jArray  == " + jArray);
-                    arrSendLog.add(sendLogDTO1);
+                    // 전송 기록 UI 변경 전 로직
+//                    sendLogDTO1 = new SendLogDTO(jsonObject.getString("time"), jsonObject.getString("name"), jsonObject.getString("id"), jsonObject.getString("sendLog"));
+//                    arrSendLog.add(sendLogDTO1);
+
+                    sendLogDTO1 = new SendLogDTO();
+                    sendLogDTO1.setTime(jsonObject.getString("time"));
+                    sendLogDTO1.setName(jsonObject.getString("name"));
+                    sendLogDTO1.setId(jsonObject.getString("id"));
+                    sendLogDTO1.setSendLog(jsonObject.getString("sendLog"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            mRvSendLogAdapter.setArrSendHistory(arrSendLog);
+//            mRvSendLogAdapter.setArrSendHistory(arrSendLog);
+            mRvSendLogAdapter.addUser(sendLogDTO1);
             mRvSendLogAdapter.notifyDataSetChanged();
         }
         GLog.d();

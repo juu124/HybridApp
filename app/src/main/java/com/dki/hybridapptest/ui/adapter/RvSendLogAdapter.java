@@ -21,12 +21,16 @@ public class RvSendLogAdapter extends RecyclerView.Adapter<RvSendLogAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView date;
+        private TextView name;
+        private TextView id;
         private TextView patientHealthInfo;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             date = itemView.findViewById(R.id.date);
-            patientHealthInfo = itemView.findViewById(R.id.patient_health_info);
+            name = itemView.findViewById(R.id.name);
+            id = itemView.findViewById(R.id.id);
+            patientHealthInfo = itemView.findViewById(R.id.health_info);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -46,18 +50,17 @@ public class RvSendLogAdapter extends RecyclerView.Adapter<RvSendLogAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        GLog.d("");
         holder.date.setText(arrSendHistory.get(position).getTime());
-        patientHealthInfoTxt = arrSendHistory.get(position).getName()
-                + " ("
-                + arrSendHistory.get(position).getPatientId()
-                + ") "
-                + arrSendHistory.get(position).getSendLog()
-                + " 데이터 전송완료";
-        holder.patientHealthInfo.setText(patientHealthInfoTxt);
-
-        GLog.d("date = " + arrSendHistory.get(position).getTime());
-        GLog.d("patientHealthInfoTxt = " + patientHealthInfoTxt);
+        holder.name.setText(arrSendHistory.get(position).getName());
+        holder.id.setText(arrSendHistory.get(position).getId());
+        holder.patientHealthInfo.setText(arrSendHistory.get(position).getSendLog());
+//        patientHealthInfoTxt = arrSendHistory.get(position).getName()
+//                + " ("
+//                + arrSendHistory.get(position).getPatientId()
+//                + ") "
+//                + arrSendHistory.get(position).getSendLog()
+//                + " 데이터 전송완료";
+//        holder.patientHealthInfo.setText(patientHealthInfoTxt);
     }
 
     @Override
@@ -66,14 +69,14 @@ public class RvSendLogAdapter extends RecyclerView.Adapter<RvSendLogAdapter.View
     }
 
     public void setArrSendHistory(ArrayList<SendLogDTO> sendHistoryList) {
-        GLog.d();
+        GLog.d("");
 //        arrSendHistory.addAll(sendHistoryList);
         arrSendHistory = sendHistoryList;
     }
 
-//    public void addUser(PatientInfoDTO user) {
-//        if (user != null) {
-//            ArrPatientInfo.add(user);
-//        }
-//    }
+    public void addUser(SendLogDTO sendLog) {
+        if (sendLog != null) {
+            arrSendHistory.add(sendLog);
+        }
+    }
 }

@@ -23,6 +23,63 @@
         <!--            app:layout_constraintStart_toStartOf="parent"-->
         <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
+        <!--        <TableLayout-->
+        <!--            android:id="@+id/patient_info_layout"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:background="#c9c9c9"-->
+        <!--            android:gravity="center_vertical"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toTopOf="parent">-->
+
+        <!--            <TableRow-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="0dp"-->
+        <!--                android:layout_weight="1">-->
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/date"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:background="@drawable/list_selector"-->
+        <!--                    android:gravity="center"-->
+        <!--                    android:padding="10dp"-->
+        <!--                    android:textColor="@color/black"-->
+        <!--                    tools:text="2013-09-12 10:10:10" />-->
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/empty"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:background="@drawable/list_selector"-->
+        <!--                    android:gravity="center"-->
+        <!--                    android:padding="10dp" />-->
+        <!--            </TableRow>-->
+
+        <!--            <TableRow-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="0dp"-->
+        <!--                android:layout_weight="1">-->
+
+        <!--                <TextView-->
+        <!--                    android:id="@+id/patient_health_info"-->
+        <!--                    android:layout_width="0dp"-->
+        <!--                    android:layout_height="match_parent"-->
+        <!--                    android:layout_weight="1"-->
+        <!--                    android:background="@drawable/list_selector"-->
+        <!--                    android:gravity="center"-->
+        <!--                    android:padding="10dp"-->
+        <!--                    android:textColor="@color/black"-->
+        <!--                    android:textSize="15sp"-->
+        <!--                    tools:text="이지영 (12345123) 혈압, 혈당, 체중 데이터 전송" />-->
+
+        <!--            </TableRow>-->
+
+        <!--        </TableLayout>-->
+
         <TableLayout
             android:id="@+id/patient_info_layout"
             android:layout_width="0dp"
@@ -42,7 +99,7 @@
                     android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:background="@drawable/list_selector"
                     android:gravity="center"
                     android:padding="10dp"
@@ -50,32 +107,39 @@
                     tools:text="2013-09-12 10:10:10" />
 
                 <TextView
-                    android:id="@+id/empty"
+                    android:id="@+id/name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@drawable/list_selector"
                     android:gravity="center"
+                    android:textColor="@color/black"
+                    tools:text="이지영"
                     android:padding="10dp" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/patient_health_info"
+                    android:id="@+id/id"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="1.5"
+                    android:background="@drawable/list_selector"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
+                    tools:text="12345123" />
+
+                <TextView
+                    android:id="@+id/health_info"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
                     android:background="@drawable/list_selector"
                     android:gravity="center"
                     android:padding="10dp"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     tools:text="이지영 (12345123) 혈압, 혈당, 체중 데이터 전송" />
-
             </TableRow>
 
         </TableLayout>

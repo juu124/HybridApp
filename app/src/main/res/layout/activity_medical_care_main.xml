@@ -70,7 +70,7 @@
                     android:id="@+id/num"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:background="@drawable/list_border"
                     android:gravity="center"
                     android:text="순번"
@@ -80,7 +80,7 @@
                     android:id="@+id/gender"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:background="@drawable/list_border"
                     android:gravity="center"
                     android:text="성별"
@@ -187,6 +187,64 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TableLayout
+            android:id="@+id/send_history_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/send_history_layout">
+
+            <TableRow
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="@drawable/list_border"
+                    android:gravity="center"
+                    android:text="시간"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_send_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/list_border"
+                    android:gravity="center"
+                    android:text="이름"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_send_patient_id"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1.5"
+                    android:background="@drawable/list_border"
+                    android:gravity="center"
+                    android:text="환자 ID"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_send_history"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="@drawable/list_border"
+                    android:gravity="center"
+                    android:text="전송 정보"
+                    android:textStyle="bold" />
+
+            </TableRow>
+
+        </TableLayout>
+
         <TextView
             android:id="@+id/rv_send_history_empty"
             android:layout_width="match_parent"
@@ -195,20 +253,18 @@
             android:text="전송된 기록이 없습니다."
             android:textColor="@color/list_empty_tv_dark_gray"
             android:textSize="15sp"
-            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/send_history_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/send_history_info_layout" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_send_history"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/send_history_layout"
+            app:layout_constraintTop_toBottomOf="@id/send_history_info_layout"
             tools:itemCount="3"
             tools:listitem="@layout/item_send_history" />
 

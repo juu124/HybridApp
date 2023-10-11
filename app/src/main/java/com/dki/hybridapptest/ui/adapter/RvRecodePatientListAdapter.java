@@ -38,7 +38,7 @@ public class RvRecodePatientListAdapter extends RecyclerView.Adapter<RvRecodePat
             checkBox = itemView.findViewById(R.id.checkbox);
             date = itemView.findViewById(R.id.date);
             type = itemView.findViewById(R.id.Log_type);
-            patientHealthInfo = itemView.findViewById(R.id.patient_health_info);
+            patientHealthInfo = itemView.findViewById(R.id.health_info);
 
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
