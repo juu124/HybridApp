@@ -1,5 +1,6 @@
 package com.dki.hybridapptest.ui.adapter;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dto.RecodePatientDTO;
-import com.dki.hybridapptest.utils.GLog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RvRecodePatientListAdapter extends RecyclerView.Adapter<RvRecodePatientListAdapter.ViewHolder> {
     // 측정 기록 리스트
@@ -22,6 +23,9 @@ public class RvRecodePatientListAdapter extends RecyclerView.Adapter<RvRecodePat
 
     // 체크한 측정 기록 리스트
     private ArrayList<RecodePatientDTO> arrCheckedPatient = new ArrayList<>();
+
+    private HashMap<String, RecodePatientDTO> map = new HashMap<>();
+    private RecodePatientDTO recodePatientBloodPressure, recodePatientBloodSugar;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private CheckBox checkBox;
@@ -39,13 +43,28 @@ public class RvRecodePatientListAdapter extends RecyclerView.Adapter<RvRecodePat
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (checkBox.isChecked()) { // 체크가 되었습니다.
-                        arrRecodePatient.get(getBindingAdapterPosition()).setChecked(true);
-                        arrCheckedPatient.add(arrRecodePatient.get(getBindingAdapterPosition()));
-                    } else { // 체크가 되지 않았습니다.
-                        Toast.makeText(v.getContext(), "체크X", Toast.LENGTH_SHORT).show();
-                        arrCheckedPatient.remove(arrRecodePatient.get(getBindingAdapterPosition()));
-                        arrRecodePatient.get(getBindingAdapterPosition()).setChecked(true);
+                    if (checkBox.isChecked()) {
+
+                        recodePatientBloodPressure = map.get("혈압");
+                        recodePatientBloodSugar = map.get("혈당");
+
+                        // 혈압 중복 시 체크 방지
+                        if (arrRecodePatient.get(getBindingAdapterPosition()) == recodePatientBloodPressure) {
+                            arrCheckedPatient.add(arrRecodePatient.get(getBindingAdapterPosition()));
+                        } else if (arrRecodePatient.get(getBindingAdapterPosition()) != recodePatientBloodPressure &&
+                                TextUtils.equals(arrRecodePatient.get(getBindingAdapterPosition()).getType(), "혈압")) {
+                            checkBox.setChecked(false);
+                            arrRecodePatient.get(getBindingAdapterPosition()).setChecked(false);
+                            Toast.makeText(v.getContext(), "최종 혈압 측정치만 선택 가능합니다.", Toast.LENGTH_SHORT).show();
+                        }
+                        if (arrRecodePatient.get(getBindingAdapterPosition()) == recodePatientBloodSugar) {
+                            arrCheckedPatient.add(arrRecodePatient.get(getBindingAdapterPosition()));
+                        } else if (arrRecodePatient.get(getBindingAdapterPosition()) != recodePatientBloodSugar &&
+                                TextUtils.equals(arrRecodePatient.get(getBindingAdapterPosition()).getType(), "혈당")) {
+                            checkBox.setChecked(false);
+                            arrRecodePatient.get(getBindingAdapterPosition()).setChecked(false);
+                            Toast.makeText(v.getContext(), "최종 혈당 측정치만 선택 가능합니다.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
             });
@@ -80,15 +99,9 @@ public class RvRecodePatientListAdapter extends RecyclerView.Adapter<RvRecodePat
         return arrCheckedPatient;
     }
 
-    public ArrayList<RecodePatientDTO> getArrRecodePatient() {
-        return arrRecodePatient;
-    }
-
-    public void changArrRecodePatient(int i, RecodePatientDTO recodePatientDTO) {
-        GLog.d(i + " 번째");
-        arrRecodePatient.remove(i);
-        arrRecodePatient.add(i, recodePatientDTO);
-
+    // 최종 즉정치 (혈압, 혈당)
+    public void duplicatedRecodePatient(HashMap<String, RecodePatientDTO> map) {
+        this.map = map;
     }
 
 //    public void addUser(PatientInfoDTO user) {

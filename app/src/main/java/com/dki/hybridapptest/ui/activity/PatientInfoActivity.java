@@ -19,7 +19,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dki.hybridapptest.Interface.InputPatientInfoListener;
 import com.dki.hybridapptest.Interface.InputRecodePatientInfoListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.CustomDialog;
@@ -37,6 +36,7 @@ import org.json.JSONObject;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PatientInfoActivity extends AppCompatActivity {
     private ActionBar actionBar;
@@ -58,17 +58,18 @@ public class PatientInfoActivity extends AppCompatActivity {
     private ArrayList<PatientDeviceDTO> arrPatientDevice = new ArrayList<>();
 
     // 측정 기록 목록
+    private TextView tvRecodeEmpty;
     private RecyclerView mRvRecodePatient;
     private RvRecodePatientListAdapter mRvRecodePatientListAdapter;
-    private SimpleDateFormat simpleDate;
-    private String time;
     private RecodePatientDTO recodePatientDTO;
     private ArrayList<RecodePatientDTO> arrRecodePatient;
-    private TextView tvRecodeEmpty;
+
+    // 측정 기록 추가
     private InputRecodePatientInfoListener inputRecodePatientInfoListener;
-    private InputPatientInfoListener mInputPatientInfoListener;
     private JSONObject obj = new JSONObject();
-//    private CheckBox checkBox;
+    private HashMap<String, RecodePatientDTO> checkMap = new HashMap<>(); // 측정 기록 체크
+    private SimpleDateFormat simpleDate;                                  // 측정 기록 날짜
+    private String time;                                                  // 측정 기록 날짜
 
     // 측정값 전송
     private Button sendBtn;
@@ -98,8 +99,8 @@ public class PatientInfoActivity extends AppCompatActivity {
         mIntent = getIntent();
         name = mIntent.getStringExtra("name");
         id = mIntent.getStringExtra("patientId");
-        GLog.d("name == " + name);
-        GLog.d("id == " + id);
+//        GLog.d("name == " + name);
+//        GLog.d("id == " + id);
         patientName.setText(name);
         patientId.setText(id);
 
@@ -153,21 +154,8 @@ public class PatientInfoActivity extends AppCompatActivity {
 //        mRvRecodePatientListAdapter.notifyDataSetChanged();
         mRvRecodePatient.setAdapter(mRvRecodePatientListAdapter);
 
-
         // 테스트 샘플 데이터 (측정기록)
 //        sampleDataPatient();
-
-        // 기기 목록 전체 체크
-//        checkBox.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (checkBox.isChecked()) {
-//                    rvDeviceListAdapter.getCheckItem(true);
-//                } else {
-//                    rvDeviceListAdapter.getCheckItem(false);
-//                }
-//            }
-//        });
 
         // 측정값 전송 버튼
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -223,24 +211,11 @@ public class PatientInfoActivity extends AppCompatActivity {
                 recodePatientDTO.setRecodePatient("-");
             }
 
-            // 중복된 type 기록은 덮어씌우기
-//            if (mRvRecodePatientListAdapter.getItemCount() > 1) {
-//                GLog.d("size == " + mRvRecodePatientListAdapter.getItemCount());
-//                for (int i = 0; i < mRvRecodePatientListAdapter.getItemCount(); i++) {
-//                    if (TextUtils.equals(mRvRecodePatientListAdapter.getArrRecodePatient().get(i).getType(), patientDeviceType)) {
-//                        mRvRecodePatientListAdapter.changArrRecodePatient(i, recodePatientDTO);
-//                        Toast.makeText(this, patientDeviceType + " 기록이 업데이트 되었습니다.", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            } else {
-//                arrRecodePatient.add(recodePatientDTO);
-//            }
-
-            arrRecodePatient.add(recodePatientDTO);
-            mRvRecodePatientListAdapter.addArrSendHistory(arrRecodePatient);
-        } else {
-            GLog.d("측정 값 없음");
+            checkMap.put(patientDeviceType, recodePatientDTO);
+            mRvRecodePatientListAdapter.duplicatedRecodePatient(checkMap);
         }
+        arrRecodePatient.add(recodePatientDTO);
+        mRvRecodePatientListAdapter.addArrSendHistory(arrRecodePatient);
         mRvRecodePatientListAdapter.notifyDataSetChanged();
     }
 
@@ -256,7 +231,6 @@ public class PatientInfoActivity extends AppCompatActivity {
 
                 for (int i = 0; i < itemJsonArray.length(); i++) {
                     GLog.d("itemJsonArray [" + i + "] == " + itemJsonArray.get(i));
-//                                    GLog.d("item " + item);
                     JSONObject jsonObject = new JSONObject(itemJsonArray.get(i).toString());
                     JSONObject sendLogJson = new JSONObject();
                     sendLogJson.put("time", jsonObject.getString("time"));
