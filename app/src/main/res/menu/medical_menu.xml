@@ -6,6 +6,6 @@
         android:id="@+id/device_settings"
         android:icon="@drawable/ic_settings"
         app:showAsAction="always|withText"
-        android:title="기기 설정" />
+        android:title=" 기기 설정" />
 
 </menu>

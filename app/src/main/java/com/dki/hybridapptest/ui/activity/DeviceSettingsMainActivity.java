@@ -153,7 +153,7 @@ public class DeviceSettingsMainActivity extends AppCompatActivity {
 
         // 뒤로가기 버튼 이미지 불러오기
         actionBar.setHomeAsUpIndicator(R.drawable.baseline_arrow_back_aos_new_24);
-        String toolBarTitle = "기기 설정";
+        String toolBarTitle = " 기기 설정";
         mTitle.setText(toolBarTitle);
     }
 

@@ -81,7 +81,7 @@
         <!--        </TableLayout>-->
 
         <TableLayout
-            android:id="@+id/patient_info_layout"
+            android:id="@+id/patient_list_top_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="#c9c9c9"

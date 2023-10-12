@@ -21,7 +21,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/connect_layout"
+        android:id="@+id/connect_device_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="30dp"
@@ -42,7 +42,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TableLayout
-            android:id="@+id/connect_device_list_title_layout"
+            android:id="@+id/connect_device_list_top_layout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
@@ -56,7 +56,7 @@
                 android:layout_weight="1">
 
                 <TextView
-                    android:id="@+id/type"
+                    android:id="@+id/device_type"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -91,7 +91,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/connect_device_list_title_layout" />
+            app:layout_constraintTop_toBottomOf="@id/connect_device_list_top_layout" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_connect_device"
@@ -100,7 +100,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/connect_device_list_title_layout"
+            app:layout_constraintTop_toBottomOf="@id/connect_device_list_top_layout"
             tools:itemCount="3"
             tools:listitem="@layout/item_device" />
 
@@ -116,7 +116,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guide_Line"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connect_layout">
+        app:layout_constraintTop_toBottomOf="@+id/connect_device_layout">
 
         <TextView
             android:id="@+id/server_setting_title"

@@ -16,13 +16,13 @@
         android:text="환자 정보 입력"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintBottom_toTopOf="@id/patient_info_layout"
+        app:layout_constraintBottom_toTopOf="@id/patient_list_top_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/patient_info_layout"
+        android:id="@+id/patient_list_top_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="50dp"
@@ -245,7 +245,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/patient_info_layout">
+        app:layout_constraintTop_toBottomOf="@id/patient_list_top_layout">
 
         <Button
             android:id="@+id/dialog_user_info_yes_button"

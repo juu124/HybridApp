@@ -22,7 +22,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout"
+        android:id="@+id/patient_device_list_layout"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="40dp"
@@ -71,13 +71,6 @@
                 app:layout_constraintStart_toEndOf="@id/tv_patient_name"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="(12345123)" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_begin="20dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -128,7 +121,7 @@
 
 
             <TableLayout
-                android:id="@+id/connect_device_list_title_layout"
+                android:id="@+id/device_list_top_layout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:background="@drawable/list_border"
@@ -143,7 +136,7 @@
                     android:layout_weight="1">
 
                     <TextView
-                        android:id="@+id/type"
+                        android:id="@+id/device_type"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -225,20 +218,80 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--        <CheckBox-->
-        <!--            android:id="@+id/device_check_box"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:background="@drawable/list_border"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recode_list_top_layout"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recode_title">
+
+            <CheckBox
+                android:id="@+id/recode_check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:background="@drawable/list_border"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/recode_list_title_layout"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TableLayout
+                android:id="@+id/recode_list_title_layout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@drawable/list_border"
+                android:gravity="center_vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toEndOf="@id/recode_check_box">
+
+                <TableRow
+                    android:layout_height="0dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:id="@+id/recode_time"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@drawable/list_border"
+                        android:gravity="center"
+                        android:text="시간"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/recode_type"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/list_border"
+                        android:gravity="center"
+                        android:text="종류"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/recode_result"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5"
+                        android:background="@drawable/list_border"
+                        android:gravity="center"
+                        android:text="측정 결과"
+                        android:textStyle="bold" />
+
+                </TableRow>
+
+            </TableLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <TextView
             android:id="@+id/tv_recode_device_empty"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="측정된 기록이 없습니다."
             android:textColor="@color/list_empty_tv_dark_gray"
@@ -246,19 +299,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recode_title" />
+            app:layout_constraintTop_toBottomOf="@+id/recode_list_top_layout" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_recode_patient"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recode_title"
+            app:layout_constraintTop_toBottomOf="@+id/recode_list_top_layout"
             tools:itemCount="10"
-            tools:listitem="@layout/item_send_history" />
+            tools:listitem="@layout/item_recode_patient" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -298,13 +350,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="180dp" />
+        app:layout_constraintGuide_begin="179dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="171dp" />
+        app:layout_constraintGuide_begin="141dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

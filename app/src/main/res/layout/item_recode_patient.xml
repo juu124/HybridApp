@@ -24,7 +24,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TableLayout
-            android:id="@+id/patient_info_layout"
+            android:id="@+id/patient_list_top_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="#c9c9c9"
@@ -42,7 +42,7 @@
                     android:id="@+id/date"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:background="@drawable/list_selector"
                     android:gravity="center"
                     android:padding="10dp"
@@ -58,26 +58,38 @@
                     android:gravity="center"
                     android:padding="10dp"
                     android:text="혈압 (Autockeck)" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
 
                 <TextView
                     android:id="@+id/health_info"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_weight="5"
                     android:background="@drawable/list_selector"
                     android:gravity="center"
                     android:padding="10dp"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     tools:text="수축기 (156.0), 이완기 (87.3), 맥박수 (80.0)" />
-
             </TableRow>
+
+            <!--            <TableRow-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="0dp"-->
+            <!--                android:layout_weight="1">-->
+
+            <!--                <TextView-->
+            <!--                    android:id="@+id/health_info"-->
+            <!--                    android:layout_width="0dp"-->
+            <!--                    android:layout_height="match_parent"-->
+            <!--                    android:layout_weight="1"-->
+            <!--                    android:background="@drawable/list_selector"-->
+            <!--                    android:gravity="center"-->
+            <!--                    android:padding="10dp"-->
+            <!--                    android:textColor="@color/black"-->
+            <!--                    android:textSize="15sp"-->
+            <!--                    tools:text="수축기 (156.0), 이완기 (87.3), 맥박수 (80.0)" />-->
+
+            <!--            </TableRow>-->
 
         </TableLayout>
 

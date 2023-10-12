@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 public class RvSendLogAdapter extends RecyclerView.Adapter<RvSendLogAdapter.ViewHolder> {
     private ArrayList<SendLogDTO> arrSendHistory = new ArrayList<>();
-    private String patientHealthInfoTxt;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView date;

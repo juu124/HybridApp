@@ -25,7 +25,7 @@ public class RvSettingDeviceListAdapter extends RecyclerView.Adapter<RvSettingDe
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            type = itemView.findViewById(R.id.type);
+            type = itemView.findViewById(R.id.device_type);
             deviceName = itemView.findViewById(R.id.device_name);
 
         }
