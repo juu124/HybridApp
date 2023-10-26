@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dki.hybridapptest.Interface.AllCheckListener;
 import com.dki.hybridapptest.Interface.InputRecodePatientInfoListener;
 import com.dki.hybridapptest.R;
 import com.dki.hybridapptest.dialog.CustomDialog;
@@ -53,7 +55,7 @@ public class PatientInfoActivity extends AppCompatActivity {
     // 기기 목록
     private TextView tvDeviceEmpty;
     private RecyclerView mRvConnectDevice;
-    private RvDeviceListAdapter rvDeviceListAdapter;
+    private RvDeviceListAdapter mRvDeviceListAdapter;
     private PatientDeviceDTO patientDevice;
     private ArrayList<PatientDeviceDTO> arrPatientDevice = new ArrayList<>();
 
@@ -63,6 +65,14 @@ public class PatientInfoActivity extends AppCompatActivity {
     private RvRecodePatientListAdapter mRvRecodePatientListAdapter;
     private RecodePatientDTO recodePatientDTO;
     private ArrayList<RecodePatientDTO> arrRecodePatient;
+    private ArrayList<RecodePatientDTO> arrCheckRecodePatient;
+    private ArrayList<RecodePatientDTO> arrSetCheckList;
+    private CheckBox allCheck;
+    private String dataType;
+    private int beforeCount;
+
+    private RecodePatientDTO checkBloodPressureResult;
+    private RecodePatientDTO checkBloodSugarResult;
 
     // 측정 기록 추가
     private InputRecodePatientInfoListener inputRecodePatientInfoListener;
@@ -70,6 +80,7 @@ public class PatientInfoActivity extends AppCompatActivity {
     private HashMap<String, RecodePatientDTO> checkMap = new HashMap<>(); // 측정 기록 체크
     private SimpleDateFormat simpleDate;                                  // 측정 기록 날짜
     private String time;                                                  // 측정 기록 날짜
+    private AllCheckListener allCheckListener;
 
     // 측정값 전송
     private Button sendBtn;
@@ -91,6 +102,7 @@ public class PatientInfoActivity extends AppCompatActivity {
         sendBtn = findViewById(R.id.send_btn);
         tvDeviceEmpty = findViewById(R.id.tv_conn_device_empty);
         tvRecodeEmpty = findViewById(R.id.tv_recode_device_empty);
+        allCheck = findViewById(R.id.recode_check_box);
 
         // 타이틀 UI displayHeader값 들어오기 전 초기화
         titleBarInit();
@@ -110,9 +122,10 @@ public class PatientInfoActivity extends AppCompatActivity {
         // 선택 기기 종류에 맞는 측정 기록 데이터 추가 리스너
         inputRecodePatientInfoListener = new InputRecodePatientInfoListener() {
             @Override
-            public void onInputPositiveClick(String patientDeviceType) {
+            public void onInputPositiveClick(String patientDeviceType, boolean isChecked) {
+
                 // 기기 종류에 따른 샘플 데이터 추가
-                addTestRecodeData(patientDeviceType);
+                addTestRecodeData(patientDeviceType, isChecked);
 
                 // 환자 데이터 없을 시 노출 문구
                 if (mRvRecodePatientListAdapter.getItemCount() == 0) {
@@ -121,6 +134,11 @@ public class PatientInfoActivity extends AppCompatActivity {
                 } else {
                     tvRecodeEmpty.setVisibility(View.GONE);
                     mRvRecodePatient.setVisibility(View.VISIBLE);
+
+                    // 환자 추가시 자동 스크롤
+                    int position = mRvRecodePatientListAdapter.getIndexUser(recodePatientDTO);
+                    mRvRecodePatient.smoothScrollToPosition(position);
+
                 }
             }
 
@@ -130,16 +148,24 @@ public class PatientInfoActivity extends AppCompatActivity {
             }
         };
 
+        // 전체 체크 선택
+        allCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkAllRecode();
+            }
+        });
+
         // 기기목록
         mRvConnectDevice.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        rvDeviceListAdapter = new RvDeviceListAdapter(inputRecodePatientInfoListener);
-        rvDeviceListAdapter.addArrPatientDevice(arrPatientDevice);
-        rvDeviceListAdapter.notifyDataSetChanged();
-        mRvConnectDevice.setAdapter(rvDeviceListAdapter);
+        mRvDeviceListAdapter = new RvDeviceListAdapter(inputRecodePatientInfoListener);
+        mRvDeviceListAdapter.addArrPatientDevice(arrPatientDevice);
+        mRvDeviceListAdapter.notifyDataSetChanged();
+        mRvConnectDevice.setAdapter(mRvDeviceListAdapter);
 
 
         // 환자 데이터 없을 시 노출 문구
-        if (rvDeviceListAdapter.getItemCount() == 0) {
+        if (mRvDeviceListAdapter.getItemCount() == 0) {
             tvDeviceEmpty.setVisibility(View.VISIBLE);
             mRvConnectDevice.setVisibility(View.GONE);
         } else {
@@ -150,6 +176,7 @@ public class PatientInfoActivity extends AppCompatActivity {
         // 측정 기록
         mRvRecodePatient.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         mRvRecodePatientListAdapter = new RvRecodePatientListAdapter();
+//        mRvRecodePatientListAdapter = new RvRecodePatientListAdapter();
 //        mRvRecodePatientListAdapter.addArrSendHistory(arrRecodePatient);
 //        mRvRecodePatientListAdapter.notifyDataSetChanged();
         mRvRecodePatient.setAdapter(mRvRecodePatientListAdapter);
@@ -180,11 +207,17 @@ public class PatientInfoActivity extends AppCompatActivity {
                 }
             }
         });
+
+        // 전체 체크를 한뒤 check목록에서  기존 숫자보다 낮아지면
+        if (mRvRecodePatientListAdapter.getCheckedList().size() == 0) {
+        }
+
     }
 
     // 기기 종류에 따른 샘플 데이터 추가
-    public void addTestRecodeData(String patientDeviceType) {
+    public void addTestRecodeData(String patientDeviceType, boolean isChecked) {
         arrRecodePatient = new ArrayList<>();
+        dataType = patientDeviceType;
 
         if (!TextUtils.isEmpty(patientDeviceType)) {
             // 현재 시간
@@ -196,6 +229,9 @@ public class PatientInfoActivity extends AppCompatActivity {
             // 종류에 따른 샘플 데이터 추가
             recodePatientDTO = new RecodePatientDTO();
             recodePatientDTO.setTime(time);
+
+            // check 초기화
+            recodePatientDTO.setChecked(isChecked);
 
             if (TextUtils.equals(patientDeviceType, "혈압")) {
                 GLog.d("혈압");
@@ -213,9 +249,17 @@ public class PatientInfoActivity extends AppCompatActivity {
 
             checkMap.put(patientDeviceType, recodePatientDTO);
             mRvRecodePatientListAdapter.duplicatedRecodePatient(checkMap);
+
+            ArrayList<RecodePatientDTO> arrRecode = mRvRecodePatientListAdapter.getList();
+            for (int i = 0; i < mRvRecodePatientListAdapter.getItemCount(); i++) {
+                arrRecode.get(i).setChecked(false);
+            }
+            mRvRecodePatientListAdapter.getCheckedList().clear();
+            if (mRvRecodePatientListAdapter.getCheckedList().size() == 0) {
+                allCheck.setChecked(false);
+            }
         }
-        arrRecodePatient.add(recodePatientDTO);
-        mRvRecodePatientListAdapter.addArrSendHistory(arrRecodePatient);
+        mRvRecodePatientListAdapter.addSendLog(recodePatientDTO);
         mRvRecodePatientListAdapter.notifyDataSetChanged();
     }
 
@@ -324,12 +368,63 @@ public class PatientInfoActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void newInsertCheck() {
+        GLog.d("beforeCount == " + beforeCount);
+        GLog.d("mRvRecodePatientListAdapter.getItemCount() == " + mRvRecodePatientListAdapter.getItemCount());
+        if (beforeCount != mRvRecodePatientListAdapter.getItemCount()) {
+            mRvRecodePatientListAdapter.newDataCheck(true);
+        } else {
+            mRvRecodePatientListAdapter.newDataCheck(false);
+        }
+        mRvRecodePatientListAdapter.setArrSendHistory(arrCheckRecodePatient);
+        mRvRecodePatientListAdapter.notifyDataSetChanged();
+    }
+
+    // checkBox 전체 선택
+    public void checkAllRecode() {
+        arrSetCheckList = mRvRecodePatientListAdapter.getCheckedList();
+        if (allCheck.isChecked()) {
+            arrCheckRecodePatient = mRvRecodePatientListAdapter.getList();
+            checkBloodPressureResult = (RecodePatientDTO) checkMap.get("혈압");
+            checkBloodSugarResult = (RecodePatientDTO) checkMap.get("혈당");
+
+            String pressureTime = null;
+            String sugarTime = null;
+
+            if (checkBloodPressureResult != null) {
+                pressureTime = checkBloodPressureResult.getTime();
+            }
+            if (checkBloodSugarResult != null) {
+                sugarTime = checkBloodSugarResult.getTime();
+            }
+
+            for (int i = 0; i < arrCheckRecodePatient.size(); i++) {
+                GLog.d("checkMap.size == " + checkMap.size());
+//                GLog.d("arrCheckRecodePatient [" + i + "]" + " = " + checkBloodPressureResult.getTime());
+//                GLog.d("checkBloodPressureResult time == " + checkBloodPressureResult.getTime());
+                if (TextUtils.equals(arrCheckRecodePatient.get(i).getTime(), pressureTime)) {
+                    arrCheckRecodePatient.get(i).setChecked(true);
+                } else if (TextUtils.equals(arrCheckRecodePatient.get(i).getTime(), sugarTime)) {
+                    arrCheckRecodePatient.get(i).setChecked(true);
+                } else {
+                    arrCheckRecodePatient.get(i).setChecked(false);
+                }
+                mRvRecodePatientListAdapter.setArrSendHistory(arrCheckRecodePatient);
+                mRvRecodePatientListAdapter.notifyDataSetChanged();
+            }
+        } else {
+            for (int i = 0; i < arrCheckRecodePatient.size(); i++) {
+                arrCheckRecodePatient.get(i).setChecked(false);
+            }
+            arrSetCheckList.clear();
+//            mRvRecodePatientListAdapter.setArrCheckList(arrRecodePatient);
+            mRvRecodePatientListAdapter.setArrSendHistory(arrCheckRecodePatient);
+            mRvRecodePatientListAdapter.notifyDataSetChanged();
+        }
+    }
+
     // 타이틀 UI 초기화
     public void titleBarInit() {
-        setSupportActionBar(toolbar);
-        actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
         toolbar.setVisibility(View.VISIBLE);
         setSupportActionBar(toolbar);
         actionBar = getSupportActionBar();
