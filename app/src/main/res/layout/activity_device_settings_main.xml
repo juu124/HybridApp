@@ -45,8 +45,8 @@
             android:id="@+id/connect_device_list_top_layout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:gravity="center_vertical"
             android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/connect_device_list_title">
@@ -60,46 +60,45 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                        android:background="@drawable/list_border"
-                        android:gravity="center"
-                        android:text="종류"
-                        android:textStyle="bold" />
+                    android:background="@drawable/list_border"
+                    android:gravity="center"
+                    android:text="종류"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/device_name"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:background="@drawable/list_border"
-                        android:gravity="center"
-                        android:text="기기명"
-                        android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/device_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="3"
+                    android:background="@drawable/list_border"
+                    android:gravity="center"
+                    android:text="기기명"
+                    android:textStyle="bold" />
 
             </TableRow>
 
         </TableLayout>
 
-        <TextView
-            android:id="@+id/tv_patient_list_empty"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center"
-            android:text="기기 정보가 없습니다."
-            android:textColor="#545454"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/connect_device_list_top_layout" />
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_connect_device_list_empty"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:gravity="center"-->
+        <!--            android:text="기기 정보가 없습니다."-->
+        <!--            android:textColor="#545454"-->
+        <!--            android:textSize="15sp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/connect_device_list_top_layout" />-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_connect_device"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/connect_device_list_top_layout"
             tools:itemCount="3"
             tools:listitem="@layout/item_device" />
@@ -111,12 +110,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="40dp"
-        android:layout_marginTop="20dp"
         app:layout_constrainedHeight="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guide_Line"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/connect_device_layout">
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/server_setting_title"
@@ -128,37 +125,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/BLE_mode"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="25dp"
-            android:layout_marginTop="20dp"
             android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            app:layout_constraintBottom_toTopOf="@id/fhir_server_layout"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/server_setting_title">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/server_title"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_marginStart="10dp"
                 android:text="BLE 수신 모드"
                 android:textColor="@color/black"
                 android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <RadioGroup
                 android:id="@+id/radioGroup"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_marginStart="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/server_title">
 
                 <RadioButton
                     android:id="@+id/radioButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="30dp"
+                    android:layout_marginEnd="20dp"
                     android:text="11073"
                     android:textSize="13sp" />
 
@@ -167,20 +172,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="30dp"
                     android:text="비표준"
                     android:textSize="13sp" />
 
             </RadioGroup>
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/fhir_server_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/btn_server_conn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/BLE_mode">
 
@@ -237,7 +241,6 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
                 android:background="@drawable/edit_border"
                 android:lines="1"
                 android:paddingStart="5dp"
@@ -257,6 +260,16 @@
                 app:layout_constraintStart_toStartOf="@id/server_guide_line" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Button
+            android:id="@+id/btn_server_conn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/fhir_server_layout"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="페어링" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
