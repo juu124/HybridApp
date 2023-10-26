@@ -2,6 +2,8 @@ package com.dki.hybridapptest.dialog;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -87,6 +89,9 @@ public class InputPatientDialog extends Dialog {
             }
         });
 
+        // 투명 배경 (모서리)
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
         // 성별 디폴트 체크(남성)
         radioGroup.check(manRadioBtn.getId());
 
@@ -123,6 +128,10 @@ public class InputPatientDialog extends Dialog {
                     patientBornYear.requestFocus();
                     showKeyboard(patientBornYear);
                     Toast.makeText(mContext, "생년을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (Integer.parseInt(patientBornYear.getText().toString()) > 2500 || Integer.parseInt(patientBornYear.getText().toString()) < 1920) {
+                    patientBornYear.setText("2000");
+                    Toast.makeText(mContext, "1920 ~ 2500년도만 입력할 수 있습니다.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
